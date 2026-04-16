@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Luxury Store | المتجر الفاخر</title>
+    <title>LUXURY STORE | متجر الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,7 +12,6 @@
             --dark-bg: #0a0a0a;
             --dark-card: #141414;
             --text-light: #e0e0e0;
-            --green-success: #27ae60;
         }
 
         body {
@@ -23,7 +22,6 @@
             overflow-x: hidden;
         }
 
-        /* هيدر فاخر */
         header {
             background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
             color: var(--gold-primary);
@@ -33,11 +31,8 @@
             box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
         }
 
-        header h2 { margin: 0; font-weight: 900; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-
         .container { max-width: 600px; margin: auto; padding: 20px; }
 
-        /* كرت المنتج */
         .product-list { display: grid; grid-template-columns: 1fr; gap: 25px; }
         
         .product-card {
@@ -47,28 +42,17 @@
             border: 1px solid #222;
             transition: 0.4s ease;
             cursor: pointer;
-            position: relative;
         }
 
         .product-card:hover {
             transform: translateY(-10px);
             border-color: var(--gold-primary);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
         }
 
-        .product-card img { width: 100%; height: 280px; object-fit: cover; filter: brightness(0.9); transition: 0.4s; }
-        .product-card:hover img { filter: brightness(1.1); }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; }
 
-        .product-info { padding: 20px; text-align: center; background: linear-gradient(to top, #000, transparent); }
-        .product-info h3 { margin: 10px 0; color: #fff; font-size: 22px; }
-        
-        .price-tag {
-            color: var(--gold-primary);
-            font-size: 26px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            display: block;
-        }
+        .product-info { padding: 20px; text-align: center; }
+        .price-tag { color: var(--gold-primary); font-size: 26px; font-weight: 900; display: block; margin-bottom: 15px; }
 
         .view-btn {
             background: linear-gradient(45deg, var(--gold-primary), var(--gold-secondary));
@@ -79,10 +63,8 @@
             font-weight: 900;
             width: 100%;
             cursor: pointer;
-            text-transform: uppercase;
         }
 
-        /* صفحة المنتج (النافذة المنبثقة) */
         #product-page {
             display: none;
             background: var(--dark-bg);
@@ -103,14 +85,35 @@
             margin: 20px;
             border-radius: 50px;
             cursor: pointer;
-            font-family: 'Cairo';
         }
+
+        /* معرض الصور */
+        .thumbnails-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .thumb-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .thumb-img:hover { border-color: var(--gold-primary); }
 
         .order-form {
             background: #111;
             padding: 25px;
             border-radius: 25px;
             border: 1px solid #333;
+            margin-top: 30px;
             margin-bottom: 40px;
         }
 
@@ -123,7 +126,6 @@
             margin-bottom: 20px;
         }
 
-        .total-card b { color: var(--gold-primary); }
         .total-amount { font-size: 28px; color: var(--gold-secondary); font-weight: 900; }
 
         input, select {
@@ -135,10 +137,7 @@
             border-radius: 12px;
             color: #fff;
             font-family: 'Cairo';
-            font-size: 16px;
         }
-
-        input:focus, select:focus { border-color: var(--gold-primary); outline: none; background: #222; }
 
         .confirm-btn {
             background: var(--gold-primary);
@@ -150,27 +149,18 @@
             font-size: 22px;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-            transition: 0.3s;
         }
-
-        .confirm-btn:hover { background: var(--gold-secondary); transform: scale(1.02); }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <header>
-    <h2> LUXURY STORE</h2>
-    <p style="color: rgba(255,255,255,0.6); margin:5px 0 0; font-size:14px; letter-spacing: 2px;">التميز في كل قطعة</p>
+    <h2 style="margin:0; letter-spacing: 2px;">LUXURY STORE</h2>
+    <p style="color: rgba(255,255,255,0.6); margin:5px 0 0; font-size:14px;">تميزك يبدأ من هنا</p>
 </header>
 
 <div class="container" id="main-view">
-    <div class="product-list" id="list-container">
-        </div>
+    <div class="product-list" id="list-container"></div>
 </div>
 
 <div id="product-page">
@@ -179,14 +169,21 @@
 </div>
 
 <script>
-    // 1. بيانات المنتجات (يمكنك تغييرها)
+    // 1. قاعدة البيانات (لاحظ استخدام مصفوفة images بدلاً من image)
     const products = [
-        { id: 1, name: "خلاط الذهب الملكي", price: 4500, image: "https://via.placeholder.com/600x450/111/d4af37?text=Product+1", desc: "تصميم عصري وقوة جبارة تناسب مطبخك الفاخر." },
-        { id: 2, name: "ساعة الغطس الذكية", price: 8900, image: "https://via.placeholder.com/600x450/111/d4af37?text=Product+2", desc: "دقة متناهية مع هيكل من الفولاذ المقاوم للصدأ." }
-        
+        { 
+            id: 1, 
+            name: "ماكينة الحلاقة الملكية Kemei KM-2024", 
+            price: 3500, 
+            images: [
+                "https://i.ibb.co/L6Vv0y7/kemei-luxury.jpg", // استبدل هذه الروابط بروابط صورك من ImgBB
+                "https://via.placeholder.com/600x450/111/d4af37?text=Side+View", 
+                "https://via.placeholder.com/600x450/111/d4af37?text=In+Box"
+            ], 
+            desc: "إصدار الحلاقة الفاخر للرجل العصري.. تصميم أسود كربوني وحجم مثالي للسفر. تمنحك حلاقة ناعمة ودقيقة مع شحن USB سريع." 
+        }
     ];
 
-    // 2. قائمة الـ 58 ولاية كاملة بأسعار الشحن
     const wilayas = [
         {n: "01-أدرار", p: 800}, {n: "02-الشلف", p: 500}, {n: "03-الأغواط", p: 600}, {n: "04-أم البواقي", p: 500}, {n: "05-باتنة", p: 500}, {n: "06-بجاية", p: 500}, {n: "07-بسكرة", p: 500}, {n: "08-بشار", p: 800}, {n: "09-البليدة", p: 400}, {n: "10-البويرة", p: 400}, {n: "11-تمنراست", p: 1000}, {n: "12-تبسة", p: 500}, {n: "13-تلمسان", p: 500}, {n: "14-تيارت", p: 500}, {n: "15-تيزي وزو", p: 400}, {n: "16-الجزائر", p: 300}, {n: "17-الجلفة", p: 500}, {n: "18-جيجل", p: 500}, {n: "19-سطيف", p: 400}, {n: "20-سعيدة", p: 500}, {n: "21-سكيكدة", p: 500}, {n: "22-سيدي بلعباس", p: 500}, {n: "23-عنابة", p: 500}, {n: "24-قالمة", p: 500}, {n: "25-قسنطينة", p: 400}, {n: "26-المدية", p: 400}, {n: "27-مستغانم", p: 500}, {n: "28-المسيلة", p: 500}, {n: "29-معسكر", p: 500}, {n: "30-ورقلة", p: 600}, {n: "31-وهران", p: 500}, {n: "32-البيض", p: 700}, {n: "33-إليزي", p: 1000}, {n: "34-برج بوعريريج", p: 400}, {n: "35-بومرداس", p: 400}, {n: "36-الطارف", p: 500}, {n: "37-تندوف", p: 1000}, {n: "38-تسمسيلت", p: 500}, {n: "39-الوادي", p: 600}, {n: "40-خنشلة", p: 500}, {n: "41-سوق أهراس", p: 500}, {n: "42-تيبازة", p: 400}, {n: "43-ميلة", p: 400}, {n: "44-عين الدفلى", p: 400}, {n: "45-النعامة", p: 700}, {n: "46-عين تموشنت", p: 500}, {n: "47-غرداية", p: 600}, {n: "48-غليزان", p: 500}, {n: "49-تيميمون", p: 800}, {n: "50-برج باجي مختار", p: 1200}, {n: "51-أولاد جلال", p: 600}, {n: "52-بني عباس", p: 800}, {n: "53-إن صالح", p: 1000}, {n: "54-إن قزام", p: 1200}, {n: "55-تقرت", p: 600}, {n: "56-جانت", p: 1200}, {n: "57-المغير", p: 600}, {n: "58-المنيعة", p: 700}
     ];
@@ -195,11 +192,11 @@
     products.forEach(p => {
         listContainer.innerHTML += `
             <div class="product-card" onclick="openProduct(${p.id})">
-                <img src="${p.image}" alt="${p.name}">
+                <img src="${p.images[0]}" alt="${p.name}">
                 <div class="product-info">
                     <h3>${p.name}</h3>
                     <span class="price-tag">${p.price} دج</span>
-                    <button class="view-btn">اكتشف العرض والطلب</button>
+                    <button class="view-btn">تفاصيل الطلب</button>
                 </div>
             </div>`;
     });
@@ -208,22 +205,31 @@
 
     function openProduct(id) {
         activeP = products.find(prod => prod.id === id);
-        let options = `<option value="0" data-price="0">-- اختر ولايتك --</option>`;
+        let options = `<option value="0">-- اختر ولايتك --</option>`;
         wilayas.forEach(w => { options += `<option value="${w.p}">${w.n}</option>`; });
 
+        // إنشاء المعرض
+        let galleryHTML = `<img src="${activeP.images[0]}" id="mainImg" style="width:100%; border-radius:20px; border: 1px solid var(--gold-primary);">`;
+        if(activeP.images.length > 1) {
+            galleryHTML += `<div class="thumbnails-container">`;
+            activeP.images.forEach(img => {
+                galleryHTML += `<img src="${img}" class="thumb-img" onclick="document.getElementById('mainImg').src='${img}'">`;
+            });
+            galleryHTML += `</div>`;
+        }
+
         document.getElementById('details-content').innerHTML = `
-            <img src="${activeP.image}" style="width:100%; border-radius:20px; border: 1px solid var(--gold-primary);">
+            ${galleryHTML}
             <h1 style="color:var(--gold-primary); text-align:center; margin-top:20px;">${activeP.name}</h1>
             <p style="color:#bbb; line-height:1.8; text-align:center;">${activeP.desc}</p>
-            
             <div class="order-form">
                 <div class="total-card">
-                    <div>سعر المنتج الفاخر: <b>${activeP.price} دج</b></div>
-                    <div style="margin:5px 0;">تكلفة الشحن الآمن: <b id="delVal">0</b> دج</div>
-                    <div class="total-amount">المجموع: <span id="totalVal">${activeP.price}</span> دج</div>
+                    <div>سعر المنتج: <b>${activeP.price} دج</b></div>
+                    <div style="margin:5px 0;">تكلفة الشحن: <b id="delVal">0</b> دج</div>
+                    <div class="total-amount">الإجمالي: <span id="totalVal">${activeP.price}</span> دج</div>
                 </div>
-                <input type="text" id="custName" placeholder="الاسم الكامل للزبون">
-                <input type="tel" id="custPhone" placeholder="رقم الهاتف النشط">
+                <input type="text" id="custName" placeholder="الاسم الكامل">
+                <input type="tel" id="custPhone" placeholder="رقم الهاتف">
                 <select id="custWilaya" onchange="updatePrice()">${options}</select>
                 <button class="confirm-btn" onclick="sendOrder()">تأكيد الطلب الفاخر</button>
             </div>`;
@@ -246,16 +252,15 @@
         const name = document.getElementById('custName').value;
         const phone = document.getElementById('custPhone').value;
         const wilayaSel = document.getElementById('custWilaya');
-        const wilayaText = wilayaSel.options[wilayaSel.selectedIndex].text;
         const total = document.getElementById('totalVal').innerText;
 
         if(name && phone && wilayaSel.value != "0") {
             const token = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
             const chat_id = "5981194410";
-            const message = `👑 طلبية VIP جديدة:\n\n📦 المنتج: ${activeP.name}\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilayaText}\n💰 المبلغ الإجمالي: ${total} دج`;
+            const message = `👑 طلبية LUXURY:\n📦 المنتج: ${activeP.name}\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilayaSel.options[wilayaSel.selectedIndex].text}\n💰 الإجمالي: ${total} دج`;
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`)
-            .then(() => { alert("نشكرك على ثقتك! تم استلام طلبك بنجاح."); closeProduct(); });
-        } else { alert("يرجى ملء البيانات واختيار الولاية لإتمام الطلب الفاخر."); }
+            .then(() => { alert("تم استلام طلبك بنجاح!"); closeProduct(); });
+        } else { alert("يرجى إكمال البيانات"); }
     }
 </script>
 </body>

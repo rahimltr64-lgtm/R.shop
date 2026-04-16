@@ -3,180 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | الفخامة</title>
+    <title>LUXURY STORE | 58 WILAYA</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #d4af37;
-            --dark: #0a0a0a;
-            --card: #151515;
-            --text: #ffffff;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            margin: 0; background-color: var(--dark); color: var(--text);
-            direction: rtl; text-align: right;
-        }
-
-        header {
-            padding: 30px; text-align: center;
-            background: linear-gradient(180deg, #1a1a1a, #0a0a0a);
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .logo { font-size: 30px; font-weight: 900; color: var(--gold); margin: 0; }
-
-        .container { max-width: 480px; margin: auto; padding: 15px; }
-
-        /* الكروت */
-        .product-card {
-            background: var(--card); border-radius: 20px; overflow: hidden;
-            margin-bottom: 30px; border: 1px solid #222; cursor: pointer;
-        }
-
-        .product-card img { width: 100%; height: 300px; object-fit: cover; }
-        
-        .p-info { padding: 20px; text-align: center; }
-        .price { color: var(--gold); font-size: 26px; font-weight: 900; }
-
-        /* صفحة المنتج */
-        #product-page {
-            display: none; position: fixed; top: 0; left: 0; width: 100%;
-            height: 100%; background: var(--dark); z-index: 9999; overflow-y: auto;
-        }
-
-        .back-btn {
-            background: none; color: white; border: 1px solid var(--gold);
-            padding: 10px 25px; margin: 15px; border-radius: 50px; cursor: pointer;
-        }
-
-        /* الاستمارة */
-        .order-form {
-            background: #111; padding: 20px; border-radius: 20px;
-            border: 1px solid #333; margin-top: 20px;
-        }
-
-        input, select {
-            width: 100%; padding: 15px; margin: 10px 0;
-            background: #1a1a1a; border: 1px solid #333;
-            color: white; border-radius: 12px; font-family: 'Cairo';
-            box-sizing: border-box; font-size: 16px;
-        }
-
-        .confirm-btn {
-            background: var(--gold); color: black; border: none;
-            padding: 18px; width: 100%; border-radius: 12px;
-            font-size: 20px; font-weight: 900; cursor: pointer;
-        }
-
-        .total-box {
-            background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold);
-            padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px;
-        }
+        :root { --gold: #d4af37; --dark: #0a0a0a; --card: #151515; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--dark); color: white; direction: rtl; }
+        header { padding: 25px; text-align: center; border-bottom: 2px solid var(--gold); background: #111; box-shadow: 0 4px 15px rgba(212,175,55,0.2); }
+        .container { max-width: 450px; margin: auto; padding: 15px; }
+        .product-card { background: var(--card); border-radius: 20px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; cursor: pointer; }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; }
+        .p-info { padding: 15px; text-align: center; }
+        #product-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 9999; overflow-y: auto; }
+        .order-form { background: #111; padding: 20px; border-radius: 20px; border: 1px solid #333; margin-top: 15px; margin-bottom: 50px; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; }
+        .confirm-btn { background: var(--gold); color: black; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 20px; font-weight: 900; cursor: pointer; }
+        .total-box { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1 class="logo">LUXURY STORE</h1>
-</header>
+<header><h1>LUXURY STORE</h1></header>
 
-<div class="container" id="main-view">
-    <div id="list-container"></div>
-</div>
+<div class="container" id="main-list"></div>
 
 <div id="product-page">
-    <button class="back-btn" onclick="closeProduct()">⬅️ عودة</button>
+    <button onclick="document.getElementById('product-page').style.display='none'" style="margin:15px; background:none; color:white; border:1px solid var(--gold); padding:8px 20px; border-radius:50px; cursor:pointer;">⬅️ عودة</button>
     <div id="details-content" class="container"></div>
 </div>
 
 <script>
-    // 1. البيانات (عدل هنا فقط)
-    const botToken = "ضـع_تـوكـن_الـبـوت_هـنـا";
-    const chatId = "ضـع_الآيـدي_الـخـاص_بـك";
+    /* ==========================================
+       🛑 بيانات تلغرام (ضعها هنا بدقة) 🛑
+    ========================================== */
+    const TELEGRAM_TOKEN = "ضع_التوكن_هنا"; 
+    const TELEGRAM_CHAT_ID = "ضع_الآيدي_هنا";
 
+    /* ==========================================
+       📦 قائمة المنتجات
+    ========================================== */
     const products = [
         {
             id: 1,
-            name: "ماكينة الحلاقة Kemei KM-2024",
+            name: "ماكينة الحلاقة Kemei V-Gold",
             price: 3500,
-            image: "https://i.ibb.co/kg7mCQJT/H811569022fb24d11bda211ccb832607fk-jpg-960x960q80.jpg",
-            desc: "حلاقة ناعمة واحترافية. النسخة الأصلية."
+            image: "https://i.ibb.co/kg7mCQJT/H811569022fb24d11bda211ccb832607fk-jpg-960x960q80.jpg"
         }
     ];
 
+    /* ==========================================
+       📍 جميع الولايات الـ 58 (ترتيب رسمي)
+    ========================================== */
     const wilayas = [
-        {n: "16-الجزائر", p: 400}, {n: "19-سطيف", p: 300}, {n: "25-قسنطينة", p: 500},
-        {n: "31-وهران", p: 600}, {n: "06-بجاية", p: 500}, {n: "05-باتنة", p: 500}
-        // أضف البقية بنفس التنسيق
+        {n: "01-أدرار", p: 1000}, {n: "02-الشلف", p: 600}, {n: "03-الأغواط", p: 700}, {n: "04-أم البواقي", p: 600}, {n: "05-باتنة", p: 600},
+        {n: "06-بجاية", p: 600}, {n: "07-بسكرة", p: 600}, {n: "08-بشار", p: 1000}, {n: "09-البليدة", p: 450}, {n: "10-البويرة", p: 600},
+        {n: "11-تمنراست", p: 1200}, {n: "12-تبسة", p: 600}, {n: "13-تلمسان", p: 700}, {n: "14-تيارت", p: 700}, {n: "15-تيزي وزو", p: 600},
+        {n: "16-الجزائر العاصمة", p: 400}, {n: "17-الجلفة", p: 700}, {n: "18-جيجل", p: 600}, {n: "19-سطيف", p: 300}, {n: "20-سعيدة", p: 700},
+        {n: "21-سكيكدة", p: 600}, {n: "22-سيدي بلعباس", p: 700}, {n: "23-عنابة", p: 600}, {n: "24-قالمة", p: 600}, {n: "25-قسنطينة", p: 500},
+        {n: "26-المدية", p: 600}, {n: "27-مستغانم", p: 700}, {n: "28-المسيلة", p: 650}, {n: "29-معسكر", p: 700}, {n: "30-ورقلة", p: 800},
+        {n: "31-وهران", p: 600}, {n: "32-البيض", p: 850}, {n: "33-إليزي", p: 1200}, {n: "34-برج بوعريريج", p: 500}, {n: "35-بومرداس", p: 500},
+        {n: "36-الطارف", p: 650}, {n: "37-تندوف", p: 1200}, {n: "38-تسمسيلت", p: 700}, {n: "39-الوادي", p: 800}, {n: "40-خنشلة", p: 600},
+        {n: "41-سوق أهراس", p: 650}, {n: "42-تيبازة", p: 500}, {n: "43-ميلة", p: 550}, {n: "44-عين الدفلى", p: 650}, {n: "45-النعامة", p: 850},
+        {n: "46-عين تموشنت", p: 700}, {n: "47-غرداية", p: 800}, {n: "48-غليزان", p: 700}, {n: "49-تيميمون", p: 1000}, {n: "50-برج باجي مختار", p: 1500},
+        {n: "51-أولاد جلال", p: 750}, {n: "52-بني عباس", p: 1000}, {n: "53-إن صالح", p: 1200}, {n: "54-إن قزام", p: 1500}, {n: "55-تقرت", p: 800},
+        {n: "56-جانت", p: 1500}, {n: "57-المغير", p: 750}, {n: "58-المنيعة", p: 900}
     ];
 
-    // 2. عرض المنتجات
-    const list = document.getElementById('list-container');
+    const list = document.getElementById('main-list');
     products.forEach(p => {
-        list.innerHTML += `
-            <div class="product-card" onclick="openProduct(${p.id})">
-                <img src="${p.image}">
-                <div class="p-info">
-                    <h3>${p.name}</h3>
-                    <div class="price">${p.price} دج</div>
-                </div>
-            </div>`;
+        list.innerHTML += `<div class="product-card" onclick="openP(${p.id})"><img src="${p.image}"><div class="p-info"><h3>${p.name}</h3><div style="color:var(--gold); font-size:22px;">${p.price} دج</div></div></div>`;
     });
 
-    let currentP = null;
-
-    function openProduct(id) {
-        currentP = products.find(x => x.id === id);
-        let options = `<option value="0">-- اختر الولاية --</option>`;
-        wilayas.forEach(w => { options += `<option value="${w.p}">${w.n}</option>`; });
+    let activeP = null;
+    function openP(id) {
+        activeP = products.find(x => x.id === id);
+        let opts = `<option value="none">-- اختر الولاية (58 ولاية) --</option>`;
+        wilayas.forEach(w => opts += `<option value="${w.p}">${w.n}</option>`);
 
         document.getElementById('details-content').innerHTML = `
-            <img src="${currentP.image}" style="width:100%; border-radius:15px;">
-            <h2 style="text-align:center;">${currentP.name}</h2>
-            <p style="text-align:center; color:#aaa;">${currentP.desc}</p>
+            <img src="${activeP.image}" style="width:100%; border-radius:15px; border:1px solid #333;">
             <div class="order-form">
-                <div class="total-box">
-                    <div style="font-size:22px; font-weight:900;">الإجمالي: <span id="totalV">${currentP.price}</span> دج</div>
-                </div>
-                <input type="text" id="custName" placeholder="الإسم الكامل">
-                <input type="tel" id="custPhone" placeholder="رقم الهاتف">
-                <select id="custWilaya" onchange="document.getElementById('totalV').innerText = ${currentP.price} + parseInt(this.value)">
-                    ${options}
-                </select>
-                <input type="text" id="custCommune" placeholder="البلدية">
-                <button class="confirm-btn" onclick="sendToTelegram()">تأكيد الطلب</button>
+                <div class="total-box"><b>الإجمالي: <span id="finalP">${activeP.price}</span> دج</b></div>
+                <input type="text" id="n" placeholder="الإسم الكامل">
+                <input type="tel" id="ph" placeholder="رقم الهاتف">
+                <select id="w" onchange="const cost=this.value==='none'?0:parseInt(this.value); document.getElementById('finalP').innerText = ${activeP.price} + cost;">${opts}</select>
+                <input type="text" id="c" placeholder="البلدية">
+                <button class="confirm-btn" onclick="send()">تأكيد الطلب الآن</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
     }
 
-    function sendToTelegram() {
-        const name = document.getElementById('custName').value;
-        const phone = document.getElementById('custPhone').value;
-        const wilayaSelect = document.getElementById('custWilaya');
-        const wilayaText = wilayaSelect.options[wilayaSelect.selectedIndex].text;
-        const commune = document.getElementById('custCommune').value;
-        const total = document.getElementById('totalV').innerText;
+    function send() {
+        const n = document.getElementById('n').value;
+        const ph = document.getElementById('ph').value;
+        const w_sel = document.getElementById('w');
+        const c = document.getElementById('c').value;
+        const tot = document.getElementById('finalP').innerText;
 
-        if(name && phone && commune && wilayaSelect.value !== "0") {
-            const msg = `🚀 طلب جديد:\nالمنتج: ${currentP.name}\nالاسم: ${name}\nالهاتف: ${phone}\nالولاية: ${wilayaText}\nالبلدية: ${commune}\nالإجمالي: ${total} دج`;
+        if(n && ph && c && w_sel.value !== "none") {
+            const w_txt = w_sel.options[w_sel.selectedIndex].text;
+            const msg = `👑 طلبية LUXURY:\n\n📦 المنتج: ${activeP.name}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_txt}\n🏘️ البلدية: ${c}\n💰 الإجمالي: ${tot} دج`;
             
             fetch(`https://api.telegram.org/bot${8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM}/sendMessage?chat_id=${5981194410}&text=${encodeURIComponent(msg)}`)
-            .then(() => {
-                document.getElementById('details-content').innerHTML = `
-                    <div style="text-align:center; padding:50px 0;">
-                        <h1 style="color:var(--gold);">✅ شكراً لك!</h1>
-                        <p>تم استلام طلبك بنجاح. سنتصل بك قريباً.</p>
-                        <button class="confirm-btn" onclick="location.reload()">العودة</button>
-                    </div>`;
-            });
+            .then(res => {
+                if(res.ok) {
+                    document.getElementById('details-content').innerHTML = "<div style='text-align:center; padding:50px 0;'><h2>✅ تم استلام طلبك!</h2><p>سنتصل بك قريباً لتأكيد الشحن.</p><button class='confirm-btn' onclick='location.reload()'>العودة للمتجر</button></div>";
+                } else { alert("خطأ في بيانات تلغرام"); }
+            }).catch(() => alert("تأكد من اتصالك بالإنترنت"));
         } else {
-            alert("يرجى إكمال البيانات");
+            alert("يرجى ملء جميع البيانات");
         }
     }
-
-    function closeProduct() { document.getElementById('product-page').style.display = 'none'; }
 </script>
 </body>
 </html>

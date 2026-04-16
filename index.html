@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجري - اطلب الآن</title>
+    <style>
+        :root { --primary-color: #e67e22; --dark-color: #2c3e50; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f4f4; }
+        .container { max-width: 500px; margin: auto; background: #fff; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .product-img { width: 100%; height: auto; border-bottom: 3px solid var(--primary-color); }
+        .content { padding: 20px; text-align: center; }
+        .price { color: var(--primary-color); font-size: 24px; font-weight: bold; }
+        .old-price { text-decoration: line-through; color: #999; font-size: 18px; }
+        .form-group { margin-top: 20px; text-align: right; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .order-btn { background: #27ae60; color: #fff; border: none; padding: 15px; width: 100%; font-size: 20px; font-weight: bold; cursor: pointer; border-radius: 5px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://via.placeholder.com/500x400" alt="صورة المنتج" class="product-img">
+    
+    <div class="content">
+        <h2>اسم المنتج الاحترافي</h2>
+        <p class="price">3500 دج <span class="old-price">5800 دج</span></p>
+        <p>توصيل سريع لـ 58 ولاية والدفع عند الاستلام!</p>
+
+        <div class="form-group">
+            <label>الاسم الكامل:</label>
+            <input type="text" id="name" placeholder="أدخل اسمك">
+            
+            <label>رقم الهاتف:</label>
+            <input type="tel" id="phone" placeholder="0XXXXXXXXX">
+            
+            <label>الولاية:</label>
+            <select id="wilaya">
+                <option value="1">أدرار</option>
+                <option value="19">سطيف</option>
+                <option value="16">الجزائر العاصمة</option>
+                </select>
+
+            <button class="order-btn" onclick="sendOrder()">تأكيد الطلب الآن</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendOrder() {
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const wilaya = document.getElementById('wilaya').value;
+
+        if(name && phone) {
+            // هنا يتم الربط الآلي: إرسال الطلب لـ Telegram الخاص بك لتقوم بإدخاله في CodSnt
+            const message = `طلبية جديدة!📦\nالاسم: ${name}\nالهاتف: ${phone}\nالولاية: ${wilaya}`;
+            const token = "YOUR_BOT_TOKEN";
+            const chat_id = "YOUR_CHAT_ID";
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
+            
+            fetch(url).then(() => {
+                alert("تم استلام طلبك بنجاح! سنتصل بك قريباً.");
+            });
+        } else {
+            alert("يرجى ملء كافة المعلومات");
+        }
+    }
+</script>
+
+</body>
+</html>

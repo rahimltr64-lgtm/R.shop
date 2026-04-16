@@ -44,11 +44,6 @@
             cursor: pointer;
         }
 
-        .product-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--gold-primary);
-        }
-
         .product-card img { width: 100%; height: 280px; object-fit: cover; }
 
         .product-info { padding: 20px; text-align: center; }
@@ -169,16 +164,16 @@
 </div>
 
 <script>
-    // 1. قاعدة البيانات (لاحظ استخدام مصفوفة images بدلاً من image)
+    // تم وضع الروابط المنقاة هنا يا رحيم
     const products = [
         { 
             id: 1, 
             name: "ماكينة الحلاقة الملكية Kemei KM-2024", 
             price: 3500, 
             images: [
-                "https://i.ibb.co/L6Vv0y7/kemei-luxury.jpg", // استبدل هذه الروابط بروابط صورك من ImgBB
-                "https://via.placeholder.com/600x450/111/d4af37?text=Side+View", 
-                "https://via.placeholder.com/600x450/111/d4af37?text=In+Box"
+                "https://i.ibb.co/kg7mCQJT/H811569022fb24d11bda211ccb832607fk-jpg-960x960q80.jpg",
+                "https://i.ibb.co/fYRprL0N/H4dc30437beeb48efaaba10e35e8f0d38-E-jpg-960x960q80.jpg",
+                "https://i.ibb.co/PZGvQ6gt/7e69dfb1609a0651a6761fbfdcb28788.jpg"
             ], 
             desc: "إصدار الحلاقة الفاخر للرجل العصري.. تصميم أسود كربوني وحجم مثالي للسفر. تمنحك حلاقة ناعمة ودقيقة مع شحن USB سريع." 
         }
@@ -208,7 +203,6 @@
         let options = `<option value="0">-- اختر ولايتك --</option>`;
         wilayas.forEach(w => { options += `<option value="${w.p}">${w.n}</option>`; });
 
-        // إنشاء المعرض
         let galleryHTML = `<img src="${activeP.images[0]}" id="mainImg" style="width:100%; border-radius:20px; border: 1px solid var(--gold-primary);">`;
         if(activeP.images.length > 1) {
             galleryHTML += `<div class="thumbnails-container">`;

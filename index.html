@@ -102,6 +102,134 @@
             animation: shake 3s infinite;
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
 
+        .order-btn:hover { transform: scale(1.02); background: #2ecc71; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
 
+<div class="container">
+    <img src="ضع_رابط_الصورة_هنا" alt="Premium Product" class="product-img">
+    
+    <div class="content">
+        <h2 style="margin:0; font-weight:900;">ساعة رجالية فخمة  </h2>
+        <p style="color:#666; margin-bottom:20px;">توصيل سريع لباب المنزل والدفع عند الاستلام</p>
+        
+        <div class="price-tag">
+            <span class="old-price">5800 دج</span>
+            <span id="pPrice">3500</span> دج
+        </div>
 
+        <div class="form-group">
+            <input type="text" id="name" placeholder="الاسم الكامل">
+            <input type="tel" id="phone" placeholder="رقم الهاتف">
+            
+            <select id="wilaya" onchange="updateTotal()">
+                <option value="" data-price="0">اختر الولاية (58 ولاية)</option>
+                <option value="1" data-price="800">01 - أدرار</option>
+                <option value="2" data-price="500">02 - الشلف</option>
+                <option value="3" data-price="600">03 - الأغواط</option>
+                <option value="4" data-price="500">04 - أم البواقي</option>
+                <option value="5" data-price="500">05 - باتنة</option>
+                <option value="6" data-price="500">06 - بجاية</option>
+                <option value="7" data-price="600">07 - بسكرة</option>
+                <option value="8" data-price="800">08 - بشار</option>
+                <option value="9" data-price="400">09 - البليدة</option>
+                <option value="10" data-price="500">10 - البويرة</option>
+                <option value="11" data-price="1000">11 - تمنراست</option>
+                <option value="12" data-price="500">12 - تبسة</option>
+                <option value="13" data-price="500">13 - تلمسان</option>
+                <option value="14" data-price="500">14 - تيارت</option>
+                <option value="15" data-price="400">15 - تيزي وزو</option>
+                <option value="16" data-price="300">16 - الجزائر</option>
+                <option value="17" data-price="500">17 - الجلفة</option>
+                <option value="18" data-price="500">18 - جيجل</option>
+                <option value="19" data-price="400">19 - سطيف</option>
+                <option value="20" data-price="500">20 - سعيدة</option>
+                <option value="21" data-price="500">21 - سكيكدة</option>
+                <option value="22" data-price="500">22 - سيدي بلعباس</option>
+                <option value="23" data-price="500">23 - عنابة</option>
+                <option value="24" data-price="500">24 - قالمة</option>
+                <option value="25" data-price="400">25 - قسنطينة</option>
+                <option value="26" data-price="500">26 - المدية</option>
+                <option value="27" data-price="500">27 - مستغانم</option>
+                <option value="28" data-price="500">28 - المسيلة</option>
+                <option value="29" data-price="500">29 - معسكر</option>
+                <option value="30" data-price="600">30 - ورقلة</option>
+                <option value="31" data-price="500">31 - وهران</option>
+                <option value="32" data-price="700">32 - البيض</option>
+                <option value="33" data-price="1200">33 - إليزي</option>
+                <option value="34" data-price="500">34 - برج بوعريريج</option>
+                <option value="35" data-price="400">35 - بومرداس</option>
+                <option value="36" data-price="500">36 - الطارف</option>
+                <option value="37" data-price="1000">37 - تندوف</option>
+                <option value="38" data-price="500">38 - تسمسيلت</option>
+                <option value="39" data-price="600">39 - الوادي</option>
+                <option value="40" data-price="500">40 - خنشلة</option>
+                <option value="41" data-price="500">41 - سوق أهراس</option>
+                <option value="42" data-price="400">42 - تيبازة</option>
+                <option value="43" data-price="500">43 - ميلة</option>
+                <option value="44" data-price="500">44 - عين الدفلى</option>
+                <option value="45" data-price="700">45 - النعامة</option>
+                <option value="46" data-price="500">46 - عين تموشنت</option>
+                <option value="47" data-price="700">47 - غرداية</option>
+                <option value="48" data-price="500">48 - غليزان</option>
+                <option value="49" data-price="800">49 - تيميمون</option>
+                <option value="50" data-price="1000">50 - برج باجي مختار</option>
+                <option value="51" data-price="600">51 - أولاد جلال</option>
+                <option value="52" data-price="600">52 - بني عباس</option>
+                <option value="53" data-price="1200">53 - إن صالح</option>
+                <option value="54" data-price="1200">54 - إن قزام</option>
+                <option value="55" data-price="600">55 - تقرت</option>
+                <option value="56" data-price="1200">56 - جانت</option>
+                <option value="57" data-price="600">57 - المغير</option>
+                <option value="58" data-price="600">58 - المنيعة</option>
+            </select>
+        </div>
+
+        <div class="total-box">
+            <div style="font-size:14px; color:#888;">سعر التوصيل: <span id="delPrice">0</span> دج</div>
+            <div style="font-size:22px; font-weight:bold;">الإجمالي: <span id="totalPrice">3500</span> دج</div>
+        </div>
+
+        <button class="order-btn" onclick="sendToTelegram()">تأكيد الطلب الآن</button>
+    </div>
+</div>
+
+<script>
+    const itemCost = 3500; // عدل سعر المنتج هنا
+
+    function updateTotal() {
+        const select = document.getElementById('wilaya');
+        const delivery = parseInt(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
+        document.getElementById('delPrice').innerText = delivery;
+        document.getElementById('totalPrice').innerText = itemCost + delivery;
+    }
+
+    function sendToTelegram() {
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const wilaya = document.getElementById('wilaya').options[document.getElementById('wilaya').selectedIndex].text;
+        const total = document.getElementById('totalPrice').innerText;
+
+        if(name && phone && document.getElementById('wilaya').value != "") {
+            const token = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
+            const chat_id = "5981194410";
+            const msg = `👑 طلبية VIP جديدة:\n\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n💰 المبلغ المطلوب: ${total} دج`;
+            
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}`)
+            .then(() => alert("تم إرسال طلبك بنجاح! سنتصل بك فوراً."));
+        } else {
+            alert("يرجى إدخال جميع المعلومات واختيار الولاية");
+        }
+    }
+</script>
+
+</body>
+</html>

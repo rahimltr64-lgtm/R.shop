@@ -8,97 +8,63 @@
     <style>
         :root {
             --gold: #d4af37;
-            --gold-light: #f1c40f;
             --dark-bg: #0a0a0a;
-            --dark-card: #141414;
-            --text: #e0e0e0;
+            --card-bg: #141414;
+            --text-color: #ffffff;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
             background-color: var(--dark-bg);
-            color: var(--text);
-            overflow-x: hidden;
+            color: var(--text-color);
+            direction: rtl;
         }
 
         header {
-            background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
-            color: var(--gold);
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
             padding: 25px;
             text-align: center;
             border-bottom: 2px solid var(--gold);
-            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
         .container { max-width: 500px; margin: auto; padding: 15px; }
 
-        /* قائمة المنتجات */
-        .product-list { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        /* المنتجات */
         .product-card {
-            background: var(--dark-card);
+            background: var(--card-bg);
             border-radius: 20px;
+            margin-bottom: 25px;
             overflow: hidden;
             border: 1px solid #222;
-            cursor: pointer;
-            transition: 0.3s ease;
         }
-        .product-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .product-card img { width: 100%; height: 260px; object-fit: cover; }
-        .product-info { padding: 15px; text-align: center; }
-        .price-tag { color: var(--gold); font-size: 24px; font-weight: 900; margin-bottom: 10px; display: block; }
 
-        /* صفحة المنتج */
+        .product-card img { width: 100%; height: 280px; object-fit: cover; }
+        .product-info { padding: 15px; text-align: center; }
+        .price { color: var(--gold); font-size: 26px; font-weight: 900; }
+
+        /* صفحة الطلب */
         #product-page {
             display: none;
-            background: var(--dark-bg);
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--dark-bg);
+            z-index: 1000;
             overflow-y: auto;
         }
 
-        .back-btn {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border: 1px solid var(--gold);
-            padding: 10px 20px;
-            margin: 15px;
-            border-radius: 50px;
-            cursor: pointer;
-        }
-
-        .thumbnails {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            overflow-x: auto;
-            padding: 5px;
-        }
-        .thumb {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            cursor: pointer;
-            object-fit: cover;
-        }
-
-        /* الاستمارة */
         .order-form {
             background: #111;
             padding: 20px;
             border-radius: 20px;
             border: 1px solid #333;
-            margin-top: 20px;
-            margin-bottom: 50px;
+            margin-top: 15px;
         }
 
-        .total-card {
-            background: rgba(212, 175, 55, 0.05);
+        .total-box {
+            background: rgba(212, 175, 55, 0.1);
             border: 1px solid var(--gold);
             padding: 15px;
             border-radius: 15px;
@@ -106,23 +72,21 @@
             margin-bottom: 15px;
         }
 
-        .total-amount { font-size: 26px; color: var(--gold-light); font-weight: 900; }
-
         input, select {
             width: 100%;
             padding: 14px;
             margin: 10px 0;
             background: #1a1a1a;
             border: 1px solid #333;
+            color: white;
             border-radius: 12px;
-            color: #fff;
             font-family: 'Cairo';
             box-sizing: border-box;
         }
 
-        .confirm-btn {
-            background: linear-gradient(45deg, var(--gold), #b8860b);
-            color: #000;
+        .btn-confirm {
+            background: linear-gradient(90deg, #d4af37, #f1c40f);
+            color: black;
             border: none;
             padding: 18px;
             width: 100%;
@@ -130,148 +94,138 @@
             font-size: 20px;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
-        .success-msg {
-            text-align: center;
-            padding: 40px 20px;
+        .back-btn {
+            background: none;
+            color: white;
+            border: 1px solid var(--gold);
+            padding: 8px 20px;
+            margin: 15px;
+            border-radius: 50px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h2 style="margin:0;">LUXURY STORE</h2>
-    <p style="font-size:12px; opacity:0.6;">إبداع، فخامة، تميز</p>
+    <h1 style="margin:0;">LUXURY STORE</h1>
+    <p style="font-size:12px; color:var(--gold);">كل ما يحتاجه الرجل الجزائري الأنيق</p>
 </header>
 
 <div class="container" id="main-view">
-    <div class="product-list" id="list-container"></div>
+    <div id="list-container"></div>
 </div>
 
 <div id="product-page">
-    <button class="back-btn" onclick="closeProduct()">⬅️ العودة للمتجر</button>
+    <button class="back-btn" onclick="closeProduct()">⬅️ عودة</button>
     <div id="details-content" class="container"></div>
 </div>
 
 <script>
-    // 1. قاعدة بيانات منتجاتك الخاصة (يمكنك إضافة المزيد هنا)
-    const products = [
-        { 
-            id: 1, 
-            name: "ماكينة الحلاقة الملكية Kemei KM-2024", 
-            price: 3500, 
-            images: [
-                "https://i.ibb.co/kg7mCQJT/H811569022fb24d11bda211ccb832607fk-jpg-960x960q80.jpg",
-                "https://i.ibb.co/fYRprL0N/H4dc30437beeb48efaaba10e35e8f0d38-E-jpg-960x960q80.jpg",
-                "https://i.ibb.co/PZGvQ6gt/7e69dfb1609a0651a6761fbfdcb28788.jpg"
-            ], 
-            desc: "النسخة الأصلية والأكثر فخامة. حلاقة ناعمة، بطارية قوية، وتصميم عصري يليق بك. ضمان الجودة من Luxury Store." 
+    // 1. قائمة المنتجات (أضف منتجاتك هنا)
+    const myProducts = [
+        {
+            id: 1,
+            name: "ماكينة الحلاقة Kemei KM-2024",
+            price: 3500,
+            image: "https://i.ibb.co/kg7mCQJT/H811569022fb24d11bda211ccb832607fk-jpg-960x960q80.jpg",
+            description: "النسخة الأصلية الاحترافية، مثالية للحلاقة اليومية وتحديد اللحية."
         }
     ];
 
-    // 2. قائمة الـ 58 ولاية بأسعار الشحن (Yalidine/ZR 2026)
-    const wilayas = [
-        {n: "01-أدرار", p: 1000}, {n: "02-الشلف", p: 600}, {n: "03-الأغواط", p: 700}, {n: "04-أم البواقي", p: 600}, {n: "05-باتنة", p: 600}, 
-        {n: "06-بجاية", p: 600}, {n: "07-بسكرة", p: 600}, {n: "08-بشار", p: 1000}, {n: "09-البليدة", p: 500}, {n: "10-البويرة", p: 600},
-        {n: "11-تمنراست", p: 1200}, {n: "12-تبسة", p: 600}, {n: "13-تلمسان", p: 700}, {n: "14-تيارت", p: 700}, {n: "15-تيزي وزو", p: 600},
-        {n: "16-الجزائر العاصمة", p: 400}, {n: "17-الجلفة", p: 700}, {n: "18-جيجل", p: 600}, {n: "19-سطيف", p: 500}, {n: "20-سعيدة", p: 700},
-        {n: "21-سكيكدة", p: 600}, {n: "22-سيدي بلعباس", p: 700}, {n: "23-عنابة", p: 600}, {n: "24-قالمة", p: 600}, {n: "25-قسنطينة", p: 500},
-        {n: "26-المدية", p: 600}, {n: "27-مستغانم", p: 700}, {n: "28-المسيلة", p: 650}, {n: "29-معسكر", p: 700}, {n: "30-ورقلة", p: 800},
-        {n: "31-وهران", p: 600}, {n: "32-البيض", p: 850}, {n: "33-إليزي", p: 1200}, {n: "34-برج بوعريريج", p: 500}, {n: "35-بومرداس", p: 500},
-        {n: "36-الطارف", p: 650}, {n: "37-تندوف", p: 1200}, {n: "38-تسمسيلت", p: 700}, {n: "39-الوادي", p: 800}, {n: "40-خنشلة", p: 600},
-        {n: "41-سوق أهراس", p: 650}, {n: "42-تيبازة", p: 500}, {n: "43-ميلة", p: 550}, {n: "44-عين الدفلى", p: 650}, {n: "45-النعامة", p: 850},
-        {n: "46-عين تموشنت", p: 700}, {n: "47-غرداية", p: 800}, {n: "48-غليزان", p: 700}, {n: "49-تيميمون", p: 1000}, {n: "50-برج باجي مختار", p: 1500},
-        {n: "51-أولاد جلال", p: 750}, {n: "52-بني عباس", p: 1000}, {n: "53-إن صالح", p: 1200}, {n: "54-إن قزام", p: 1500}, {n: "55-تقرت", p: 800},
-        {n: "56-جانت", p: 1500}, {n: "57-المغير", p: 750}, {n: "58-المنيعة", p: 900}
+    // 2. قائمة الـ 58 ولاية بأسعار الشحن التقريبية (يمكنك تعديل الأسعار هنا)
+    const myShipping = [
+        {name: "01-أدرار", cost: 1000}, {name: "02-الشلف", cost: 600}, {name: "03-الأغواط", cost: 700}, {name: "04-أم البواقي", cost: 600}, {name: "05-باتنة", cost: 600},
+        {name: "06-بجاية", cost: 600}, {name: "07-بسكرة", cost: 600}, {name: "08-بشار", cost: 1000}, {name: "09-البليدة", cost: 500}, {name: "10-البويرة", cost: 600},
+        {name: "11-تمنراست", cost: 1200}, {name: "12-تبسة", cost: 600}, {name: "13-تلمسان", cost: 700}, {name: "14-تيارت", cost: 700}, {name: "15-تيزي وزو", cost: 600},
+        {name: "16-الجزائر العاصمة", cost: 400}, {name: "17-الجلفة", cost: 700}, {name: "18-جيجل", cost: 600}, {name: "19-سطيف", cost: 500}, {name: "20-سعيدة", cost: 700},
+        {name: "21-سكيكدة", cost: 600}, {name: "22-سيدي بلعباس", cost: 700}, {name: "23-عنابة", cost: 600}, {name: "24-قالمة", cost: 600}, {name: "25-قسنطينة", cost: 500},
+        {name: "26-المدية", cost: 600}, {name: "27-مستغانم", cost: 700}, {name: "28-المسيلة", cost: 650}, {name: "29-معسكر", cost: 700}, {name: "30-ورقلة", cost: 800},
+        {name: "31-وهران", cost: 600}, {name: "32-البيض", cost: 850}, {name: "33-إليزي", cost: 1200}, {name: "34-برج بوعريريج", cost: 500}, {name: "35-بومرداس", cost: 500},
+        {name: "36-الطارف", cost: 650}, {name: "37-تندوف", cost: 1200}, {name: "38-تسمسيلت", cost: 700}, {name: "39-الوادي", cost: 800}, {name: "40-خنشلة", cost: 600},
+        {name: "41-سوق أهراس", cost: 650}, {name: "42-تيبازة", cost: 500}, {name: "43-ميلة", cost: 550}, {name: "44-عين الدفلى", cost: 650}, {name: "45-النعامة", cost: 850},
+        {name: "46-عين تموشنت", cost: 700}, {name: "47-غرداية", cost: 800}, {name: "48-غليزان", cost: 700}, {name: "49-تيميمون", cost: 1000}, {name: "50-برج باجي مختار", cost: 1500},
+        {name: "51-أولاد جلال", cost: 750}, {name: "52-بني عباس", cost: 1000}, {name: "53-إن صالح", cost: 1200}, {name: "54-إن قزام", cost: 1500}, {name: "55-تقرت", cost: 800},
+        {name: "56-جانت", cost: 1500}, {name: "57-المغير", cost: 750}, {name: "58-المنيعة", cost: 900}
     ];
 
-    // عرض قائمة المنتجات
-    const list = document.getElementById('list-container');
-    products.forEach(p => {
-        list.innerHTML += `
-            <div class="product-card" onclick="openProduct(${p.id})">
-                <img src="${p.images[0]}">
-                <div class="product-info">
-                    <h3>${p.name}</h3>
-                    <span class="price-tag">${p.price} دج</span>
-                    <button class="confirm-btn" style="padding:10px; font-size:16px;">اطلب الآن</button>
-                </div>
-            </div>`;
-    });
+    // 3. معلومات تلغرام
+    const botToken = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
+    const chatId = "5981194410";
 
-    let currentP = null;
+    const listDiv = document.getElementById('list-container');
+    function render() {
+        myProducts.forEach(p => {
+            listDiv.innerHTML += `
+                <div class="product-card" onclick="openProduct(${p.id})">
+                    <img src="${p.image}">
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        <div class="price">${p.price} دج</div>
+                    </div>
+                </div>`;
+        });
+    }
 
+    let activeP = null;
     function openProduct(id) {
-        currentP = products.find(p => p.id === id);
-        let options = `<option value="0">-- اختر الولاية --</option>`;
-        wilayas.forEach(w => { options += `<option value="${w.p}">${w.n}</option>`; });
+        activeP = myProducts.find(p => p.id === id);
+        let options = `<option value="none">-- اختر ولايتك --</option>`;
+        myShipping.forEach(s => { options += `<option value="${s.cost}">${s.name}</option>`; });
 
         document.getElementById('details-content').innerHTML = `
-            <img src="${currentP.images[0]}" id="mainImg" style="width:100%; border-radius:15px; border:1px solid var(--gold);">
-            <div class="thumbnails">
-                ${currentP.images.map(img => `<img src="${img}" class="thumb" onclick="document.getElementById('mainImg').src='${img}'">`).join('')}
-            </div>
-            <h2 style="color:var(--gold); text-align:center; margin-top:20px;">${currentP.name}</h2>
-            <p style="color:#bbb; text-align:center; font-size:14px; line-height:1.6;">${currentP.desc}</p>
-            
+            <img src="${activeP.image}" style="width:100%; border-radius:15px; border:1px solid var(--gold);">
+            <h2 style="text-align:center;">${activeP.name}</h2>
             <div class="order-form">
-                <div class="total-card">
-                    <div class="total-amount">الإجمالي: <span id="totalVal">${currentP.price}</span> دج</div>
-                    <div style="font-size:12px; opacity:0.6;">سعر التوصيل: <span id="delVal">0</span> دج</div>
+                <div class="total-box">
+                    <div style="font-size:24px; font-weight:900;">الإجمالي: <span id="finalPrice">${activeP.price}</span> دج</div>
+                    <div style="font-size:12px; opacity:0.7;">توصيل: <span id="shipPrice">0</span> دج</div>
                 </div>
-                <input type="text" id="custName" placeholder="الإسم الكامل">
-                <input type="tel" id="custPhone" placeholder="رقم الهاتف">
-                <select id="custWilaya" onchange="updatePrice()">${options}</select>
-                <input type="text" id="custCommune" placeholder="البلدية أو العنوان">
-                <button class="confirm-btn" onclick="sendOrder()">تأكيد الطلب</button>
+                <input type="text" id="cName" placeholder="الإسم الكامل">
+                <input type="tel" id="cPhone" placeholder="رقم الهاتف">
+                <select id="cWilaya" onchange="updateTotal()">${options}</select>
+                <input type="text" id="cCommune" placeholder="البلدية">
+                <input type="text" id="cAddress" placeholder="العنوان الدقيق (اختياري)">
+                <button class="btn-confirm" onclick="confirmOrder()">تأكيد الطلب</button>
             </div>`;
-        
         document.getElementById('product-page').style.display = 'block';
-        window.scrollTo(0,0);
     }
 
-    function updatePrice() {
-        const delivery = parseInt(document.getElementById('custWilaya').value);
-        document.getElementById('delVal').innerText = delivery;
-        document.getElementById('totalVal').innerText = currentP.price + delivery;
+    function updateTotal() {
+        const cost = document.getElementById('cWilaya').value;
+        if(cost !== "none") {
+            document.getElementById('finalPrice').innerText = activeP.price + parseInt(cost);
+            document.getElementById('shipPrice').innerText = cost;
+        }
     }
 
-    function sendOrder() {
-        const name = document.getElementById('custName').value;
-        const phone = document.getElementById('custPhone').value;
-        const wilayaSelect = document.getElementById('custWilaya');
-        const wilaya = wilayaSelect.options[wilayaSelect.selectedIndex].text;
-        const commune = document.getElementById('custCommune').value;
-        const total = document.getElementById('totalVal').innerText;
+    function confirmOrder() {
+        const name = document.getElementById('cName').value;
+        const phone = document.getElementById('cPhone').value;
+        const wilaya = document.getElementById('cWilaya');
+        const commune = document.getElementById('cCommune').value;
 
-        if(name && phone && commune && wilayaSelect.value != "0") {
-            const token = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
-            const chat_id = "5981194410";
-            const msg = `🚀 طلبية جديدة في LUXURY STORE:\n\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n🏘️ البلدية: ${commune}\n💰 الإجمالي: ${total} دج\n📦 المنتج: ${currentP.name}`;
+        if(name && phone && commune && wilaya.value !== "none") {
+            const msg = `👑 طلبية LUXURY:\n📦 المنتج: ${activeP.name}\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya.options[wilaya.selectedIndex].text}\n🏘️ البلدية: ${commune}\n💰 السعر: ${document.getElementById('finalPrice').innerText} دج`;
             
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}`)
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`)
             .then(() => {
-                // صفحة الشكر الفاخرة
                 document.getElementById('details-content').innerHTML = `
-                    <div class="success-msg">
-                        <div style="font-size:60px;">✅</div>
-                        <h1 style="color:var(--gold);">تم استلام طلبك بنجاح!</h1>
-                        <p style="font-size:18px;">شكراً لك يا <b>${name}</b> على ثقتك في Luxury Store.</p>
-                        <p>سيتصل بك فريق العمل قريباً لتأكيد موعد الشحن.</p>
-                        <br>
-                        <button class="confirm-btn" onclick="location.reload()">العودة للمتجر</button>
+                    <div style="text-align:center; padding:50px 0;">
+                        <h1 style="color:var(--gold);">✅ شكراً لك!</h1>
+                        <p>تم استلام طلبك يا ${name}. سنتصل بك قريباً.</p>
+                        <button class="btn-confirm" onclick="location.reload()">العودة للمتجر</button>
                     </div>`;
             });
         } else {
-            alert("يرجى إكمال كافة البيانات لاختيار الولاية والبلدية");
+            alert("يرجى ملء الاسم، الهاتف، الولاية والبلدية.");
         }
     }
 
-    function closeProduct() {
-        document.getElementById('product-page').style.display = 'none';
-    }
+    function closeProduct() { document.getElementById('product-page').style.display = 'none'; }
+    render();
 </script>
 </body>
 </html>

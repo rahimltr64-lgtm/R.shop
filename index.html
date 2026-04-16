@@ -5,41 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجري - اطلب الآن</title>
     <style>
-        :root { --primary-color: #e67e22; --dark-color: #2c3e50; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f4f4; }
+        :root { --primary-color: #27ae60; --orange: #e67e22; }
+        body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; color: #333; line-height: 1.6; }
         .container { max-width: 500px; margin: auto; background: #fff; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .product-img { width: 100%; height: auto; border-bottom: 3px solid var(--primary-color); }
-        .content { padding: 20px; text-align: center; }
-        .price { color: var(--primary-color); font-size: 24px; font-weight: bold; }
-        .old-price { text-decoration: line-through; color: #999; font-size: 18px; }
-        .form-group { margin-top: 20px; text-align: right; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .order-btn { background: #27ae60; color: #fff; border: none; padding: 15px; width: 100%; font-size: 20px; font-weight: bold; cursor: pointer; border-radius: 5px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .product-img { width: 100%; height: auto; display: block; background: #eee; }
+        .content { padding: 20px; }
+        .product-title { text-align: center; font-size: 22px; margin-bottom: 10px; }
+        .price-card { background: #fff9f4; border: 1px dashed var(--orange); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .main-price { color: var(--orange); font-size: 30px; font-weight: bold; }
+        .delivery-price { color: #555; font-size: 16px; margin: 5px 0; }
+        .total-price { color: var(--primary-color); font-size: 20px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 5px; margin-top: 5px; }
+        .form-group { text-align: right; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .order-btn { background: var(--primary-color); color: #fff; border: none; padding: 18px; width: 100%; font-size: 22px; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="https://via.placeholder.com/500x400" alt="صورة المنتج" class="product-img">
+    <img src="https://share.google/tm0oJGcTzKMsTEGT3" alt="منتج" class="product-img">
     
     <div class="content">
-        <h2>اسم المنتج الاحترافي</h2>
-        <p class="price">3500 دج <span class="old-price">5800 دج</span></p>
-        <p>توصيل سريع لـ 58 ولاية والدفع عند الاستلام!</p>
+        <h1 class="product-title">اسم المنتج الخاص بك</h1>
+        
+        <div class="price-card">
+            <div class="main-price" id="productPrice">3500 دج</div>
+            <div class="delivery-price">توصيل للولاية: <span id="deliveryVal">0</span> دج</div>
+            <div class="total-price">الإجمالي: <span id="totalVal">3500</span> دج</div>
+        </div>
 
         <div class="form-group">
-            <label>الاسم الكامل:</label>
-            <input type="text" id="name" placeholder="أدخل اسمك">
+            <input type="text" id="name" placeholder="الاسم الكامل">
+            <input type="tel" id="phone" placeholder="رقم الهاتف">
             
-            <label>رقم الهاتف:</label>
-            <input type="tel" id="phone" placeholder="0XXXXXXXXX">
-            
-            <label>الولاية:</label>
-            <select id="wilaya">
-                <option value="1">أدرار</option>
-                <option value="19">سطيف</option>
-                <option value="16">الجزائر العاصمة</option>
+            <select id="wilaya" onchange="calculateTotal()">
+                <option value="0" data-price="0">اختر الولاية (58 ولاية)</option>
+                <option value="1" data-price="800">01 - أدرار</option>
+                <option value="2" data-price="500">02 - الشلف</option>
+                <option value="16" data-price="400">16 - الجزائر العاصمة</option>
+                <option value="19" data-price="400">19 - سطيف</option>
+                <option value="31" data-price="500">31 - وهران</option>
                 </select>
 
             <button class="order-btn" onclick="sendOrder()">تأكيد الطلب الآن</button>
@@ -48,26 +53,39 @@
 </div>
 
 <script>
+    const productAmount = 2000; // غير سعر المنتج هنا
+
+    function calculateTotal() {
+        const select = document.getElementById('wilaya');
+        const deliveryPrice = parseInt(select.options[select.selectedIndex].getAttribute('data-price'));
+        
+        document.getElementById('deliveryVal').innerText = deliveryPrice;
+        document.getElementById('totalVal').innerText = productAmount + deliveryPrice;
+    }
+
     function sendOrder() {
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
-        const wilaya = document.getElementById('wilaya').value;
+        const wilayaText = document.getElementById('wilaya').options[document.getElementById('wilaya').selectedIndex].text;
+        const total = document.getElementById('totalVal').innerText;
 
-        if(name && phone) {
-            // هنا يتم الربط الآلي: إرسال الطلب لـ Telegram الخاص بك لتقوم بإدخاله في CodSnt
-            const message = `طلبية جديدة!📦\nالاسم: ${name}\nالهاتف: ${phone}\nالولاية: ${wilaya}`;
-            const token = "YOUR_BOT_TOKEN";
-            const chat_id = "YOUR_CHAT_ID";
+        if(name && phone && document.getElementById('wilaya').value != "0") {
+            const token = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
+            const chat_id = "5981194410";
+            const message = `📦 طلبية جديدة:\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilayaText}\n💰 الإجمالي: ${total} دج`;
+            
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
             
             fetch(url).then(() => {
-                alert("تم استلام طلبك بنجاح! سنتصل بك قريباً.");
+                alert("تم استلام طلبك بنجاح! سنتصل بك لتأكيده.");
             });
         } else {
-            alert("يرجى ملء كافة المعلومات");
+            alert("يرجى ملء جميع الخانات واختيار الولاية");
         }
     }
 </script>
 
 </body>
 </html>
+
+

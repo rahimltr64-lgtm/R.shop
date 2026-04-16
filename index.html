@@ -3,223 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rahim shop</title>
+    <title>Luxury Store | متجري الفاخر</title>
     <style>
         :root {
-            --primary-color: #2ecc71;
-            --accent-color: #e67e22;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --main-gold: #d4af37;
+            --premium-black: #1a1a1a;
+            --success-green: #27ae60;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
             margin: 0;
-            background: var(--bg-gradient);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #2d3436;
+            color: #fff;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
-            width: 100%;
-            max-width: 450px;
-            background: #ffffff;
-            margin: 20px;
-            border-radius: 20px;
+            width: 90%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            color: #333;
+            position: relative;
         }
 
         .product-img {
             width: 100%;
-            height: 300px;
+            height: 320px;
             object-fit: cover;
-            border-bottom: 4px solid var(--primary-color);
+            border-bottom: 5px solid var(--main-gold);
         }
 
-        .content {
-            padding: 25px;
-        }
+        .content { padding: 30px; }
 
-        .product-title {
-            font-size: 24px;
-            font-weight: 800;
-            margin: 0 0 15px 0;
-            color: #2c3e50;
-            text-align: center;
-        }
-
-        .price-card {
-            background: #fff9f4;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 25px;
-            border: 1px solid #ffeaa7;
-        }
-
-        .main-price {
-            display: block;
-            font-size: 32px;
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            color: #b2bec3;
-            font-size: 18px;
-        }
-
-        .delivery-info {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #636e72;
-            background: #f1f2f6;
-            padding: 5px 10px;
-            border-radius: 20px;
+        .price-tag {
+            background: var(--premium-black);
+            color: var(--main-gold);
             display: inline-block;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .old-price { text-decoration: line-through; color: #999; font-size: 16px; margin-right: 10px; }
 
-        input, select {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #edf2f7;
-            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #eee;
+            border-radius: 15px;
             font-size: 16px;
-            transition: all 0.3s ease;
             box-sizing: border-box;
             outline: none;
+            transition: 0.3s;
         }
 
-        input:focus, select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
-        }
+        input:focus, select:focus { border-color: var(--main-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
 
-        .total-display {
-            background: #2d3436;
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 10px;
+        .total-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 1px solid #eee;
             text-align: center;
-            font-weight: bold;
         }
 
         .order-btn {
-            background: var(--primary-color);
+            background: var(--success-green);
             color: white;
             border: none;
-            padding: 18px;
-            font-size: 20px;
+            padding: 20px;
+            width: 100%;
+            border-radius: 15px;
+            font-size: 22px;
             font-weight: bold;
-            border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+            transition: 0.3s;
+            animation: shake 3s infinite;
         }
 
-        .order-btn:active {
-            transform: scale(0.98);
-        }
-
-        .badge {
-            background: #ff7675;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container" style="position: relative;">
-    <div class="badge">🔥 عرض محدود</div>
-    <img src="https://via.placeholder.com/500x400" alt="منتج رائع" class="product-img">
-    
-    <div class="content">
-        <h1 class="product-title">ساعة رجالية انيقة </h1>
-        
-        <div class="price-card">
-            <span class="old-price">6500 دج</span>
-            <span class="main-price" id="prodPrice">3500 دج</span>
-            <div class="delivery-info">🚚 التوصيل: <span id="delVal">0</span> دج</div>
-        </div>
-
-        <div class="form-group">
-            <input type="text" id="name" placeholder="الاسم الكامل">
-            <input type="tel" id="phone" placeholder="رقم الهاتف">
-            
-            <select id="wilaya" onchange="updatePrice()">
-                <option value="0" data-price="0">اختر ولايتك (58 ولاية)</option>
-                <option value="1" data-price="800">01 - أدرار</option>
-                <option value="16" data-price="400">16 - الجزائر</option>
-                <option value="19" data-price="400">19 - سطيف</option>
-                <option value="31" data-price="500">31 - وهران</option>
-                </select>
-
-            <div class="total-display">
-                المبلغ الإجمالي: <span id="totalVal">3500</span> دج
-            </div>
-
-            <button class="order-btn" onclick="processOrder()">تأكيد الطلب الآن</button>
-        </div>
-        
-        <p style="text-align: center; font-size: 12px; color: #95a5a6; margin-top: 15px;">
-            ✅ الدفع عند الاستلام - خدمة الزبائن متوفرة 24/7
-        </p>
-    </div>
-</div>
-
-<script>
-    const itemPrice = 3500; // غير سعر منتجك هنا
-
-    function updatePrice() {
-        const sel = document.getElementById('wilaya');
-        const dPrice = parseInt(sel.options[sel.selectedIndex].getAttribute('data-price')) || 0;
-        
-        document.getElementById('delVal').innerText = dPrice;
-        document.getElementById('totalVal').innerText = itemPrice + dPrice;
-    }
-
-    function processOrder() {
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-        const wilaya = document.getElementById('wilaya').options[document.getElementById('wilaya').selectedIndex].text;
-        const finalPrice = document.getElementById('totalVal').innerText;
-
-        if(name && phone && document.getElementById('wilaya').value != "0") {
-            const botToken = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
-            const myChatId = "5981194410";
-            const text = `🚀 طلبية جديدة من المتجر:\n\n👤 الزبون: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n💰 السعر الكلي: ${finalPrice} دج`;
-            
-            const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${myChatId}&text=${encodeURIComponent(text)}`;
-            
-            fetch(telegramUrl).then(() => {
-                alert("تهانينا! تم إرسال طلبك بنجاح. سنتصل بك قريباً لتأكيد الشحن.");
-            });
-        } else {
-            alert("من فضلك، تأكد من ملء جميع البيانات واختيار الولاية.");
-        }
-    }
-</script>
-
-</body>
-</html>
 
 
 

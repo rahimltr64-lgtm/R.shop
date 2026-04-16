@@ -3,115 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | متجر الفخامة</title>
+    <title>LUXURY STORE | الفخامة بين يديك</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #d4af37;
-            --dark-bg: #0a0a0a;
-            --card-bg: #141414;
-            --text-color: #ffffff;
+            --gold-light: #f1c40f;
+            --dark: #0a0a0a;
+            --card: #151515;
+            --white: #ffffff;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
-            background-color: var(--dark-bg);
-            color: var(--text-color);
-            direction: rtl;
+            background-color: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
         }
 
+        /* رأس الصفحة */
         header {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            padding: 25px;
+            background: linear-gradient(135deg, #1a1a1a, #000);
+            padding: 30px 15px;
             text-align: center;
             border-bottom: 2px solid var(--gold);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
         }
 
-        .container { max-width: 500px; margin: auto; padding: 15px; }
+        .logo { font-size: 32px; font-weight: 900; letter-spacing: 2px; color: var(--gold); margin: 0; }
+        .tagline { font-size: 13px; color: #888; margin-top: 5px; }
 
-        /* المنتجات */
+        .container { max-width: 500px; margin: auto; padding: 20px; }
+
+        /* كارت المنتج */
         .product-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            margin-bottom: 25px;
+            background: var(--card);
+            border-radius: 25px;
             overflow: hidden;
-            border: 1px solid #222;
+            border: 1px solid #333;
+            margin-bottom: 30px;
+            transition: 0.4s;
+            position: relative;
         }
 
-        .product-card img { width: 100%; height: 280px; object-fit: cover; }
-        .product-info { padding: 15px; text-align: center; }
-        .price { color: var(--gold); font-size: 26px; font-weight: 900; }
+        .badge {
+            position: absolute;
+            top: 15px; left: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
 
-        /* صفحة الطلب */
+        .product-card img { width: 100%; height: 300px; object-fit: cover; }
+        .p-info { padding: 20px; text-align: center; }
+        .p-info h3 { margin: 10px 0; font-size: 22px; }
+        
+        .stars { color: var(--gold-light); margin-bottom: 10px; font-size: 14px; }
+        .price { font-size: 28px; font-weight: 900; color: var(--gold); }
+        .old-price { font-size: 16px; text-decoration: line-through; color: #666; margin-left: 10px; }
+
+        /* صفحة التفاصيل */
         #product-page {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: var(--dark-bg);
+            background: var(--dark);
             z-index: 1000;
             overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
         }
 
-        .order-form {
-            background: #111;
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid #333;
-            margin-top: 15px;
-        }
-
-        .total-box {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid var(--gold);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 12px;
-            font-family: 'Cairo';
-            box-sizing: border-box;
-        }
-
-        .btn-confirm {
-            background: linear-gradient(90deg, #d4af37, #f1c40f);
-            color: black;
-            border: none;
-            padding: 18px;
-            width: 100%;
-            border-radius: 12px;
-            font-size: 20px;
-            font-weight: 900;
-            cursor: pointer;
-        }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         .back-btn {
-            background: none;
-            color: white;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
             border: 1px solid var(--gold);
-            padding: 8px 20px;
+            padding: 10px 25px;
             margin: 15px;
             border-radius: 50px;
             cursor: pointer;
         }
+
+        /* استمارة الطلب المتميزة */
+        .order-form {
+            background: #111;
+            padding: 25px;
+            border-radius: 25px;
+            border: 1px solid #222;
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
+
+        .timer-box {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border: 1px dashed #e74c3c;
+        }
+
+        .input-group { position: relative; margin-bottom: 15px; }
+        input, select {
+            width: 100%;
+            padding: 16px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 15px;
+            font-family: 'Cairo';
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus { border-color: var(--gold); outline: none; background: #222; }
+
+        .btn-buy {
+            background: linear-gradient(90deg, #d4af37, #f1c40f);
+            color: #000;
+            border: none;
+            padding: 20px;
+            width: 100%;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+            transition: 0.3s;
+        }
+
+        .btn-buy:active { transform: scale(0.95); }
+
+        .footer-note { font-size: 11px; color: #555; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="margin:0;">LUXURY STORE</h1>
-    <p style="font-size:12px; color:var(--gold);">كل ما يحتاجه الرجل الجزائري الأنيق</p>
+    <div class="logo">LUXURY STORE</div>
+    <div class="tagline">الفخامة التي تستحقها، تصلك لباب منزلك</div>
 </header>
 
 <div class="container" id="main-view">
@@ -119,113 +159,117 @@
 </div>
 
 <div id="product-page">
-    <button class="back-btn" onclick="closeProduct()">⬅️ عودة</button>
+    <button class="back-btn" onclick="closeProduct()">⬅️ عودة للمتجر</button>
     <div id="details-content" class="container"></div>
 </div>
 
 <script>
-    // 1. قائمة المنتجات (أضف منتجاتك هنا)
+    // 1. قاعدة بيانات المنتجات (التحكم في متجرك من هنا)
     const myProducts = [
         {
             id: 1,
             name: "ماكينة الحلاقة Kemei KM-2024",
             price: 3500,
+            oldPrice: 4800,
             image: "https://i.ibb.co/kg7mCQJT/H811569022fb24d11bda211ccb832607fk-jpg-960x960q80.jpg",
-            description: "النسخة الأصلية الاحترافية، مثالية للحلاقة اليومية وتحديد اللحية."
+            desc: "• حلاقة احترافية ناعمة<br>• شحن USB سريع<br>• مقاومة للماء وسهلة التنظيف"
         }
     ];
 
-    // 2. قائمة الـ 58 ولاية بأسعار الشحن التقريبية (يمكنك تعديل الأسعار هنا)
+    // 2. الولايات (58 ولاية)
     const myShipping = [
-        {name: "01-أدرار", cost: 1000}, {name: "02-الشلف", cost: 600}, {name: "03-الأغواط", cost: 700}, {name: "04-أم البواقي", cost: 600}, {name: "05-باتنة", cost: 600},
-        {name: "06-بجاية", cost: 600}, {name: "07-بسكرة", cost: 600}, {name: "08-بشار", cost: 1000}, {name: "09-البليدة", cost: 500}, {name: "10-البويرة", cost: 600},
-        {name: "11-تمنراست", cost: 1200}, {name: "12-تبسة", cost: 600}, {name: "13-تلمسان", cost: 700}, {name: "14-تيارت", cost: 700}, {name: "15-تيزي وزو", cost: 600},
-        {name: "16-الجزائر العاصمة", cost: 400}, {name: "17-الجلفة", cost: 700}, {name: "18-جيجل", cost: 600}, {name: "19-سطيف", cost: 500}, {name: "20-سعيدة", cost: 700},
-        {name: "21-سكيكدة", cost: 600}, {name: "22-سيدي بلعباس", cost: 700}, {name: "23-عنابة", cost: 600}, {name: "24-قالمة", cost: 600}, {name: "25-قسنطينة", cost: 500},
-        {name: "26-المدية", cost: 600}, {name: "27-مستغانم", cost: 700}, {name: "28-المسيلة", cost: 650}, {name: "29-معسكر", cost: 700}, {name: "30-ورقلة", cost: 800},
-        {name: "31-وهران", cost: 600}, {name: "32-البيض", cost: 850}, {name: "33-إليزي", cost: 1200}, {name: "34-برج بوعريريج", cost: 500}, {name: "35-بومرداس", cost: 500},
-        {name: "36-الطارف", cost: 650}, {name: "37-تندوف", cost: 1200}, {name: "38-تسمسيلت", cost: 700}, {name: "39-الوادي", cost: 800}, {name: "40-خنشلة", cost: 600},
-        {name: "41-سوق أهراس", cost: 650}, {name: "42-تيبازة", cost: 500}, {name: "43-ميلة", cost: 550}, {name: "44-عين الدفلى", cost: 650}, {name: "45-النعامة", cost: 850},
-        {name: "46-عين تموشنت", cost: 700}, {name: "47-غرداية", cost: 800}, {name: "48-غليزان", cost: 700}, {name: "49-تيميمون", cost: 1000}, {name: "50-برج باجي مختار", cost: 1500},
-        {name: "51-أولاد جلال", cost: 750}, {name: "52-بني عباس", cost: 1000}, {name: "53-إن صالح", cost: 1200}, {name: "54-إن قزام", cost: 1500}, {name: "55-تقرت", cost: 800},
-        {name: "56-جانت", cost: 1500}, {name: "57-المغير", cost: 750}, {name: "58-المنيعة", cost: 900}
+        {n: "01-أدرار", c: 1000}, {n: "02-الشلف", c: 600}, {n: "03-الأغواط", c: 700}, {n: "04-أم البواقي", c: 600}, {n: "05-باتنة", c: 600},
+        {n: "06-بجاية", c: 600}, {n: "07-بسكرة", c: 600}, {n: "08-بشار", c: 1000}, {n: "09-البليدة", c: 450}, {n: "10-البويرة", c: 600},
+        {n: "11-تمنراست", c: 1200}, {n: "12-تبسة", c: 600}, {n: "13-تلمسان", c: 700}, {n: "14-تيارت", c: 700}, {n: "15-تيزي وزو", c: 600},
+        {n: "16-الجزائر العاصمة", c: 400}, {n: "17-الجلفة", c: 700}, {n: "18-جيجل", c: 600}, {n: "19-سطيف", c: 500}, {n: "20-سعيدة", c: 700},
+        {n: "21-سكيكدة", c: 600}, {n: "22-سيدي بلعباس", c: 700}, {n: "23-عنابة", c: 600}, {n: "24-قالمة", c: 600}, {n: "25-قسنطينة", c: 500},
+        {n: "26-المدية", c: 600}, {n: "27-مستغانم", c: 700}, {n: "28-المسيلة", c: 650}, {n: "29-معسكر", c: 700}, {n: "30-ورقلة", c: 800},
+        {n: "31-وهران", c: 600}, {n: "32-البيض", c: 850}, {n: "33-إليزي", c: 1200}, {n: "34-برج بوعريريج", c: 500}, {n: "35-بومرداس", c: 500},
+        {n: "36-الطارف", c: 650}, {n: "37-تندوف", c: 1200}, {n: "38-تسمسيلت", c: 700}, {n: "39-الوادي", c: 800}, {n: "40-خنشلة", c: 600},
+        {n: "41-سوق أهراس", c: 650}, {n: "42-تيبازة", c: 500}, {n: "43-ميلة", c: 550}, {n: "44-عين الدفلى", c: 650}, {n: "45-النعامة", c: 850},
+        {n: "46-عين تموشنت", c: 700}, {n: "47-غرداية", c: 800}, {n: "48-غليزان", c: 700}, {n: "49-تيميمون", c: 1000}, {n: "50-برج باجي مختار", c: 1500},
+        {n: "51-أولاد جلال", c: 750}, {n: "52-بني عباس", c: 1000}, {n: "53-إن صالح", c: 1200}, {n: "54-إن قزام", c: 1500}, {n: "55-تقرت", c: 800},
+        {n: "56-جانت", c: 1500}, {n: "57-المغير", c: 750}, {n: "58-المنيعة", c: 900}
     ];
 
-    // 3. معلومات تلغرام
-    const botToken = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
-    const chatId = "5981194410";
-
+    // 3. عرض المنتجات
     const listDiv = document.getElementById('list-container');
-    function render() {
-        myProducts.forEach(p => {
-            listDiv.innerHTML += `
-                <div class="product-card" onclick="openProduct(${p.id})">
-                    <img src="${p.image}">
-                    <div class="product-info">
-                        <h3>${p.name}</h3>
-                        <div class="price">${p.price} دج</div>
-                    </div>
-                </div>`;
-        });
-    }
+    myProducts.forEach(p => {
+        listDiv.innerHTML += `
+            <div class="product-card" onclick="openProduct(${p.id})">
+                <div class="badge">الأكثر مبيعاً 🔥</div>
+                <img src="${p.image}">
+                <div class="p-info">
+                    <div class="stars">⭐⭐⭐⭐⭐ (4.9/5)</div>
+                    <h3>${p.name}</h3>
+                    <div><span class="price">${p.price} دج</span> <span class="old-price">${p.oldPrice} دج</span></div>
+                </div>
+            </div>`;
+    });
 
     let activeP = null;
     function openProduct(id) {
         activeP = myProducts.find(p => p.id === id);
         let options = `<option value="none">-- اختر ولايتك --</option>`;
-        myShipping.forEach(s => { options += `<option value="${s.cost}">${s.name}</option>`; });
+        myShipping.forEach(s => { options += `<option value="${s.c}">${s.n}</option>`; });
 
         document.getElementById('details-content').innerHTML = `
-            <img src="${activeP.image}" style="width:100%; border-radius:15px; border:1px solid var(--gold);">
-            <h2 style="text-align:center;">${activeP.name}</h2>
+            <img src="${activeP.image}" style="width:100%; border-radius:20px; border:1px solid var(--gold);">
+            <h2 style="text-align:center; margin-top:20px;">${activeP.name}</h2>
+            <p style="background:#1a1a1a; padding:15px; border-radius:15px; font-size:14px; line-height:1.8;">${activeP.desc}</p>
+            
             <div class="order-form">
+                <div class="timer-box">⏳ سارع! ينتهي العرض خلال <b>14:55</b> دقيقة</div>
                 <div class="total-box">
                     <div style="font-size:24px; font-weight:900;">الإجمالي: <span id="finalPrice">${activeP.price}</span> دج</div>
-                    <div style="font-size:12px; opacity:0.7;">توصيل: <span id="shipPrice">0</span> دج</div>
+                    <div style="font-size:12px; opacity:0.6;">توصيل: <span id="shipPrice">0</span> دج</div>
                 </div>
-                <input type="text" id="cName" placeholder="الإسم الكامل">
-                <input type="tel" id="cPhone" placeholder="رقم الهاتف">
-                <select id="cWilaya" onchange="updateTotal()">${options}</select>
-                <input type="text" id="cCommune" placeholder="البلدية">
-                <input type="text" id="cAddress" placeholder="العنوان الدقيق (اختياري)">
-                <button class="btn-confirm" onclick="confirmOrder()">تأكيد الطلب</button>
+                <input type="text" id="name" placeholder="الإسم الكامل">
+                <input type="tel" id="phone" placeholder="رقم الهاتف">
+                <select id="wilaya" onchange="updateTotal()">${options}</select>
+                <input type="text" id="commune" placeholder="البلدية">
+                <button class="btn-buy" onclick="confirm()">تأكيد الطلب الآن</button>
+                <div class="footer-note">🔒 بياناتك محمية والدفع عند الاستلام</div>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
     }
 
     function updateTotal() {
-        const cost = document.getElementById('cWilaya').value;
+        const cost = document.getElementById('wilaya').value;
         if(cost !== "none") {
             document.getElementById('finalPrice').innerText = activeP.price + parseInt(cost);
             document.getElementById('shipPrice').innerText = cost;
         }
     }
 
-    function confirmOrder() {
-        const name = document.getElementById('cName').value;
-        const phone = document.getElementById('cPhone').value;
-        const wilaya = document.getElementById('cWilaya');
-        const commune = document.getElementById('cCommune').value;
+    function confirm() {
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const wilaya = document.getElementById('wilaya');
+        const commune = document.getElementById('commune').value;
 
         if(name && phone && commune && wilaya.value !== "none") {
-            const msg = `👑 طلبية LUXURY:\n📦 المنتج: ${activeP.name}\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya.options[wilaya.selectedIndex].text}\n🏘️ البلدية: ${commune}\n💰 السعر: ${document.getElementById('finalPrice').innerText} دج`;
+            // كود تلغرام (ضعه هنا)
+            const token = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
+            const chat = "5981194410";
+            const text = `👑 طلبية LUXURY:\n📦 ${activeP.name}\n👤 ${name}\n📞 ${phone}\n📍 ${wilaya.options[wilaya.selectedIndex].text}\n🏘️ ${commune}\n💰 الإجمالي: ${document.getElementById('finalPrice').innerText} دج`;
             
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`)
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat}&text=${encodeURIComponent(text)}`)
             .then(() => {
                 document.getElementById('details-content').innerHTML = `
-                    <div style="text-align:center; padding:50px 0;">
-                        <h1 style="color:var(--gold);">✅ شكراً لك!</h1>
-                        <p>تم استلام طلبك يا ${name}. سنتصل بك قريباً.</p>
-                        <button class="btn-confirm" onclick="location.reload()">العودة للمتجر</button>
+                    <div style="text-align:center; padding:60px 0;">
+                        <div style="font-size:70px;">✅</div>
+                        <h1 style="color:var(--gold);">تم الطلب بنجاح!</h1>
+                        <p>شكراً ${name}، سنتصل بك قريباً لتأكيد الشحن.</p>
+                        <button class="btn-buy" onclick="location.reload()">العودة للمتجر</button>
                     </div>`;
             });
         } else {
-            alert("يرجى ملء الاسم، الهاتف، الولاية والبلدية.");
+            alert("يرجى ملء جميع الخانات لضمان وصول طلبيتك.");
         }
     }
 
     function closeProduct() { document.getElementById('product-page').style.display = 'none'; }
-    render();
 </script>
 </body>
 </html>

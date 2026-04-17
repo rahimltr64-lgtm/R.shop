@@ -7,56 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --gold-light: #f1c40f; --dark: #050505; --card: #111; --white: #ffffff; }
-        
         body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--dark); color: var(--white); direction: rtl; overflow-x: hidden; }
-        
-        /* تحسين جودة عرض الصور */
-        img { 
-            image-rendering: -webkit-optimize-contrast; 
-            image-rendering: crisp-edges;
-            object-fit: cover;
-        }
-
+        img { image-rendering: -webkit-optimize-contrast; object-fit: cover; }
         header { background: #111; padding: 25px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
         .logo { font-size: 30px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin: 0; }
         .container { max-width: 500px; margin: auto; padding: 20px; }
-
-        /* شبكة المنتجات */
         .product-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
-        .p-card { background: var(--card); border-radius: 25px; overflow: hidden; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
-        .p-card:hover { border-color: var(--gold); }
+        .p-card { background: var(--card); border-radius: 25px; overflow: hidden; border: 1px solid #222; cursor: pointer; }
         .p-card img { width: 100%; height: 300px; object-fit: cover; }
         .p-card-info { padding: 20px; text-align: center; }
         .p-price { color: var(--gold); font-size: 26px; font-weight: 900; }
-
-        /* صفحة تفاصيل المنتج */
         #product-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; overflow-y: auto; }
-        .back-btn { margin: 15px; background: none; color: white; border: 1px solid var(--gold); padding: 8px 25px; border-radius: 50px; cursor: pointer; font-family: 'Cairo'; }
-        
+        .back-btn { margin: 15px; background: none; color: white; border: 1px solid var(--gold); padding: 8px 25px; border-radius: 50px; cursor: pointer; }
         .slider-box { width: 100%; height: 400px; border-radius: 20px; overflow: hidden; border: 1px solid #333; background: #000; }
-        .slider-box img { width: 100%; height: 100%; object-fit: contain; } /* لضمان عدم قص أطراف الصورة */
-        
+        .slider-box img { width: 100%; height: 100%; object-fit: contain; }
         .thumbs { display: flex; gap: 10px; margin-top: 12px; overflow-x: auto; padding: 5px; justify-content: center; }
-        .thumb { width: 70px; height: 70px; border-radius: 12px; border: 2px solid #222; cursor: pointer; object-fit: cover; transition: 0.2s; }
+        .thumb { width: 70px; height: 70px; border-radius: 12px; border: 2px solid #222; cursor: pointer; object-fit: cover; }
         .thumb.active { border-color: var(--gold); transform: scale(1.1); }
-
-        /* قسم التقييمات */
         .reviews-container { margin-top: 30px; background: #0a0a0a; border-radius: 20px; padding: 15px; border: 1px solid #1a1a1a; }
         .review-card { padding: 15px; border-bottom: 1px solid #222; }
-        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .review-header { display: flex; justify-content: space-between; align-items: center; }
         .reviewer-name { font-weight: 700; font-size: 14px; color: var(--gold); }
         .stars { color: var(--gold-light); font-size: 12px; }
-        .review-text { font-size: 13px; color: #ccc; }
-
-        /* استمارة الطلب */
         .order-section { background: #0c0c0c; border: 2px solid var(--gold); border-radius: 30px; padding: 25px; margin-top: 25px; margin-bottom: 60px; }
-        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #151515; border: 1px solid #333; color: white; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; font-size: 16px; outline: none; }
-        input:focus { border-color: var(--gold); }
+        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #151515; border: 1px solid #333; color: white; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; font-size: 16px; }
         .total-banner { background: rgba(212,175,55,0.15); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
         .buy-now-btn { background: linear-gradient(45deg, var(--gold), var(--gold-light)); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 22px; font-weight: 900; cursor: pointer; }
-
-        /* صفحة النجاح */
-        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
@@ -76,45 +53,32 @@
     <div>
         <div style="font-size:100px; color:var(--gold);">🏆</div>
         <h1 style="color:var(--gold);">تم استلام طلبك!</h1>
-        <p>شكراً لك يا <b><span id="clientName"></span></b>، سنتصل بك قريباً لتأكيد الطلب.</p>
+        <p>شكراً لك يا <b><span id="clientName"></span></b>، سنتصل بك قريباً.</p>
         <button class="buy-now-btn" onclick="location.reload()" style="width:200px;">العودة</button>
     </div>
 </div>
 
 <script>
-    // 🛑 ضع بياناتك هنا
     const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
     const CHAT_ID = "5981194410";
 
-    // 📦 قاعدة بيانات المنتجات (تعدد الصور + التقييمات)
     const products = [
         {
-                    {
-            id: 3, 
+            id: 1,
             name: "ساعة Rolex Quartz - الإصدار الملكي",
-            price: 6500, 
+            price: 2000,
             images: [
                 "https://i.ibb.co/3ykYqf9G/1000038955.png",
                 "https://i.ibb.co/6R8mS5gS/1000038951.jpg",
                 "https://i.ibb.co/0y7mC97S/1000038956.png"
             ],
             reviews: [
-                { name: "كمال. س (وهران)", text: "الساعة وصلتني اليوم، اللون الأزرق في الحقيقة أجمل بمرتين من الصور. شكراً!", stars: "⭐⭐⭐⭐⭐", date: "منذ 3 ساعات" },
-                { name: "عبد النور (العاصمة)", text: "التغليف والعلبة في القمة، تصلح كهدية فاخرة.", stars: "⭐⭐⭐⭐⭐", date: "منذ يومين" }
-            ]
-        },
-
-            ],
-            reviews: [
-                { name: "سفيان. م (سطيف)", text: "الماكينة أصلية وجودة عالية جداً، شكراً!", stars: "⭐⭐⭐⭐⭐", date: "منذ يوم" },
-                { name: "أمين. ر (العاصمة)", text: "توصيل سريع وتعامل احترافي.", stars: "⭐⭐⭐⭐⭐", date: "منذ 3 أيام" }
+                { name: "كمال. س (وهران)", text: "الساعة وصلتني اليوم، اللون الأزرق رائع جداً.", stars: "⭐⭐⭐⭐⭐" },
+                { name: "عبد النور (العاصمة)", text: "تغليف فاخر وتعامل احترافي.", stars: "⭐⭐⭐⭐⭐" }
             ]
         }
-        
-            
     ];
 
-    // 📍 الـ 58 ولاية كاملة مع أسعار الشحن
     const wilayas = [
         {n: "01-أدرار", p: 1000}, {n: "02-الشلف", p: 600}, {n: "03-الأغواط", p: 700}, {n: "04-أم البواقي", p: 600}, {n: "05-باتنة", p: 600},
         {n: "06-بجاية", p: 600}, {n: "07-بسكرة", p: 600}, {n: "08-بشار", p: 1000}, {n: "09-البليدة", p: 450}, {n: "10-البويرة", p: 600},
@@ -130,46 +94,24 @@
         {n: "56-جانت", p: 1500}, {n: "57-المغير", p: 750}, {n: "58-المنيعة", p: 900}
     ];
 
-    // عرض المنتجات في الصفحة الرئيسية
     const grid = document.getElementById('main-grid');
     products.forEach(p => {
-        grid.innerHTML += `
-            <div class="p-card" onclick="openP(${p.id})">
-                <img src="${p.images[0]}" loading="lazy">
-                <div class="p-card-info">
-                    <h3>${p.name}</h3>
-                    <div class="p-price">${p.price} دج</div>
-                </div>
-            </div>`;
+        grid.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><img src="${p.images[0]}"><div class="p-card-info"><h3>${p.name}</h3><div class="p-price">${p.price} دج</div></div></div>`;
     });
 
     let current = null;
     function openP(id) {
         current = products.find(x => x.id === id);
-        let opts = `<option value="none">-- اختر ولايتك (58 ولاية) --</option>`;
+        let opts = `<option value="none">-- اختر ولايتك --</option>`;
         wilayas.forEach(w => opts += `<option value="${w.p}">${w.n}</option>`);
 
-        let reviewsHtml = current.reviews.map(rev => `
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="reviewer-name">${rev.name}</span>
-                    <span class="stars">${rev.stars}</span>
-                </div>
-                <div class="review-text">${rev.text}</div>
-            </div>
-        `).join('');
+        let reviewsHtml = current.reviews.map(rev => `<div class="review-card"><div class="review-header"><span class="reviewer-name">${rev.name}</span><span class="stars">${rev.stars}</span></div><div class="review-text">${rev.text}</div></div>`).join('');
 
         document.getElementById('p-content').innerHTML = `
             <div class="slider-box"><img src="${current.images[0]}" id="activeImg"></div>
             <div class="thumbs">${current.images.map((img, i) => `<img src="${img}" class="thumb ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
-            
-            <h2 style="text-align:center; margin-top:20px;">${current.name}</h2>
-            
-            <div class="reviews-container">
-                <h4 style="margin:0 0 10px 0; color:var(--gold);">آراء الزبائن ⭐</h4>
-                ${reviewsHtml}
-            </div>
-
+            <h2 style="text-align:center;">${current.name}</h2>
+            <div class="reviews-container"><h4 style="color:var(--gold);">آراء الزبائن</h4>${reviewsHtml}</div>
             <div class="order-section">
                 <div class="total-banner">الإجمالي: <span id="finalPrice">${current.price}</span> دج</div>
                 <input type="text" id="custN" placeholder="الإسم الكامل">
@@ -178,7 +120,6 @@
                 <input type="text" id="custC" placeholder="البلدية">
                 <button class="buy-now-btn" onclick="send()">تأكيد الطلب الآن</button>
             </div>`;
-        
         document.getElementById('product-page').style.display = 'block';
         window.scrollTo(0,0);
     }
@@ -195,17 +136,10 @@
         const w_sel = document.getElementById('custW');
         const c = document.getElementById('custC').value;
         const tot = document.getElementById('finalPrice').innerText;
-
         if(n && ph && c && w_sel.value !== "none") {
-            const msg = `👑 طلبية LUXURY جديدة:\n📦 المنتج: ${current.name}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏘️ البلدية: ${c}\n💰 الإجمالي: ${tot} دج`;
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`)
-            .then(res => {
-                if(res.ok) {
-                    document.getElementById('clientName').innerText = n;
-                    document.getElementById('successScreen').style.display = 'flex';
-                }
-            });
-        } else { alert("يرجى ملء كافة البيانات لضمان معالجة طلبك"); }
+            const msg = `👑 طلبية جديدة:\n📦 المنتج: ${current.name}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏘️ البلدية: ${c}\n💰 الإجمالي: ${tot} دج`;
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`).then(res => { if(res.ok) { document.getElementById('clientName').innerText = n; document.getElementById('successScreen').style.display = 'flex'; } });
+        } else { alert("يرجى ملء كافة البيانات"); }
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; }

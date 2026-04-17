@@ -17,17 +17,18 @@
         .p-card-info { padding: 20px; text-align: center; }
         .p-price { color: var(--gold); font-size: 26px; font-weight: 900; }
         #product-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; overflow-y: auto; }
-        .back-btn { margin: 15px; background: none; color: white; border: 1px solid var(--gold); padding: 8px 25px; border-radius: 50px; cursor: pointer; }
+        .back-btn { margin: 15px; background: none; color: white; border: 1px solid var(--gold); padding: 8px 25px; border-radius: 50px; cursor: pointer; font-family: 'Cairo'; }
         .slider-box { width: 100%; height: 400px; border-radius: 20px; overflow: hidden; border: 1px solid #333; background: #000; }
         .slider-box img { width: 100%; height: 100%; object-fit: contain; }
         .thumbs { display: flex; gap: 10px; margin-top: 12px; overflow-x: auto; padding: 5px; justify-content: center; }
         .thumb { width: 70px; height: 70px; border-radius: 12px; border: 2px solid #222; cursor: pointer; object-fit: cover; }
         .thumb.active { border-color: var(--gold); transform: scale(1.1); }
         .order-section { background: #0c0c0c; border: 2px solid var(--gold); border-radius: 30px; padding: 25px; margin-top: 25px; margin-bottom: 60px; }
-        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #151515; border: 1px solid #333; color: white; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; font-size: 16px; }
+        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #151515; border: 1px solid #333; color: white; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; font-size: 16px; outline: none; }
         .total-banner { background: rgba(212,175,55,0.15); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
         .buy-now-btn { background: linear-gradient(45deg, var(--gold), var(--gold-light)); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 22px; font-weight: 900; cursor: pointer; }
         .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; }
+        label { display: block; margin-top: 10px; font-size: 14px; color: var(--gold); margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -51,8 +52,8 @@
 </div>
 
 <script>
-    // 🛑 ضع بياناتك هنا 🛑
-    const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
+    // 🛑 ضع بيانات التلغرام الخاصة بك هنا 🛑
+    const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGj..."; 
     const CHAT_ID = "5981194410";
 
     const products = [
@@ -61,12 +62,10 @@
             name: "ساعة Rolex Quartz - الإصدار الملكي الأنيق",
             price: 2000,
             images: [
-                "https://i.postimg.cc/bJSqWXnp/703512434.jpg",
-                "https://i.postimg.cc/CK1hCnLB/1776431681377.png",
-                "https://i.postimg.cc/KvDxdD13/386764089.jpg"
-            ],
-            reviews: [
-                { name: "كمال. س (وهران)", text: "الساعة وصلتني اليوم، اللون الأزرق رائع جداً.", stars: "⭐⭐⭐⭐⭐" }
+                "https://i.ibb.co/6R8mS5gS/1000038951.jpg",
+                "https://i.ibb.co/3ykYqf9G/1000038955.png",
+                "https://i.ibb.co/0y7mC97S/1000038956.png",
+                "https://i.ibb.co/pBqVd72g/1000038960.jpg"
             ]
         }
     ];
@@ -103,14 +102,36 @@
             <h2 style="text-align:center;">${current.name}</h2>
             <div class="order-section">
                 <div class="total-banner">الإجمالي: <span id="finalPrice">${current.price}</span> دج</div>
+                
+                <label>معلومات العميل:</label>
                 <input type="text" id="custN" placeholder="الإسم الكامل">
                 <input type="tel" id="custPh" placeholder="رقم الهاتف">
-                <select id="custW" onchange="const cost=this.value==='none'?0:parseInt(this.value); document.getElementById('finalPrice').innerText = ${current.price} + cost;">${opts}</select>
+                
+                <label>مكان التوصيل:</label>
+                <select id="custW" onchange="updateTotal()">${opts}</select>
+                
+                <label>نوع التوصيل:</label>
+                <select id="deliveryType" onchange="updateTotal()">
+                    <option value="home">توصيل إلى المنزل (سعر كامل)</option>
+                    <option value="office">توصيل للمكتب / يلمار (خصم 200 دج)</option>
+                </select>
+                
                 <input type="text" id="custC" placeholder="البلدية">
                 <button class="buy-now-btn" onclick="send()">تأكيد الطلب الآن</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         window.scrollTo(0,0);
+    }
+
+    function updateTotal() {
+        const w_val = document.getElementById('custW').value;
+        const d_type = document.getElementById('deliveryType').value;
+        let shipping = w_val === "none" ? 0 : parseInt(w_val);
+        
+        // إذا اختار المكتب، يتم خصم 200 دج من سعر التوصيل (مثال)
+        if(d_type === "office" && shipping > 200) shipping -= 200;
+        
+        document.getElementById('finalPrice').innerText = current.price + shipping;
     }
 
     function changeGallery(el, src) {
@@ -123,12 +144,21 @@
         const n = document.getElementById('custN').value;
         const ph = document.getElementById('custPh').value;
         const w_sel = document.getElementById('custW');
+        const d_type = document.getElementById('deliveryType');
         const c = document.getElementById('custC').value;
         const tot = document.getElementById('finalPrice').innerText;
+        
         if(n && ph && c && w_sel.value !== "none") {
-            const msg = `👑 طلبية جديدة:\n📦 المنتج: ${current.name}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏘️ البلدية: ${c}\n💰 الإجمالي: ${tot} دج`;
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`).then(res => { if(res.ok) { document.getElementById('clientName').innerText = n; document.getElementById('successScreen').style.display = 'flex'; } });
-        } else { alert("يرجى ملء كافة البيانات"); }
+            const msg = `👑 طلبية جديدة من المتجر:\n📦 المنتج: ${current.name}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏠 مكان التوصيل: ${d_type.options[d_type.selectedIndex].text}\n🏘️ البلدية: ${c}\n💰 الإجمالي: ${tot} دج`;
+            
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`)
+            .then(res => { 
+                if(res.ok) { 
+                    document.getElementById('clientName').innerText = n; 
+                    document.getElementById('successScreen').style.display = 'flex'; 
+                } 
+            });
+        } else { alert("يرجى ملء كافة البيانات واختيار الولاية"); }
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; }

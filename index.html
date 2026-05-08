@@ -72,16 +72,16 @@
             id: 1,
             name: "Premium Summer T-Shirt",
             price: 1000,
-            colors: ["ازرق داكن", "أبيض", "اسود", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
+            colors: ["أبيض ملكي", "اسود فخم", "ازرق داكن", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
             sizes: ["M", "L", "XL"],
             images: [
-                "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
-                "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
-                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
-                "https://i.postimg.cc/76F8cM8b/1778253686102.png",
-                "https://i.postimg.cc/FH8mt4Q0/1778253106574.png",
-                "https://i.postimg.cc/CKnhdK43/1778252936394.png",
-                "https://i.postimg.cc/8C8tvKSK/1778252209457.png"
+                "https://i.postimg.cc/SsfTkWHW/1778252993790.png", // الموديل لابس اللون الأصلي
+                "https://i.postimg.cc/76F8cM8b/1778253686102.png", // صورة الموديل لابس الأبيض Armani المحدثة
+                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png", // الموديل لابس الأسود
+                "https://i.postimg.cc/CKnhdK43/1778252936394.png", // الموديل لابس الوردي
+                "https://i.postimg.cc/xCn5xXq7/1778253038445.png", // الموديل لابس الأزرق البارد
+                "https://i.postimg.cc/FH8mt4Q0/1778253106574.png", // الموديل لابس العنابي
+                "https://i.postimg.cc/8C8tvKSK/1778252209457.png"  // الموديل لابس الأخضر البارد
             ]
         }
     ];
@@ -150,19 +150,6 @@
         let shipping = w_val === "none" ? 0 : parseInt(w_val);
         if(d_type === "office" && shipping > 200) shipping -= 200;
         document.getElementById('finalPrice').innerText = products[0].price + shipping;
-    }
-
-    function send() {
-        const n = document.getElementById('custN').value;
-        const ph = document.getElementById('custPh').value;
-        if(n && ph && document.getElementById('custW').value !== "none") {
-            const msg = `🚀 طلب جديد!\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 الإجمالي: ${document.getElementById('finalPrice').innerText} DA`;
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
-            }).then(res => { if(res.ok) alert("تم الإرسال بنجاح!"); });
-        } else { alert("يرجى ملء البيانات"); }
     }
 
     function closeP() { 

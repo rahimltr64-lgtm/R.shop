@@ -6,84 +6,81 @@
     <title>LUXURY STORE | متجر الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --gold-light: #f1c40f; --dark: #050505; --card: #111; --white: #ffffff; }
+        :root { --gold: #d4af37; --gold-light: #f1c40f; --dark: #0a0a0a; --card: #141414; --white: #ffffff; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--dark); color: var(--white); direction: rtl; overflow-x: hidden; }
-        header { background: #111; padding: 25px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 30px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin: 0; }
-        .container { max-width: 500px; margin: auto; padding: 20px; }
-        .product-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
-        .p-card { background: var(--card); border-radius: 25px; overflow: hidden; border: 1px solid #222; cursor: pointer; }
-        .p-card img { width: 100%; height: 300px; object-fit: cover; }
-        .p-card-info { padding: 20px; text-align: center; }
-        .p-price { color: var(--gold); font-size: 26px; font-weight: 900; }
+        header { background: #111; padding: 20px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 28px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin: 0; letter-spacing: 2px; }
+        .container { max-width: 500px; margin: auto; padding: 15px; }
+        
+        /* تصميم كروت المنتجات */
+        .product-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
+        .p-card img { width: 100%; height: 350px; object-fit: cover; }
+        .p-card-info { padding: 15px; text-align: center; }
+        .p-card-info h3 { margin: 10px 0; font-size: 18px; }
+        .p-price { color: var(--gold); font-size: 24px; font-weight: 900; }
+
+        /* صفحة المنتج */
         #product-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; overflow-y: auto; }
-        .back-btn { margin: 15px; background: none; color: white; border: 1px solid var(--gold); padding: 8px 25px; border-radius: 50px; cursor: pointer; font-family: 'Cairo'; }
+        .back-btn { margin: 15px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 50px; cursor: pointer; font-family: 'Cairo'; }
         
-        /* إصلاح نظام عرض الصور (التمرير الأفقي) */
-        .slider-box { width: 100%; height: 400px; border-radius: 20px; overflow: hidden; border: 1px solid #333; background: #000; }
+        .slider-box { width: 100%; height: 450px; border-radius: 15px; overflow: hidden; background: #000; display: flex; align-items: center; }
         .slider-box img { width: 100%; height: 100%; object-fit: contain; }
-        .thumbs { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 12px; 
-            overflow-x: auto; /* تفعيل التمرير */
-            padding: 10px 5px; 
-            justify-content: flex-start; 
-            -webkit-overflow-scrolling: touch;
-        }
-        .thumbs::-webkit-scrollbar { display: none; } /* إخفاء شريط التمرير المزعج */
-        .thumb { 
-            width: 80px; 
-            height: 80px; 
-            flex-shrink: 0; /* منع الصور من الانكماش */
-            border-radius: 12px; 
-            border: 2px solid #222; 
-            cursor: pointer; 
-            object-fit: cover; 
-            transition: 0.3s;
-        }
-        .thumb.active { border-color: var(--gold); transform: scale(1.1); }
         
-        .order-section { background: #0c0c0c; border: 2px solid var(--gold); border-radius: 30px; padding: 25px; margin-top: 25px; margin-bottom: 60px; }
-        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #151515; border: 1px solid #333; color: white; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; font-size: 16px; outline: none; }
-        .total-banner { background: rgba(212,175,55,0.15); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        .buy-now-btn { background: linear-gradient(45deg, var(--gold), var(--gold-light)); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 22px; font-weight: 900; cursor: pointer; }
-        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; }
-        label { display: block; margin-top: 15px; font-size: 14px; color: var(--gold); margin-right: 5px; font-weight: bold; }
+        .thumbs { display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding: 5px; -webkit-overflow-scrolling: touch; }
+        .thumbs::-webkit-scrollbar { display: none; }
+        .thumb { width: 75px; height: 75px; flex-shrink: 0; border-radius: 10px; border: 2px solid #222; cursor: pointer; object-fit: cover; }
+        .thumb.active { border-color: var(--gold); transform: scale(1.05); }
+
+        /* قسم الطلب */
+        .order-section { background: #111; border: 1px solid #333; border-top: 3px solid var(--gold); border-radius: 25px 25px 0 0; padding: 25px; margin-top: 20px; }
+        .total-banner { background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent); border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); padding: 15px; text-align: center; margin-bottom: 20px; font-size: 20px; }
+        
+        input, select { width: 100%; padding: 14px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 12px; font-family: 'Cairo'; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--gold); }
+        
+        label { display: block; margin-top: 10px; font-size: 13px; color: var(--gold); font-weight: bold; }
         .selection-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .buy-now-btn { background: linear-gradient(45deg, var(--gold), var(--gold-light)); color: black; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 15px; }
+        
+        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
 
 <header><h1 class="logo">LUXURY STORE</h1></header>
 
-<div class="container" id="home-view"><div class="product-grid" id="main-grid"></div></div>
+<div class="container" id="home-view">
+    <div class="product-grid" id="main-grid"></div>
+</div>
 
 <div id="product-page">
-    <button class="back-btn" onclick="closeP()">⬅️ عودة للمتجر</button>
+    <button class="back-btn" onclick="closeP()">⬅️ العودة للمتجر</button>
     <div id="p-content" class="container"></div>
 </div>
 
 <div class="success-overlay" id="successScreen">
     <div>
-        <div style="font-size:100px; color:var(--gold);">🏆</div>
-        <h1 style="color:var(--gold);">تم استلام طلبك!</h1>
-        <p>شكراً لك يا <b><span id="clientName"></span></b>، سنتصل بك لتأكيد طلبك.</p>
-        <button class="buy-now-btn" onclick="location.reload()" style="width:200px;">العودة</button>
+        <div style="font-size:80px;">✅</div>
+        <h1 style="color:var(--gold);">تم إرسال طلبك بنجاح!</h1>
+        <p>شكراً لك <b id="clientName"></b>. سنتصل بك قريباً لتأكيد طلبك.</p>
+        <button class="buy-now-btn" onclick="location.reload()" style="width:200px;">إغلاق</button>
     </div>
 </div>
 
 <script>
+    // بياناتك الخاصة - محفوظة وجاهزة
     const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
     const CHAT_ID = "5981194410";
 
     const products = [
         {
             id: 1,
-            name: "T-SHIRT صيفي بعدة الوان ",
+            name: "T-SHIRT صيفي بعدة ألوان",
             price: 1000,
-            colors: [" ازرق داكن ", "أبيض ", "اسود" ,"عنابي", "أزرق بارد", "وردي ", "اخضر بارد"],
-            sizes: ["M", "L ", " XL"],
+            colors: ["ازرق داكن", "أبيض", "اسود", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
+            sizes: ["M", "L", "XL"],
             images: [
                 "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
                 "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
@@ -113,53 +110,57 @@
 
     const grid = document.getElementById('main-grid');
     products.forEach(p => {
-        grid.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><img src="${p.images[0]}"><div class="p-card-info"><h3>${p.name}</h3><div class="p-price">${p.price} دج</div></div></div>`;
+        grid.innerHTML += `
+            <div class="p-card" onclick="openP(${p.id})">
+                <img src="${p.images[0]}">
+                <div class="p-card-info">
+                    <h3>${p.name}</h3>
+                    <div class="p-price">${p.price} دج</div>
+                </div>
+            </div>`;
     });
 
     let current = null;
     function openP(id) {
         current = products.find(x => x.id === id);
-        let w_opts = `<option value="none">-- اختر ولايتك --</option>`;
-        wilayas.forEach(w => w_opts += `<option value="${w.p}">${w.n}</option>`);
-
-        let color_opts = current.colors.map(c => `<option value="${c}">${c}</option>`).join('');
-        let size_opts = current.sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+        let w_opts = `<option value="none">-- اختر ولايتك --</option>` + wilayas.map(w => `<option value="${w.p}">${w.n}</option>`).join('');
 
         document.getElementById('p-content').innerHTML = `
             <div class="slider-box"><img src="${current.images[0]}" id="activeImg"></div>
             <div class="thumbs">${current.images.map((img, i) => `<img src="${img}" class="thumb ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
-            <h2 style="text-align:center;">${current.name}</h2>
+            
+            <h2 style="text-align:center; margin: 20px 0;">${current.name}</h2>
             
             <div class="order-section">
                 <div class="total-banner">الإجمالي: <span id="finalPrice">${current.price}</span> دج</div>
                 
                 <div class="selection-group">
-                    <div>
-                        <label>اللون:</label>
-                        <select id="custColor">${color_opts}</select>
-                    </div>
-                    <div>
-                        <label>المقاس:</label>
-                        <select id="custSize">${size_opts}</select>
-                    </div>
+                    <div><label>اللون:</label><select id="custColor">${current.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+                    <div><label>المقاس:</label><select id="custSize">${current.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
                 </div>
 
-                <label>معلومات الزبون:</label>
+                <label>معلومات التواصل:</label>
                 <input type="text" id="custN" placeholder="الإسم الكامل">
                 <input type="tel" id="custPh" placeholder="رقم الهاتف">
                 
-                <label>الولاية ومكان التوصيل:</label>
+                <label>الشحن والولاية:</label>
                 <select id="custW" onchange="updateTotal()">${w_opts}</select>
                 <select id="deliveryType" onchange="updateTotal()">
-                    <option value="home">توصيل للمنزل (سعر كامل)</option>
+                    <option value="home">توصيل للمنزل</option>
                     <option value="office">استلام من المكتب (خصم 200 دج)</option>
                 </select>
-                
                 <input type="text" id="custC" placeholder="البلدية والعنوان بالتفصيل">
-                <button class="buy-now-btn" onclick="send()">تأكيد الطلبية الآن 🛒</button>
+                
+                <button class="buy-now-btn" id="sendBtn" onclick="send()">تأكيد الطلبية 🛒</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         window.scrollTo(0,0);
+    }
+
+    function changeGallery(el, src) {
+        document.getElementById('activeImg').src = src;
+        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
     }
 
     function updateTotal() {
@@ -170,33 +171,27 @@
         document.getElementById('finalPrice').innerText = current.price + shipping;
     }
 
-    function changeGallery(el, src) {
-        document.getElementById('activeImg').src = src;
-        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-    }
-
     function send() {
         const n = document.getElementById('custN').value;
         const ph = document.getElementById('custPh').value;
         const w_sel = document.getElementById('custW');
-        const d_type = document.getElementById('deliveryType');
         const c = document.getElementById('custC').value;
-        const col = document.getElementById('custColor').value;
-        const siz = document.getElementById('custSize').value;
-        const tot = document.getElementById('finalPrice').innerText;
         
         if(n && ph && c && w_sel.value !== "none") {
-            const msg = `👑 طلبية جديدة من Luxury Store:\n📦 المنتج: ${current.name}\n🎨 اللون: ${col}\n📏 المقاس: ${siz}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏠 التوصيل: ${d_type.options[d_type.selectedIndex].text}\n🏘️ العنوان: ${c}\n💰 الإجمالي: ${tot} دج`;
+            document.getElementById('sendBtn').innerText = "جاري الإرسال...";
+            const msg = `👑 طلبية جديدة:\n📦 المنتج: ${current.name}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n💰 الإجمالي: ${document.getElementById('finalPrice').innerText} دج`;
             
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`)
-            .then(res => { 
-                if(res.ok) { 
-                    document.getElementById('clientName').innerText = n; 
-                    document.getElementById('successScreen').style.display = 'flex'; 
-                } 
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
+            }).then(res => {
+                if(res.ok) {
+                    document.getElementById('clientName').innerText = n;
+                    document.getElementById('successScreen').style.display = 'flex';
+                }
             });
-        } else { alert("يرجى ملء جميع الخانات واختيار الولاية"); }
+        } else { alert("يرجى ملء كافة الخانات"); }
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; }

@@ -28,7 +28,8 @@
         .total-banner { background: rgba(212,175,55,0.15); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
         .buy-now-btn { background: linear-gradient(45deg, var(--gold), var(--gold-light)); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 22px; font-weight: 900; cursor: pointer; }
         .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; }
-        label { display: block; margin-top: 10px; font-size: 14px; color: var(--gold); margin-right: 5px; }
+        label { display: block; margin-top: 15px; font-size: 14px; color: var(--gold); margin-right: 5px; font-weight: bold; }
+        .selection-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
@@ -46,54 +47,32 @@
     <div>
         <div style="font-size:100px; color:var(--gold);">🏆</div>
         <h1 style="color:var(--gold);">تم استلام طلبك!</h1>
-        <p>شكراً لك يا <b><span id="clientName"></span></b>، سنتصل بك قريباً.</p>
+        <p>شكراً لك يا <b><span id="clientName"></span></b>، سنتصل بك لتأكيد طلبك.</p>
         <button class="buy-now-btn" onclick="location.reload()" style="width:200px;">العودة</button>
     </div>
 </div>
 
 <script>
-    // 🛑 ضع بيانات التلغرام الخاصة بك هنا 🛑
-    const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
+    const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGj..."; 
     const CHAT_ID = "5981194410";
 
     const products = [
         {
             id: 1,
-            name: "ساعة EXPONI الرجالية متعددة المهام باللون الاسود",
-            price: 2000,
+            name: "T-SHIRT صيفي بعدة الوان ",
+            price: 1000,
+            colors: [" ازرق داكن ", "أبيض ", "اسود" ,"عنابي", "أزرق بارد", "وردي ", ""],
+            sizes: ["M", "L ", " XL"],
             images: [
-                "https://i.postimg.cc/g07W6w24/product-69416ed941139.jpg",
-                "https://i.postimg.cc/gJ6PyYwV/product-69416ed9438f1.jpg",
-                "https://i.postimg.cc/mkYfq8yb/product-69416ed94629f.jpg",
-                "https://i.postimg.cc/c4WNYGdZ/product-69416ed9488a8.jpg"
-            ]
-        }, 
-        {
-            id: 2, // الرقم 2 للمنتج الثاني
-            name: "قميص صيفي بالوان متعددة",
-            price: 1000, // ضع السعر الجديد هنا
-            images: [
-                "https://i.postimg.cc/CKnhdK43/1778252936394.png",
+                "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
+                "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
+                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
                 "https://i.postimg.cc/76F8cM8b/1778253686102.png",
                 "https://i.postimg.cc/FH8mt4Q0/1778253106574.png",
-                "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
-                "https://i.postimg.cc/8C8tvKSK/1778252209457.png",
-                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
-                "https://i.postimg.cc/SsfTkWHW/1778252993790.png"
-            ]
-        },
-                {
-            id: 3, // الرقم 2 للمنتج الثاني
-            name: " ساعة EXPONI  الفخمة متعددة المهام باللون الذهبي ",
-            price: 2000, // ضع السعر الجديد هنا
-            images: [
-                "https://i.postimg.cc/Jzqc0xgV/product-694177b4b5f6f.jpg",
-                "https://i.postimg.cc/3RygLTxS/product-694177b4b31f7.jpg",
-                "https://i.postimg.cc/66vrntSc/product-694177b4b02e9.jpg"
+                "https://i.postimg.cc/CKnhdK43/1778252936394.png",
+                "https://i.postimg.cc/8C8tvKSK/1778252209457.png"
             ]
         }
-
-
     ];
 
     const wilayas = [
@@ -119,31 +98,44 @@
     let current = null;
     function openP(id) {
         current = products.find(x => x.id === id);
-        let opts = `<option value="none">-- اختر ولايتك --</option>`;
-        wilayas.forEach(w => opts += `<option value="${w.p}">${w.n}</option>`);
+        let w_opts = `<option value="none">-- اختر ولايتك --</option>`;
+        wilayas.forEach(w => w_opts += `<option value="${w.p}">${w.n}</option>`);
+
+        let color_opts = current.colors.map(c => `<option value="${c}">${c}</option>`).join('');
+        let size_opts = current.sizes.map(s => `<option value="${s}">${s}</option>`).join('');
 
         document.getElementById('p-content').innerHTML = `
             <div class="slider-box"><img src="${current.images[0]}" id="activeImg"></div>
             <div class="thumbs">${current.images.map((img, i) => `<img src="${img}" class="thumb ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             <h2 style="text-align:center;">${current.name}</h2>
+            
             <div class="order-section">
                 <div class="total-banner">الإجمالي: <span id="finalPrice">${current.price}</span> دج</div>
                 
-                <label>معلومات العميل:</label>
+                <div class="selection-group">
+                    <div>
+                        <label>اللون:</label>
+                        <select id="custColor">${color_opts}</select>
+                    </div>
+                    <div>
+                        <label>المقاس:</label>
+                        <select id="custSize">${size_opts}</select>
+                    </div>
+                </div>
+
+                <label>معلومات الزبون:</label>
                 <input type="text" id="custN" placeholder="الإسم الكامل">
                 <input type="tel" id="custPh" placeholder="رقم الهاتف">
                 
-                <label>مكان التوصيل:</label>
-                <select id="custW" onchange="updateTotal()">${opts}</select>
-                
-                <label>نوع التوصيل:</label>
+                <label>الولاية ومكان التوصيل:</label>
+                <select id="custW" onchange="updateTotal()">${w_opts}</select>
                 <select id="deliveryType" onchange="updateTotal()">
-                    <option value="home">توصيل إلى المنزل (سعر كامل)</option>
-                    <option value="office">توصيل للمكتب /  (خصم 200 دج)</option>
+                    <option value="home">توصيل للمنزل (سعر كامل)</option>
+                    <option value="office">استلام من المكتب (خصم 200 دج)</option>
                 </select>
                 
-                <input type="text" id="custC" placeholder="البلدية">
-                <button class="buy-now-btn" onclick="send()">تأكيد الطلب الآن</button>
+                <input type="text" id="custC" placeholder="البلدية والعنوان بالتفصيل">
+                <button class="buy-now-btn" onclick="send()">تأكيد الطلبية الآن 🛒</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         window.scrollTo(0,0);
@@ -153,10 +145,7 @@
         const w_val = document.getElementById('custW').value;
         const d_type = document.getElementById('deliveryType').value;
         let shipping = w_val === "none" ? 0 : parseInt(w_val);
-        
-        // إذا اختار المكتب، يتم خصم 200 دج من سعر التوصيل (مثال)
         if(d_type === "office" && shipping > 200) shipping -= 200;
-        
         document.getElementById('finalPrice').innerText = current.price + shipping;
     }
 
@@ -172,10 +161,12 @@
         const w_sel = document.getElementById('custW');
         const d_type = document.getElementById('deliveryType');
         const c = document.getElementById('custC').value;
+        const col = document.getElementById('custColor').value;
+        const siz = document.getElementById('custSize').value;
         const tot = document.getElementById('finalPrice').innerText;
         
         if(n && ph && c && w_sel.value !== "none") {
-            const msg = `👑 طلبية جديدة من المتجر:\n📦 المنتج: ${current.name}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏠 مكان التوصيل: ${d_type.options[d_type.selectedIndex].text}\n🏘️ البلدية: ${c}\n💰 الإجمالي: ${tot} دج`;
+            const msg = `👑 طلبية جديدة من Luxury Store:\n📦 المنتج: ${current.name}\n🎨 اللون: ${col}\n📏 المقاس: ${siz}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🏠 التوصيل: ${d_type.options[d_type.selectedIndex].text}\n🏘️ العنوان: ${c}\n💰 الإجمالي: ${tot} دج`;
             
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`)
             .then(res => { 
@@ -184,7 +175,7 @@
                     document.getElementById('successScreen').style.display = 'flex'; 
                 } 
             });
-        } else { alert("يرجى ملء كافة البيانات واختيار الولاية"); }
+        } else { alert("يرجى ملء جميع الخانات واختيار الولاية"); }
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; }

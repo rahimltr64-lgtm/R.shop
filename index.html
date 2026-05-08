@@ -7,21 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --main: #1a1a1a; --gold: #c5a059; --bg: #f2f4f7; --card-bg: #ffffff; --radius: 30px; }
-        
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); color: #222; overflow-x: hidden; }
-        
-        /* هيدر بتصميم زجاجي ناعم */
         header { 
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
             padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid rgba(0,0,0,0.03);
         }
         .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; }
-
         .container { max-width: 500px; margin: auto; padding: 25px 15px; }
-
-        /* تطوير الكارت (Product Card) */
         .product-grid { display: grid; grid-template-columns: 1fr; gap: 35px; }
         .p-card { 
             background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
@@ -30,47 +24,29 @@
         }
         .p-card:active { transform: scale(0.97); }
         .p-img-hold { width: 100%; height: 420px; background: #fff; overflow: hidden; }
-        .p-card img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.05); }
+        .p-card img { width: 100%; height: 100%; object-fit: contain; }
         .p-info { padding: 25px; text-align: center; background: #fff; border-top: 1px solid #f0f0f0; }
         .p-name { font-size: 18px; font-weight: 700; color: #444; margin-bottom: 8px; }
         .p-price-tag { font-weight: 900; color: var(--main); font-size: 24px; display: block; }
-
-        /* صفحة المنتج - تحسين السلاسة */
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f8f9fb; z-index: 2000; overflow-y: auto;
             animation: slideIn 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
         .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; display: flex; justify-content: space-between; align-items: center; }
         .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.08); cursor: pointer; color: #000; font-size: 20px; }
-
         .hero-slider { width: 100%; height: 50vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
         .hero-slider img { width: 100%; height: 90%; object-fit: contain; }
-        
         .thumbs-strip { display: flex; gap: 15px; padding: 25px; overflow-x: auto; }
         .t-item { width: 75px; height: 75px; flex-shrink: 0; border-radius: 20px; border: 2px solid transparent; object-fit: cover; background: #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.04); }
         .t-item.active { border-color: var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-
-        /* نموذج الطلب */
         .order-form { padding: 0 20px 50px 20px; }
         .white-card { background: #fff; border-radius: 30px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-        
         .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; }
         .final-price-box span { font-size: 32px; font-weight: 900; }
-
-        input, select { 
-            width: 100%; padding: 18px; border-radius: 20px; border: 1px solid #eee; 
-            background: #f9f9f9; font-family: 'Cairo'; font-size: 16px; outline: none; margin-bottom: 12px;
-        }
-        input:focus { border-color: var(--main); background: #fff; }
-
-        .btn-send { 
-            background: var(--main); color: #fff; border: none; width: 100%; 
-            padding: 22px; border-radius: 22px; font-size: 20px; font-weight: 700;
-            cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: 0.3s;
-        }
+        input, select { width: 100%; padding: 18px; border-radius: 20px; border: 1px solid #eee; background: #f9f9f9; font-family: 'Cairo'; font-size: 16px; outline: none; margin-bottom: 12px; }
+        .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 22px; border-radius: 22px; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: 0.3s; }
         .btn-send:active { transform: scale(0.95); }
     </style>
 </head>
@@ -94,18 +70,26 @@
     const products = [
         {
             id: 1,
-            name: "Premium Armani T-Shirt",
+            name: "Premium Summer T-Shirt",
             price: 1000,
-            colors: ["اسود", "أبيض", "ازرق داكن", "عنابي"],
-            sizes: ["M", "L", "XL", "XXL"],
+            colors: ["ازرق داكن", "أبيض", "اسود", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
+            sizes: ["M", "L", "XL"],
             images: [
-                "https://i.postimg.cc/SsfTkWHW/1778252993790.png", "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
-                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png", "https://i.postimg.cc/76F8cM8b/1778253686102.png"
+                "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
+                "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
+                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
+                "https://i.postimg.cc/76F8cM8b/1778253686102.png",
+                "https://i.postimg.cc/FH8mt4Q0/1778253106574.png",
+                "https://i.postimg.cc/CKnhdK43/1778252936394.png",
+                "https://i.postimg.cc/8C8tvKSK/1778252209457.png"
             ]
         }
     ];
 
-    const wilayas = [{n: "19-سطيف", p: 300}, {n: "16-الجزائر العاصمة", p: 400}];
+    const wilayas = [
+        {n: "19-سطيف", p: 300}, {n: "16-الجزائر العاصمة", p: 400}, {n: "31-وهران", p: 600}, {n: "25-قسنطينة", p: 500},
+        {n: "09-البليدة", p: 450}, {n: "34-برج بوعريريج", p: 500}, {n: "35-بومرداس", p: 500}
+    ];
 
     const grid = document.getElementById('main-grid');
     products.forEach(p => {
@@ -132,14 +116,12 @@
                     <small>المبلغ الإجمالي للدفع</small><br>
                     <span id="finalPrice">${p.price}</span> DA
                 </div>
-
                 <div class="white-card">
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                        <div><label>اللون</label><select id="custColor">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
-                        <div><label>المقاس</label><select id="custSize">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
+                        <div><label style="font-size:12px;color:#999">اللون</label><select id="custColor">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+                        <div><label style="font-size:12px;color:#999">المقاس</label><select id="custSize">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
                     </div>
                 </div>
-
                 <div class="white-card">
                     <input type="text" id="custN" placeholder="الإسم الكامل">
                     <input type="tel" id="custPh" placeholder="رقم الهاتف">
@@ -150,7 +132,6 @@
                     </select>
                     <input type="text" id="custC" placeholder="البلدية والعنوان">
                 </div>
-                
                 <button class="btn-send" onclick="send()">تأكيد الطلبية الآن 🛍️</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
@@ -169,6 +150,19 @@
         let shipping = w_val === "none" ? 0 : parseInt(w_val);
         if(d_type === "office" && shipping > 200) shipping -= 200;
         document.getElementById('finalPrice').innerText = products[0].price + shipping;
+    }
+
+    function send() {
+        const n = document.getElementById('custN').value;
+        const ph = document.getElementById('custPh').value;
+        if(n && ph && document.getElementById('custW').value !== "none") {
+            const msg = `🚀 طلب جديد!\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 الإجمالي: ${document.getElementById('finalPrice').innerText} DA`;
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
+            }).then(res => { if(res.ok) alert("تم الإرسال بنجاح!"); });
+        } else { alert("يرجى ملء البيانات"); }
     }
 
     function closeP() { 

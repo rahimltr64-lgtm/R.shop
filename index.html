@@ -6,45 +6,48 @@
     <title>LUXURY STORE | متجر الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --gold-light: #f1c40f; --dark: #0a0a0a; --card: #141414; --white: #ffffff; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--dark); color: var(--white); direction: rtl; overflow-x: hidden; }
-        header { background: #111; padding: 20px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 28px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin: 0; letter-spacing: 2px; }
+        :root { --accent: #000000; --gold: #d4af37; --bg: #ffffff; --card: #f9f9f9; --text: #1a1a1a; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); color: var(--text); direction: rtl; overflow-x: hidden; }
+        
+        header { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-size: 24px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        
         .container { max-width: 500px; margin: auto; padding: 15px; }
         
-        /* تصميم كروت المنتجات */
+        /* كروت المنتجات بتصميم نظيف */
         .product-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
-        .p-card img { width: 100%; height: 350px; object-fit: cover; }
-        .p-card-info { padding: 15px; text-align: center; }
-        .p-card-info h3 { margin: 10px 0; font-size: 18px; }
-        .p-price { color: var(--gold); font-size: 24px; font-weight: 900; }
+        .p-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
+        .p-card img { width: 100%; height: 400px; object-fit: cover; }
+        .p-card-info { padding: 15px; text-align: right; }
+        .p-card-info h3 { margin: 5px 0; font-size: 18px; color: #333; }
+        .p-price { color: var(--gold); font-size: 22px; font-weight: 900; margin-top: 5px; }
 
         /* صفحة المنتج */
-        #product-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; overflow-y: auto; }
-        .back-btn { margin: 15px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 50px; cursor: pointer; font-family: 'Cairo'; }
+        #product-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; overflow-y: auto; }
+        .back-btn { margin: 15px; background: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 8px 20px; border-radius: 50px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
         
-        .slider-box { width: 100%; height: 450px; border-radius: 15px; overflow: hidden; background: #000; display: flex; align-items: center; }
+        .slider-box { width: 100%; height: 450px; background: #fcfcfc; display: flex; align-items: center; border-bottom: 1px solid #eee; }
         .slider-box img { width: 100%; height: 100%; object-fit: contain; }
         
-        .thumbs { display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding: 5px; -webkit-overflow-scrolling: touch; }
+        .thumbs { display: flex; gap: 10px; padding: 15px; overflow-x: auto; -webkit-overflow-scrolling: touch; background: #fff; }
         .thumbs::-webkit-scrollbar { display: none; }
-        .thumb { width: 75px; height: 75px; flex-shrink: 0; border-radius: 10px; border: 2px solid #222; cursor: pointer; object-fit: cover; }
-        .thumb.active { border-color: var(--gold); transform: scale(1.05); }
+        .thumb { width: 70px; height: 70px; flex-shrink: 0; border-radius: 8px; border: 1px solid #eee; cursor: pointer; object-fit: cover; }
+        .thumb.active { border: 2px solid var(--accent); }
 
-        /* قسم الطلب */
-        .order-section { background: #111; border: 1px solid #333; border-top: 3px solid var(--gold); border-radius: 25px 25px 0 0; padding: 25px; margin-top: 20px; }
-        .total-banner { background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent); border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); padding: 15px; text-align: center; margin-bottom: 20px; font-size: 20px; }
+        /* قسم الطلب العصرى */
+        .order-section { background: #fff; padding: 20px; margin-top: 10px; border-top: 10px solid #f5f5f5; padding-bottom: 50px; }
+        .total-banner { background: #fdfae9; border: 1px solid #f1e7bc; padding: 15px; text-align: center; border-radius: 12px; margin-bottom: 20px; font-size: 20px; font-weight: 700; color: #856404; }
         
-        input, select { width: 100%; padding: 14px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 12px; font-family: 'Cairo'; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus, select:focus { border-color: var(--gold); }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; background: #f9f9f9; border: 1px solid #ddd; color: #333; border-radius: 10px; font-family: 'Cairo'; font-size: 16px; outline: none; box-sizing: border-box; }
+        input:focus, select:focus { border-color: var(--accent); background: #fff; }
         
-        label { display: block; margin-top: 10px; font-size: 13px; color: var(--gold); font-weight: bold; }
+        label { display: block; margin-top: 10px; font-size: 13px; color: #666; font-weight: bold; padding-right: 5px; }
         .selection-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        .buy-now-btn { background: linear-gradient(45deg, var(--gold), var(--gold-light)); color: black; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 15px; }
+        .buy-now-btn { background: var(--accent); color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 20px; font-weight: 700; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        .buy-now-btn:active { transform: scale(0.98); background: #333; }
         
-        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 5000; display: none; align-items: center; justify-content: center; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
@@ -56,21 +59,20 @@
 </div>
 
 <div id="product-page">
-    <button class="back-btn" onclick="closeP()">⬅️ العودة للمتجر</button>
-    <div id="p-content" class="container"></div>
+    <button class="back-btn" onclick="closeP()">✕ إغلاق</button>
+    <div id="p-content"></div>
 </div>
 
 <div class="success-overlay" id="successScreen">
     <div>
-        <div style="font-size:80px;">✅</div>
-        <h1 style="color:var(--gold);">تم إرسال طلبك بنجاح!</h1>
-        <p>شكراً لك <b id="clientName"></b>. سنتصل بك قريباً لتأكيد طلبك.</p>
-        <button class="buy-now-btn" onclick="location.reload()" style="width:200px;">إغلاق</button>
+        <div style="font-size:80px;">🎯</div>
+        <h1 style="color:#2ecc71;">تم استلام طلبك!</h1>
+        <p>شكراً لك <b id="clientName"></b>. سنتصل بك قريباً لتأكيد الألوان والمقاس.</p>
+        <button class="buy-now-btn" onclick="location.reload()" style="width:200px;">العودة للمتجر</button>
     </div>
 </div>
 
 <script>
-    // بياناتك الخاصة - محفوظة وجاهزة
     const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
     const CHAT_ID = "5981194410";
 
@@ -82,12 +84,9 @@
             colors: ["ازرق داكن", "أبيض", "اسود", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
             sizes: ["M", "L", "XL"],
             images: [
-                "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
-                "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
-                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
-                "https://i.postimg.cc/76F8cM8b/1778253686102.png",
-                "https://i.postimg.cc/FH8mt4Q0/1778253106574.png",
-                "https://i.postimg.cc/CKnhdK43/1778252936394.png",
+                "https://i.postimg.cc/SsfTkWHW/1778252993790.png", "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
+                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png", "https://i.postimg.cc/76F8cM8b/1778253686102.png",
+                "https://i.postimg.cc/FH8mt4Q0/1778253106574.png", "https://i.postimg.cc/CKnhdK43/1778252936394.png",
                 "https://i.postimg.cc/8C8tvKSK/1778252209457.png"
             ]
         }
@@ -110,14 +109,7 @@
 
     const grid = document.getElementById('main-grid');
     products.forEach(p => {
-        grid.innerHTML += `
-            <div class="p-card" onclick="openP(${p.id})">
-                <img src="${p.images[0]}">
-                <div class="p-card-info">
-                    <h3>${p.name}</h3>
-                    <div class="p-price">${p.price} دج</div>
-                </div>
-            </div>`;
+        grid.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><img src="${p.images[0]}"><div class="p-card-info"><h3>${p.name}</h3><div class="p-price">${p.price} دج</div></div></div>`;
     });
 
     let current = null;
@@ -129,32 +121,29 @@
             <div class="slider-box"><img src="${current.images[0]}" id="activeImg"></div>
             <div class="thumbs">${current.images.map((img, i) => `<img src="${img}" class="thumb ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             
-            <h2 style="text-align:center; margin: 20px 0;">${current.name}</h2>
-            
-            <div class="order-section">
-                <div class="total-banner">الإجمالي: <span id="finalPrice">${current.price}</span> دج</div>
-                
-                <div class="selection-group">
-                    <div><label>اللون:</label><select id="custColor">${current.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
-                    <div><label>المقاس:</label><select id="custSize">${current.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
-                </div>
+            <div class="container">
+                <h2 style="margin: 10px 0;">${current.name}</h2>
+                <div class="order-section">
+                    <div class="total-banner">المجموع: <span id="finalPrice">${current.price}</span> دج</div>
+                    
+                    <div class="selection-group">
+                        <div><label>اللون:</label><select id="custColor">${current.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+                        <div><label>المقاس:</label><select id="custSize">${current.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
+                    </div>
 
-                <label>معلومات التواصل:</label>
-                <input type="text" id="custN" placeholder="الإسم الكامل">
-                <input type="tel" id="custPh" placeholder="رقم الهاتف">
-                
-                <label>الشحن والولاية:</label>
-                <select id="custW" onchange="updateTotal()">${w_opts}</select>
-                <select id="deliveryType" onchange="updateTotal()">
-                    <option value="home">توصيل للمنزل</option>
-                    <option value="office">استلام من المكتب   </option>
-                </select>
-                <input type="text" id="custC" placeholder="البلدية والعنوان بالتفصيل">
-                
-                <button class="buy-now-btn" id="sendBtn" onclick="send()">تأكيد الطلبية 🛒</button>
+                    <label>البيانات المطلوبة:</label>
+                    <input type="text" id="custN" placeholder="الإسم واللقب">
+                    <input type="tel" id="custPh" placeholder="رقم الهاتف">
+                    <select id="custW" onchange="updateTotal()">${w_opts}</select>
+                    <select id="deliveryType" onchange="updateTotal()">
+                        <option value="home">توصيل للمنزل</option>
+                        <option value="office">استلام من المكتب (خصم 200 دج)</option>
+                    </select>
+                    <input type="text" id="custC" placeholder="العنوان بالتفصيل">
+                    <button class="buy-now-btn" id="sendBtn" onclick="send()">تأكيد الطلب الآن 🛍️</button>
+                </div>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
-        window.scrollTo(0,0);
     }
 
     function changeGallery(el, src) {
@@ -175,11 +164,10 @@
         const n = document.getElementById('custN').value;
         const ph = document.getElementById('custPh').value;
         const w_sel = document.getElementById('custW');
-        const c = document.getElementById('custC').value;
         
-        if(n && ph && c && w_sel.value !== "none") {
+        if(n && ph && w_sel.value !== "none") {
             document.getElementById('sendBtn').innerText = "جاري الإرسال...";
-            const msg = `👑 طلبية جديدة:\n📦 المنتج: ${current.name}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n💰 الإجمالي: ${document.getElementById('finalPrice').innerText} دج`;
+            const msg = `📦 طلبية تيشرت:\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 السعر: ${document.getElementById('finalPrice').innerText} دج`;
             
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -191,7 +179,7 @@
                     document.getElementById('successScreen').style.display = 'flex';
                 }
             });
-        } else { alert("يرجى ملء كافة الخانات"); }
+        } else { alert("من فضلك أكمل البيانات الأساسية"); }
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; }

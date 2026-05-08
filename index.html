@@ -76,7 +76,7 @@
 <div class="success-overlay" id="successScreen">
     <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
     <h1>تم استلام طلبك!</h1>
-    <p>سنتصل بك لتأكيد الطلب وشحن عرضك عبر <b>Noest Express</b>.</p>
+    <p>سنتصل بك لتأكيد الألوان وشحن طلبك عبر <b>Noest Express</b>.</p>
     <button class="btn-send" onclick="location.reload()" style="width: 200px; margin-top: 20px;">حسناً</button>
 </div>
 
@@ -101,7 +101,6 @@
         ]
     }];
 
-    // أسعار شركة نواست (Noest) لعام 2026 لجميع الولايات
     const wilayas = [
         {n: "01-أدرار", p: 1200}, {n: "02-الشلف", p: 800}, {n: "03-الأغواط", p: 900}, {n: "04-أم البواقي", p: 800},
         {n: "05-باتنة", p: 850}, {n: "06-بجاية", p: 750}, {n: "07-بسكرة", p: 900}, {n: "08-بشار", p: 1000},
@@ -127,7 +126,7 @@
                 <div class="p-img-hold"><img src="${p.images[0]}"></div>
                 <div class="p-info">
                     <div class="p-name">${p.name}</div>
-                    <div class="p-price-tag">1000 DA <small style="font-size:11px; color:var(--accent)">(عرض: 2 بـ 1800)</small></div>
+                    <div class="p-price-tag">1000 DA <small style="font-size:11px; color:var(--accent)">(2 بـ 1800)</small></div>
                 </div>
             </div>`;
     });
@@ -141,21 +140,32 @@
             <div class="thumbs-strip">${p.images.map((img, i) => `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             
             <div class="order-form">
-                <div class="offer-tag">✨ عرض حصري: قطعتين بـ <b>1800 دج</b> فقط!</div>
+                <div class="offer-tag">✨ عرض: قطعتين بـ <b>1800 دج</b> (يمكنك اختيار ألوان مختلفة)</div>
                 <div class="final-price-box">
                     <div class="discount-badge" id="disBadge">وفرت 200 دج! 😍</div>
-                    <small>الإجمالي شامل التوصيل (Noest)</small><br><span id="finalPrice">${p.price}</span> DA
+                    <small>الإجمالي شامل التوصيل</small><br><span id="finalPrice">${p.price}</span> DA
                 </div>
                 <div class="white-card">
                     <label>الكمية</label>
                     <select id="custQty" onchange="updateTotal()">
                         <option value="1">قطعة واحدة (1000 دج)</option>
-                        <option value="2">قطعتين (1800 دج) - الأكثر طلباً 🔥</option>
-                        <option value="3">3 قطع (2500 دج)</option>
+                        <option value="2">قطعتين (1800 دج) 🔥</option>
                     </select>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                        <div><label>اللون</label><select id="custColor">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
-                        <div><label>المقاس</label><select id="custSize">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
+                    
+                    <div style="padding:10px 0;">
+                        <label>القطعة الأولى:</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                            <select id="custColor">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                            <select id="custSize">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                        </div>
+                    </div>
+
+                    <div id="second-item-options" style="display:none; border-top: 1px dashed #eee; padding-top: 15px; margin-top: 10px;">
+                        <label style="color:var(--accent)">القطعة الثانية (اختياري):</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                            <select id="custColor2">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                            <select id="custSize2">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                        </div>
                     </div>
                 </div>
                 <div class="white-card">
@@ -164,7 +174,7 @@
                     <select id="custW" onchange="updateTotal()">${w_opts}</select>
                     <select id="deliveryType" onchange="updateTotal()">
                         <option value="home">توصيل للمنزل</option>
-                        <option value="office">استلام من المكتب (Stop Desk - خصم)</option>
+                        <option value="office">استلام من المكتب (Noest Desk)</option>
                     </select>
                 </div>
                 <button class="btn-send" onclick="send()">إرسال الطلب الآن 🛍️</button>
@@ -173,23 +183,18 @@
         document.body.style.overflow = 'hidden';
     }
 
-    function changeGallery(el, src) {
-        document.getElementById('activeImg').src = src;
-        document.querySelectorAll('.t-item').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-    }
-
     function updateTotal() {
         const qty = document.getElementById('custQty').value;
         const w_val = document.getElementById('custW').value;
         const d_type = document.getElementById('deliveryType').value;
         const badge = document.getElementById('disBadge');
+        const secondItem = document.getElementById('second-item-options');
         
-        let pPrice = (qty === "2") ? 1800 : (qty === "3") ? 2800 : 1000;
+        let pPrice = (qty === "2") ? 1800 : 1000;
         badge.style.display = (qty === "2") ? 'block' : 'none';
+        secondItem.style.display = (qty === "2") ? 'block' : 'none';
 
         let ship = w_val === "none" ? 0 : parseInt(w_val);
-        // خصم نواست للمكتب يتراوح بين 300 و 400 دج
         if(d_type === "office" && ship > 300) ship -= 300;
         
         document.getElementById('finalPrice').innerText = pPrice + ship;
@@ -197,14 +202,28 @@
 
     function send() {
         const n = document.getElementById('custN').value, ph = document.getElementById('custPh').value, w = document.getElementById('custW');
+        const qty = document.getElementById('custQty').value;
+        
         if(n && ph && w.value !== "none") {
-            const msg = `📦 طلب جديد Noest!\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🛍️ الكمية: ${document.getElementById('custQty').value}\n🎨 اللون: ${document.getElementById('custColor').value}\n💰 المجموع: ${document.getElementById('finalPrice').innerText} DA`;
+            let colorDetails = `🎨 لون 1: ${document.getElementById('custColor').value} (${document.getElementById('custSize').value})`;
+            if(qty === "2") {
+                colorDetails += `\n🎨 لون 2: ${document.getElementById('custColor2').value} (${document.getElementById('custSize2').value})`;
+            }
+
+            const msg = `📦 طلب جديد Noest!\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🛍️ الكمية: ${qty}\n${colorDetails}\n💰 المجموع: ${document.getElementById('finalPrice').innerText} DA`;
+            
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
             }).then(res => { if(res.ok) document.getElementById('successScreen').style.display = 'flex'; });
         } else { alert("يرجى إدخال جميع البيانات"); }
+    }
+
+    function changeGallery(el, src) {
+        document.getElementById('activeImg').src = src;
+        document.querySelectorAll('.t-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; }

@@ -6,7 +6,7 @@
     <title>LUXURY STORE | متجر الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #1a1a1a; --bg: #f2f4f7; --card-bg: #ffffff; --radius: 30px; }
+        :root { --main: #1a1a1a; --bg: #f2f4f7; --card-bg: #ffffff; --radius: 30px; --accent: #e67e22; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); color: #222; overflow-x: hidden; }
         
@@ -18,21 +18,17 @@
         .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; }
         .container { max-width: 500px; margin: auto; padding: 25px 15px; }
 
-        /* تصميم كرت المنتج */
-        .product-grid { display: grid; grid-template-columns: 1fr; gap: 35px; }
         .p-card { 
             background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.06); border: 1px solid rgba(255,255,255,0.8);
             transition: 0.3s ease; cursor: pointer;
         }
-        .p-card:active { transform: scale(0.97); }
         .p-img-hold { width: 100%; height: 420px; background: #fff; overflow: hidden; }
         .p-card img { width: 100%; height: 100%; object-fit: contain; }
         .p-info { padding: 25px; text-align: center; background: #fff; border-top: 1px solid #f0f0f0; }
         .p-name { font-size: 18px; font-weight: 700; color: #444; margin-bottom: 8px; }
         .p-price-tag { font-weight: 900; color: var(--main); font-size: 24px; display: block; }
 
-        /* واجهة المنتج */
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f8f9fb; z-index: 2000; overflow-y: auto;
@@ -49,15 +45,17 @@
         .t-item { width: 75px; height: 75px; flex-shrink: 0; border-radius: 20px; border: 2px solid transparent; background: #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.04); }
         .t-item.active { border-color: var(--main); }
 
-        /* استمارة الطلب */
         .order-form { padding: 0 20px 50px 20px; }
         .white-card { background: #fff; border-radius: 30px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
-        .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; }
+        
+        .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; position: relative; }
         .final-price-box span { font-size: 32px; font-weight: 900; }
+        .discount-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 4px 15px; border-radius: 10px; font-size: 12px; font-weight: bold; display: none; }
 
         label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: #999; }
         input, select { width: 100%; padding: 18px; border-radius: 20px; border: 1px solid #eee; background: #f9f9f9; font-family: 'Cairo'; font-size: 16px; outline: none; margin-bottom: 12px; }
 
+        .offer-tag { background: #fff3cd; color: #856404; padding: 10px; border-radius: 15px; font-size: 14px; text-align: center; margin-bottom: 15px; border: 1px dashed #ffeeba; }
         .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 22px; border-radius: 22px; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
         .success-overlay { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
     </style>
@@ -77,8 +75,8 @@
 
 <div class="success-overlay" id="successScreen">
     <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
-    <h1>تم استلام طلبك بنجاح!</h1>
-    <p>سنتصل بك في غضون 24 ساعة لتأكيد الشحن عبر  .</p>
+    <h1>تم استلام طلبك!</h1>
+    <p>سنتصل بك لتأكيد الطلب وشحن عرضك عبر <b>Noest Express</b>.</p>
     <button class="btn-send" onclick="location.reload()" style="width: 200px; margin-top: 20px;">حسناً</button>
 </div>
 
@@ -93,7 +91,7 @@
         colors: ["أبيض ملكي", "اسود فخم", "ازرق داكن", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
         sizes: ["M", "L", "XL"],
         images: [
-            "https://i.postimg.cc/3xYKhDnW/1778264788756.png", // صورتك الجديدة للتيشيرت الأبيض
+            "https://i.postimg.cc/3xYKhDnW/1778264788756.png",
             "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
             "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
             "https://i.postimg.cc/CKnhdK43/1778252936394.png",
@@ -103,23 +101,23 @@
         ]
     }];
 
-    // أسعار ZR Express لعام 2026 (توصيل للمنزل)
+    // أسعار شركة نواست (Noest) لعام 2026 لجميع الولايات
     const wilayas = [
-        {n: "01-أدرار", p: 1300}, {n: "02-الشلف", p: 850}, {n: "03-الأغواط", p: 950}, {n: "04-أم البواقي", p: 850},
-        {n: "05-باتنة", p: 900}, {n: "06-بجاية", p: 800}, {n: "07-بسكرة", p: 950}, {n: "08-بشار", p: 1000},
-        {n: "09-البليدة", p: 600}, {n: "10-البويرة", p: 700}, {n: "11-تمنراست", p: 1500}, {n: "12-تبسة", p: 900},
-        {n: "13-تلمسان", p: 900}, {n: "14-تيارت", p: 850}, {n: "15-تيزي وزو", p: 750}, {n: "16-الجزائر", p: 400},
-        {n: "17-الجلفة", p: 950}, {n: "18-جيجل", p: 900}, {n: "19-سطيف", p: 800}, {n: "20-سعيدة", p: 900},
-        {n: "21-سكيكدة", p: 900}, {n: "22-سيدي بلعباس", p: 900}, {n: "23-عنابة", p: 850}, {n: "24-قالمة", p: 900},
-        {n: "25-قسنطينة", p: 800}, {n: "26-المدية", p: 800}, {n: "27-مستغانم", p: 900}, {n: "28-المسيلة", p: 850},
-        {n: "29-معسكر", p: 900}, {n: "30-ورقلة", p: 950}, {n: "31-وهران", p: 800}, {n: "32-البيض", p: 1000},
-        {n: "33-إليزي", p: 1500}, {n: "34-برج بوعريريج", p: 800}, {n: "35-بومرداس", p: 700}, {n: "36-الطارف", p: 850},
-        {n: "37-تندوف", p: 1500}, {n: "38-تيسمسيلت", p: 900}, {n: "39-الوادي", p: 950}, {n: "40-خنشلة", p: 900},
-        {n: "41-سوق أهراس", p: 900}, {n: "42-تيبازة", p: 700}, {n: "43-ميلة", p: 900}, {n: "44-عين الدفلى", p: 900},
-        {n: "45-النعامة", p: 1000}, {n: "46-عين تموشنت", p: 900}, {n: "47-غرداية", p: 950}, {n: "48-غليزان", p: 900},
-        {n: "49-تيميمون", p: 1300}, {n: "50-برج باجي مختار", p: 1500}, {n: "51-أولاد جلال", p: 950}, {n: "52-بني عباس", p: 1000},
-        {n: "53-عين صالح", p: 1500}, {n: "54-عين قزام", p: 1500}, {n: "55-تقرت", p: 950}, {n: "56-جانت", p: 1500},
-        {n: "57-المغير", p: 950}, {n: "58-المنيعة", p: 1000}
+        {n: "01-أدرار", p: 1200}, {n: "02-الشلف", p: 800}, {n: "03-الأغواط", p: 900}, {n: "04-أم البواقي", p: 800},
+        {n: "05-باتنة", p: 850}, {n: "06-بجاية", p: 750}, {n: "07-بسكرة", p: 900}, {n: "08-بشار", p: 1000},
+        {n: "09-البليدة", p: 600}, {n: "10-البويرة", p: 700}, {n: "11-تمنراست", p: 1400}, {n: "12-تبسة", p: 850},
+        {n: "13-تلمسان", p: 850}, {n: "14-تيارت", p: 800}, {n: "15-تيزي وزو", p: 700}, {n: "16-الجزائر", p: 400},
+        {n: "17-الجلفة", p: 900}, {n: "18-جيجل", p: 800}, {n: "19-سطيف", p: 750}, {n: "20-سعيدة", p: 850},
+        {n: "21-سكيكدة", p: 850}, {n: "22-سيدي بلعباس", p: 850}, {n: "23-عنابة", p: 800}, {n: "24-قالمة", p: 800},
+        {n: "25-قسنطينة", p: 750}, {n: "26-المدية", p: 750}, {n: "27-مستغانم", p: 850}, {n: "28-المسيلة", p: 800},
+        {n: "29-معسكر", p: 850}, {n: "30-ورقلة", p: 900}, {n: "31-وهران", p: 750}, {n: "32-البيض", p: 950},
+        {n: "33-إليزي", p: 1400}, {n: "34-برج بوعريريج", p: 750}, {n: "35-بومرداس", p: 650}, {n: "36-الطارف", p: 850},
+        {n: "37-تندوف", p: 1400}, {n: "38-تيسمسيلت", p: 850}, {n: "39-الوادي", p: 900}, {n: "40-خنشلة", p: 850},
+        {n: "41-سوق أهراس", p: 850}, {n: "42-تيبازة", p: 650}, {n: "43-ميلة", p: 850}, {n: "44-عين الدفلى", p: 800},
+        {n: "45-النعامة", p: 950}, {n: "46-عين تموشنت", p: 850}, {n: "47-غرداية", p: 900}, {n: "48-غليزان", p: 800},
+        {n: "49-تيميمون", p: 1200}, {n: "50-برج باجي مختار", p: 1500}, {n: "51-أولاد جلال", p: 900}, {n: "52-بني عباس", p: 1000},
+        {n: "53-عين صالح", p: 1400}, {n: "54-عين قزام", p: 1500}, {n: "55-تقرت", p: 900}, {n: "56-جانت", p: 1500},
+        {n: "57-المغير", p: 900}, {n: "58-المنيعة", p: 1000}
     ];
 
     const grid = document.getElementById('main-grid');
@@ -129,7 +127,7 @@
                 <div class="p-img-hold"><img src="${p.images[0]}"></div>
                 <div class="p-info">
                     <div class="p-name">${p.name}</div>
-                    <div class="p-price-tag">${p.price} DA</div>
+                    <div class="p-price-tag">1000 DA <small style="font-size:11px; color:var(--accent)">(عرض: 2 بـ 1800)</small></div>
                 </div>
             </div>`;
     });
@@ -143,8 +141,18 @@
             <div class="thumbs-strip">${p.images.map((img, i) => `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             
             <div class="order-form">
-                <div class="final-price-box"><small>الإجمالي للدفع</small><br><span id="finalPrice">${p.price}</span> DA</div>
+                <div class="offer-tag">✨ عرض حصري: قطعتين بـ <b>1800 دج</b> فقط!</div>
+                <div class="final-price-box">
+                    <div class="discount-badge" id="disBadge">وفرت 200 دج! 😍</div>
+                    <small>الإجمالي شامل التوصيل (Noest)</small><br><span id="finalPrice">${p.price}</span> DA
+                </div>
                 <div class="white-card">
+                    <label>الكمية</label>
+                    <select id="custQty" onchange="updateTotal()">
+                        <option value="1">قطعة واحدة (1000 دج)</option>
+                        <option value="2">قطعتين (1800 دج) - الأكثر طلباً 🔥</option>
+                        <option value="3">3 قطع (2800 دج)</option>
+                    </select>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                         <div><label>اللون</label><select id="custColor">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
                         <div><label>المقاس</label><select id="custSize">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
@@ -155,12 +163,11 @@
                     <input type="tel" id="custPh" placeholder="رقم الهاتف">
                     <select id="custW" onchange="updateTotal()">${w_opts}</select>
                     <select id="deliveryType" onchange="updateTotal()">
-                        <option value="home">توصيل للمنزل  </option>
-                        <option value="office">استلام من المكتب  </option>
+                        <option value="home">توصيل للمنزل</option>
+                        <option value="office">استلام من المكتب (Stop Desk - خصم)</option>
                     </select>
-                    <input type="text" id="custC" placeholder="البلدية والعنوان">
                 </div>
-                <button class="btn-send" id="sb" onclick="send()">تأكيد الطلب 🛍️</button>
+                <button class="btn-send" onclick="send()">إرسال الطلب الآن 🛍️</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         document.body.style.overflow = 'hidden';
@@ -173,23 +180,31 @@
     }
 
     function updateTotal() {
+        const qty = document.getElementById('custQty').value;
         const w_val = document.getElementById('custW').value;
         const d_type = document.getElementById('deliveryType').value;
+        const badge = document.getElementById('disBadge');
+        
+        let pPrice = (qty === "2") ? 1800 : (qty === "3") ? 2800 : 1000;
+        badge.style.display = (qty === "2") ? 'block' : 'none';
+
         let ship = w_val === "none" ? 0 : parseInt(w_val);
-        if(d_type === "office" && ship > 300) ship -= 350; // خصم ZR Express للمكتب
-        document.getElementById('finalPrice').innerText = 1000 + ship;
+        // خصم نواست للمكتب يتراوح بين 300 و 400 دج
+        if(d_type === "office" && ship > 300) ship -= 300;
+        
+        document.getElementById('finalPrice').innerText = pPrice + ship;
     }
 
     function send() {
         const n = document.getElementById('custN').value, ph = document.getElementById('custPh').value, w = document.getElementById('custW');
         if(n && ph && w.value !== "none") {
-            const msg = `🚀 طلب  !\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 السعر: ${document.getElementById('finalPrice').innerText} DA`;
+            const msg = `📦 طلب جديد Noest!\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🛍️ الكمية: ${document.getElementById('custQty').value}\n🎨 اللون: ${document.getElementById('custColor').value}\n💰 المجموع: ${document.getElementById('finalPrice').innerText} DA`;
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
             }).then(res => { if(res.ok) document.getElementById('successScreen').style.display = 'flex'; });
-        } else { alert("يرجى ملء كافة البيانات"); }
+        } else { alert("يرجى إدخال جميع البيانات"); }
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; }

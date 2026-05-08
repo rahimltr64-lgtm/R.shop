@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | فخامة التسوق</title>
+    <title>LUXURY STORE | متجر الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --main: #1a1a1a; --bg: #f2f4f7; --card-bg: #ffffff; --radius: 30px; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); color: #222; overflow-x: hidden; }
+        
         header { 
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
             padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
@@ -16,11 +17,13 @@
         }
         .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; }
         .container { max-width: 500px; margin: auto; padding: 25px 15px; }
+
+        /* تصميم كرت المنتج */
         .product-grid { display: grid; grid-template-columns: 1fr; gap: 35px; }
         .p-card { 
             background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.06); border: 1px solid rgba(255,255,255,0.8);
-            transition: 0.3s ease;
+            transition: 0.3s ease; cursor: pointer;
         }
         .p-card:active { transform: scale(0.97); }
         .p-img-hold { width: 100%; height: 420px; background: #fff; overflow: hidden; }
@@ -28,26 +31,34 @@
         .p-info { padding: 25px; text-align: center; background: #fff; border-top: 1px solid #f0f0f0; }
         .p-name { font-size: 18px; font-weight: 700; color: #444; margin-bottom: 8px; }
         .p-price-tag { font-weight: 900; color: var(--main); font-size: 24px; display: block; }
+
+        /* واجهة المنتج */
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f8f9fb; z-index: 2000; overflow-y: auto;
             animation: slideIn 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; display: flex; justify-content: space-between; align-items: center; }
-        .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.08); cursor: pointer; color: #000; font-size: 20px; }
-        .hero-slider { width: 100%; height: 50vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; }
+        .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.08); cursor: pointer; }
+
+        .hero-slider { width: 100%; height: 50vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; }
         .hero-slider img { width: 100%; height: 90%; object-fit: contain; }
+        
         .thumbs-strip { display: flex; gap: 15px; padding: 25px; overflow-x: auto; }
-        .t-item { width: 75px; height: 75px; flex-shrink: 0; border-radius: 20px; border: 2px solid transparent; object-fit: cover; background: #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.04); }
-        .t-item.active { border-color: var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .t-item { width: 75px; height: 75px; flex-shrink: 0; border-radius: 20px; border: 2px solid transparent; background: #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.04); }
+        .t-item.active { border-color: var(--main); }
+
+        /* استمارة الطلب */
         .order-form { padding: 0 20px 50px 20px; }
-        .white-card { background: #fff; border-radius: 30px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
+        .white-card { background: #fff; border-radius: 30px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
         .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; }
         .final-price-box span { font-size: 32px; font-weight: 900; }
+
         label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: #999; }
         input, select { width: 100%; padding: 18px; border-radius: 20px; border: 1px solid #eee; background: #f9f9f9; font-family: 'Cairo'; font-size: 16px; outline: none; margin-bottom: 12px; }
-        .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 22px; border-radius: 22px; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: 0.3s; }
+
+        .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 22px; border-radius: 22px; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
         .success-overlay { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
     </style>
 </head>
@@ -66,9 +77,9 @@
 
 <div class="success-overlay" id="successScreen">
     <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
-    <h1>تم استلام طلبك!</h1>
-    <p>شكراً لك. سنتصل بك قريباً لتأكيد الشحن.</p>
-    <button class="btn-send" onclick="location.reload()" style="width: 200px; margin-top: 20px;">العودة للمتجر</button>
+    <h1>تم استلام طلبك بنجاح!</h1>
+    <p>سنتصل بك في غضون 24 ساعة لتأكيد الشحن عبر ZR Express.</p>
+    <button class="btn-send" onclick="location.reload()" style="width: 200px; margin-top: 20px;">حسناً</button>
 </div>
 
 <script>
@@ -77,13 +88,13 @@
 
     const products = [{
         id: 1,
-        name: "Premium Summer T-Shirt",
+        name: "Armani Exchange Premium",
         price: 1000,
         colors: ["أبيض ملكي", "اسود فخم", "ازرق داكن", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
         sizes: ["M", "L", "XL"],
         images: [
+            "https://i.postimg.cc/3xYKhDnW/1778264788756.png", // صورتك الجديدة للتيشيرت الأبيض
             "https://i.postimg.cc/SsfTkWHW/1778252993790.png",
-            "https://i.postimg.cc/3xYKhDnW/1778264788756.png",
             "https://i.postimg.cc/pXTGM5CJ/1778251954636.png",
             "https://i.postimg.cc/CKnhdK43/1778252936394.png",
             "https://i.postimg.cc/xCn5xXq7/1778253038445.png",
@@ -92,23 +103,23 @@
         ]
     }];
 
-    // قائمة الـ 58 ولاية كاملة
+    // أسعار ZR Express لعام 2026 (توصيل للمنزل)
     const wilayas = [
-        {n: "01-أدرار", p: 800}, {n: "02-الشلف", p: 400}, {n: "03-الأغواط", p: 500}, {n: "04-أم البواقي", p: 400},
-        {n: "05-باتنة", p: 400}, {n: "06-بجاية", p: 400}, {n: "07-بسكرة", p: 500}, {n: "08-بشار", p: 800},
-        {n: "09-البليدة", p: 300}, {n: "10-البويرة", p: 350}, {n: "11-تمنراست", p: 900}, {n: "12-تبسة", p: 500},
-        {n: "13-تلمسان", p: 500}, {n: "14-تيارت", p: 450}, {n: "15-تيزي وزو", p: 350}, {n: "16-الجزائر", p: 300},
-        {n: "17-الجلفة", p: 500}, {n: "18-جيجل", p: 400}, {n: "19-سطيف", p: 300}, {n: "20-سعيدة", p: 500},
-        {n: "21-سكيكدة", p: 400}, {n: "22-سيدي بلعباس", p: 500}, {n: "23-عنابة", p: 400}, {n: "24-قالمة", p: 400},
-        {n: "25-قسنطينة", p: 400}, {n: "26-المدية", p: 350}, {n: "27-مستغانم", p: 450}, {n: "28-المسيلة", p: 400},
-        {n: "29-معسكر", p: 450}, {n: "30-ورقلة", p: 600}, {n: "31-وهران", p: 450}, {n: "32-البيض", p: 600},
-        {n: "33-إليزي", p: 900}, {n: "34-برج بوعريريج", p: 300}, {n: "35-بومرداس", p: 300}, {n: "36-الطارف", p: 500},
-        {n: "37-تندوف", p: 900}, {n: "38-تيسمسيلت", p: 450}, {n: "39-الوادي", p: 600}, {n: "40-خنشلة", p: 450},
-        {n: "41-سوق أهراس", p: 500}, {n: "42-تيبازة", p: 350}, {n: "43-ميلة", p: 400}, {n: "44-عين الدفلى", p: 400},
-        {n: "45-النعامة", p: 600}, {n: "46-عين تموشنت", p: 500}, {n: "47-غرداية", p: 600}, {n: "48-غليزان", p: 450},
-        {n: "49-تيميمون", p: 800}, {n: "50-برج باجي مختار", p: 1000}, {n: "51-أولاد جلال", p: 600}, {n: "52-بني عباس", p: 850},
-        {n: "53-عين صالح", p: 900}, {n: "54-عين قزام", p: 1000}, {n: "55-تقرت", p: 650}, {n: "56-جانت", p: 1000},
-        {n: "57-المغير", p: 600}, {n: "58-المنيعة", p: 800}
+        {n: "01-أدرار", p: 1300}, {n: "02-الشلف", p: 850}, {n: "03-الأغواط", p: 950}, {n: "04-أم البواقي", p: 850},
+        {n: "05-باتنة", p: 900}, {n: "06-بجاية", p: 800}, {n: "07-بسكرة", p: 950}, {n: "08-بشار", p: 1000},
+        {n: "09-البليدة", p: 600}, {n: "10-البويرة", p: 700}, {n: "11-تمنراست", p: 1500}, {n: "12-تبسة", p: 900},
+        {n: "13-تلمسان", p: 900}, {n: "14-تيارت", p: 850}, {n: "15-تيزي وزو", p: 750}, {n: "16-الجزائر", p: 400},
+        {n: "17-الجلفة", p: 950}, {n: "18-جيجل", p: 900}, {n: "19-سطيف", p: 800}, {n: "20-سعيدة", p: 900},
+        {n: "21-سكيكدة", p: 900}, {n: "22-سيدي بلعباس", p: 900}, {n: "23-عنابة", p: 850}, {n: "24-قالمة", p: 900},
+        {n: "25-قسنطينة", p: 800}, {n: "26-المدية", p: 800}, {n: "27-مستغانم", p: 900}, {n: "28-المسيلة", p: 850},
+        {n: "29-معسكر", p: 900}, {n: "30-ورقلة", p: 950}, {n: "31-وهران", p: 800}, {n: "32-البيض", p: 1000},
+        {n: "33-إليزي", p: 1500}, {n: "34-برج بوعريريج", p: 800}, {n: "35-بومرداس", p: 700}, {n: "36-الطارف", p: 850},
+        {n: "37-تندوف", p: 1500}, {n: "38-تيسمسيلت", p: 900}, {n: "39-الوادي", p: 950}, {n: "40-خنشلة", p: 900},
+        {n: "41-سوق أهراس", p: 900}, {n: "42-تيبازة", p: 700}, {n: "43-ميلة", p: 900}, {n: "44-عين الدفلى", p: 900},
+        {n: "45-النعامة", p: 1000}, {n: "46-عين تموشنت", p: 900}, {n: "47-غرداية", p: 950}, {n: "48-غليزان", p: 900},
+        {n: "49-تيميمون", p: 1300}, {n: "50-برج باجي مختار", p: 1500}, {n: "51-أولاد جلال", p: 950}, {n: "52-بني عباس", p: 1000},
+        {n: "53-عين صالح", p: 1500}, {n: "54-عين قزام", p: 1500}, {n: "55-تقرت", p: 950}, {n: "56-جانت", p: 1500},
+        {n: "57-المغير", p: 950}, {n: "58-المنيعة", p: 1000}
     ];
 
     const grid = document.getElementById('main-grid');
@@ -132,10 +143,7 @@
             <div class="thumbs-strip">${p.images.map((img, i) => `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             
             <div class="order-form">
-                <div class="final-price-box">
-                    <small>المبلغ الإجمالي للدفع</small><br>
-                    <span id="finalPrice">${p.price}</span> DA
-                </div>
+                <div class="final-price-box"><small>الإجمالي للدفع</small><br><span id="finalPrice">${p.price}</span> DA</div>
                 <div class="white-card">
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                         <div><label>اللون</label><select id="custColor">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
@@ -147,12 +155,12 @@
                     <input type="tel" id="custPh" placeholder="رقم الهاتف">
                     <select id="custW" onchange="updateTotal()">${w_opts}</select>
                     <select id="deliveryType" onchange="updateTotal()">
-                        <option value="home">توصيل للمنزل</option>
-                        <option value="office">استلام من المكتب  </option>
+                        <option value="home">توصيل للمنزل (ZR Express)</option>
+                        <option value="office">استلام من المكتب (Stop Desk)</option>
                     </select>
-                    <input type="text" id="custC" placeholder="العنوان بالتفصيل">
+                    <input type="text" id="custC" placeholder="البلدية والعنوان">
                 </div>
-                <button class="btn-send" id="sb" onclick="send()">تأكيد الطلبية 🛍️</button>
+                <button class="btn-send" id="sb" onclick="send()">تأكيد الطلب 🛍️</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         document.body.style.overflow = 'hidden';
@@ -167,29 +175,24 @@
     function updateTotal() {
         const w_val = document.getElementById('custW').value;
         const d_type = document.getElementById('deliveryType').value;
-        let shipping = w_val === "none" ? 0 : parseInt(w_val);
-        if(d_type === "office" && shipping > 200) shipping -= 200;
-        document.getElementById('finalPrice').innerText = products[0].price + shipping;
+        let ship = w_val === "none" ? 0 : parseInt(w_val);
+        if(d_type === "office" && ship > 300) ship -= 350; // خصم ZR Express للمكتب
+        document.getElementById('finalPrice').innerText = 1000 + ship;
     }
 
     function send() {
-        const n = document.getElementById('custN').value;
-        const ph = document.getElementById('custPh').value;
-        const w_sel = document.getElementById('custW');
-        if(n && ph && w_sel.value !== "none") {
-            const msg = `🚀 طلب جديد!\n👤 العميل: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w_sel.options[w_sel.selectedIndex].text}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 الإجمالي: ${document.getElementById('finalPrice').innerText} DA`;
+        const n = document.getElementById('custN').value, ph = document.getElementById('custPh').value, w = document.getElementById('custW');
+        if(n && ph && w.value !== "none") {
+            const msg = `🚀 طلب ZR Express!\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 السعر: ${document.getElementById('finalPrice').innerText} DA`;
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
             }).then(res => { if(res.ok) document.getElementById('successScreen').style.display = 'flex'; });
-        } else { alert("يرجى ملء البيانات"); }
+        } else { alert("يرجى ملء كافة البيانات"); }
     }
 
-    function closeP() { 
-        document.getElementById('product-page').style.display = 'none'; 
-        document.body.style.overflow = 'auto';
-    }
+    function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; }
 </script>
 </body>
 </html>

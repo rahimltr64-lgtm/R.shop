@@ -183,7 +183,7 @@
     function send() {
         const n = document.getElementById('custN').value, ph = document.getElementById('custPh').value, w = document.getElementById('custW');
         if(n && ph && w.value !== "none") {
-            const msg = `🚀 طلب ZR Express!\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 السعر: ${document.getElementById('finalPrice').innerText} DA`;
+            const msg = `🚀 طلب  !\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🎨 اللون: ${document.getElementById('custColor').value}\n📏 المقاس: ${document.getElementById('custSize').value}\n💰 السعر: ${document.getElementById('finalPrice').innerText} DA`;
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

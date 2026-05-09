@@ -58,7 +58,6 @@
         .p-name { font-size: 18px; font-weight: 700; color: var(--main); }
         .p-price-tag { font-weight: 900; color: #2c3e50; font-size: 22px; display: block; }
 
-        /* ستايل المؤقت الجديد */
         .timer-box {
             background: #fff5f5; border: 1px solid #feb2b2;
             padding: 12px; border-radius: 20px; margin: 15px 0;
@@ -100,7 +99,7 @@
     <div class="cat-btn" onclick="filterCat('ساعات', this)">الساعات</div>
     <div class="cat-btn" onclick="filterCat('إلكترونيات', this)">إلكترونيات</div>
     <div class="cat-btn" onclick="filterCat('أحذية', this)">أحذية</div>
-    <div class="cat-btn" onclick="filterCat('تجميل', this)">عطور</div>
+    <div class="cat-btn" onclick="filterCat('عطور', this)">عطور</div>
 </div>
 
 <div class="container">
@@ -143,7 +142,7 @@
     ];
 
     const wilayas = [
-        {n: "01-أدرار", p: 1200}, {n: "02-الشلف", p: 800}, {n: "16-الجزائر", p: 400}, {n: "19-سطيف", p: 750} /* ... بقية الولايات ... */
+        {n: "01-أدرار", p: 1000}, {n: "02-الشلف", p: 600}, {n: "03-الأغواط", p: 700}, {n: "04-أم البواقي", p: 600}, {n: "05-باتنة", p: 600}, {n: "06-بجاية", p: 600}, {n: "07-بسكرة", p: 700}, {n: "08-بشار", p: 800}, {n: "09-البليدة", p: 500}, {n: "10-البويرة", p: 500}, {n: "11-تمنراست", p: 1200}, {n: "12-تبسة", p: 600}, {n: "13-تلمسان", p: 700}, {n: "14-تيارت", p: 700}, {n: "15-تيزي وزو", p: 500}, {n: "16-الجزائر", p: 400}, {n: "17-الجلفة", p: 700}, {n: "18-جيجل", p: 600}, {n: "19-سطيف", p: 600}, {n: "20-سعيدة", p: 700}, {n: "21-سكيكدة", p: 600}, {n: "22-سيدي بلعباس", p: 700}, {n: "23-عنابة", p: 600}, {n: "24-قالمة", p: 600}, {n: "25-قسنطينة", p: 600}, {n: "26-المدية", p: 500}, {n: "27-مستغانم", p: 700}, {n: "28-المسيلة", p: 600}, {n: "29-معسكر", p: 700}, {n: "30-ورقلة", p: 800}, {n: "31-وهران", p: 600}, {n: "32-البيض", p: 800}, {n: "33-إليزي", p: 1200}, {n: "34-برج بوعريريج", p: 600}, {n: "35-بومرداس", p: 500}, {n: "36-الطارف", p: 600}, {n: "37-تندوف", p: 1200}, {n: "38-تيسمسيلت", p: 600}, {n: "39-الوادي", p: 800}, {n: "40-خنشلة", p: 600}, {n: "41-سوق أهراس", p: 600}, {n: "42-تيبازة", p: 500}, {n: "43-ميلة", p: 600}, {n: "44-عين الدفلى", p: 600}, {n: "45-النعامة", p: 800}, {n: "46-عين تموشنت", p: 700}, {n: "47-غرداية", p: 800}, {n: "48-غليزان", p: 700}, {n: "49-تيميمون", p: 1000}, {n: "50-برج باجي مختار", p: 1500}, {n: "51-أولاد جلال", p: 800}, {n: "52-بني عباس", p: 1000}, {n: "53-عين صالح", p: 1200}, {n: "54-عين قزام", p: 1500}, {n: "55-تقرت", p: 800}, {n: "56-جانت", p: 1500}, {n: "57-المغير", p: 800}, {n: "58-المنيعة", p: 1000}
     ];
 
     function render(f = 'all') {
@@ -153,7 +152,7 @@
             g.innerHTML = '';
             const filtered = products.filter(p => f === 'all' || p.category === f);
             if(filtered.length === 0) {
-                g.innerHTML = '<div style="text-align:center; padding:50px; width:100%;">☕ قريباً جداً...</div>';
+                g.innerHTML = '<div style="text-align:center; padding:50px; width:100%;">☕ قريباً جداً... نجهز لكم الأفضل.</div>';
             } else {
                 filtered.forEach(p => {
                     g.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><div class="p-img-hold"><img src="${p.images[0]}"></div><div class="p-info"><div class="p-name">${p.name}</div><div class="p-price-tag">${p.price} DA</div></div></div>`;
@@ -164,18 +163,11 @@
     }
 
     function startTimer() {
-        let duration = 2 * 60 * 60; // ساعتين بالثواني
+        let duration = 2 * 60 * 60;
         const display = document.getElementById('timer-digits');
         const interval = setInterval(() => {
-            let hours = Math.floor(duration / 3600);
-            let minutes = Math.floor((duration % 3600) / 60);
-            let seconds = duration % 60;
-
-            display.innerText = 
-                (hours < 10 ? "0" + hours : hours) + ":" + 
-                (minutes < 10 ? "0" + minutes : minutes) + ":" + 
-                (seconds < 10 ? "0" + seconds : seconds);
-
+            let h = Math.floor(duration / 3600), m = Math.floor((duration % 3600) / 60), s = duration % 60;
+            display.innerText = (h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
             if (--duration < 0) clearInterval(interval);
         }, 1000);
     }
@@ -189,44 +181,49 @@
             <div class="thumbs-strip">${p.images.map((img, i) => `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             <div class="order-form">
                 <div class="final-price-box"><span id="fPrice">${p.price}</span> DA</div>
+                <div class="timer-box"><span class="timer-text">🔥 ينتهي العرض خلال:</span><span id="timer-digits">02:00:00</span></div>
                 
-                <div class="timer-box">
-                    <span class="timer-text">🔥 ينتهي العرض خلال:</span>
-                    <span id="timer-digits">02:00:00</span>
-                </div>
-
                 <div class="white-card">
                     <label>الكمية</label>
                     <select id="qty" onchange="updateTotal()"><option value="1">قطعة (1000 دج)</option><option value="2">قطعتين (1800 دج)</option></select>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
-                        <select id="c1">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
-                        <select id="s1">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                    
+                    <div style="margin-top:10px;">
+                        <label>القطعة الأولى:</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                            <select id="c1">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                            <select id="s1">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                        </div>
+                    </div>
+
+                    <div id="item2_fields" style="display:none; border-top:1px dashed #ccc; margin-top:15px; padding-top:15px;">
+                        <label>القطعة الثانية:</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                            <select id="c2">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                            <select id="s2">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                        </div>
                     </div>
                 </div>
+
                 <div class="white-card">
                     <input type="text" id="n" placeholder="الإسم الكامل">
                     <input type="tel" id="ph" placeholder="رقم الهاتف">
                     <select id="w" onchange="updateTotal()">${w_opts}</select>
                     <input type="text" id="b" placeholder="البلدية / العنوان">
                 </div>
-                <button class="btn-send" onclick="send()">تأكيد الطلب الآن 🛍️</button>
-                <p style="text-align:center; font-size:12px; color:#7f8c8d; margin-top:10px;">⚠️ الكمية محدودة جداً! قطع قليلة متبقية.</p>
+                <button class="btn-send" onclick="send()">تأكيد الطلب 🛍️</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         document.body.style.overflow = 'hidden';
-        startTimer(); // تشغيل العداد عند فتح المنتج
-    }
-
-    function filterCat(c, el) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-        render(c);
+        startTimer();
     }
 
     function updateTotal() {
         const qty = document.getElementById('qty').value;
         const w_val = document.getElementById('w').value;
+        
+        // إظهار أو إخفاء خيارات القطعة الثانية
+        document.getElementById('item2_fields').style.display = (qty === "2") ? 'block' : 'none';
+        
         let base = (qty === "2") ? 1800 : 1000;
         let ship = w_val === "none" ? 0 : parseInt(w_val);
         document.getElementById('fPrice').innerText = base + ship;
@@ -236,10 +233,17 @@
         const n = document.getElementById('n').value, ph = document.getElementById('ph').value, w = document.getElementById('w'), b = document.getElementById('b').value;
         if(n && ph && w.value !== "none" && b) {
             const qty = document.getElementById('qty').value;
-            let text = `📦 طلب جديد:\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالبلدية: ${b}\nالكمية: ${qty}\nالمجموع: ${document.getElementById('fPrice').innerText} DA`;
+            let text = `📦 طلب جديد:\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالبلدية: ${b}\nالكمية: ${qty}\n\nالمنتج 1: [${document.getElementById('c1').value} / ${document.getElementById('s1').value}]`;
+            
+            if(qty === "2") {
+                text += `\nالمنتج 2: [${document.getElementById('c2').value} / ${document.getElementById('s2').value}]`;
+            }
+            
+            text += `\n\nالمجموع: ${document.getElementById('fPrice').innerText} DA`;
+
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: text }) })
             .then(() => document.getElementById('successScreen').style.display = 'flex');
-        } else { alert("يرجى إكمال البيانات"); }
+        } else { alert("يرجى ملء كافة البيانات"); }
     }
 
     function changeGallery(el, src) {
@@ -248,12 +252,8 @@
         el.classList.add('active');
     }
 
-    function closeP() { 
-        document.getElementById('product-page').style.display = 'none'; 
-        document.body.style.overflow = 'auto';
-        location.hash = '';
-    }
-
+    function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; location.hash = ''; }
+    
     function checkUrl() {
         const hash = location.hash.replace('#', '');
         if(hash) {

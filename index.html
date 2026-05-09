@@ -26,12 +26,12 @@
         }
         .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; }
         
-        /* شريط التصنيفات المطور - تمرير سلس */
+        /* شريط التصنيفات المطور */
         .categories-nav {
             display: flex; gap: 10px; padding: 15px; overflow-x: auto;
             white-space: nowrap; background: rgba(238, 242, 243, 0.5);
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* إخفاء شريط التمرير للمتصفحات الحديثة */
+            scrollbar-width: none;
         }
         .categories-nav::-webkit-scrollbar { display: none; }
         
@@ -45,13 +45,12 @@
 
         .container { max-width: 500px; margin: auto; padding: 20px 15px; }
         
-        /* انيميشن لظهور المنتجات بسلاسة */
+        /* تأثير الانتقال السلس للمنتجات */
         #main-grid { 
             display: grid; grid-template-columns: 1fr; gap: 20px;
             transition: opacity 0.3s ease;
         }
         .fade-out { opacity: 0; }
-        .fade-in { opacity: 1; }
 
         .p-card { 
             background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
@@ -64,6 +63,7 @@
         .p-name { font-size: 18px; font-weight: 700; color: var(--main); }
         .p-price-tag { font-weight: 900; color: #2c3e50; font-size: 22px; display: block; }
 
+        /* صفحة المنتج */
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f4f7f9; z-index: 2000; overflow-y: auto;
@@ -113,6 +113,7 @@
 <div class="success-overlay" id="successScreen">
     <div style="font-size: 80px; margin-bottom: 20px;">🕊️</div>
     <h1>تم استلام طلبك!</h1>
+    <p>سنتصل بك لتأكيد الشحن قريباً.</p>
     <button class="btn-send" onclick="location.reload()" style="width: 150px;">حسناً</button>
 </div>
 
@@ -146,33 +147,26 @@
 
     function render(f = 'all') {
         const g = document.getElementById('main-grid');
-        
-        // إضافة انيميشن التلاشي للخروج
         g.classList.add('fade-out');
         
         setTimeout(() => {
             g.innerHTML = '';
             const filtered = products.filter(p => f === 'all' || p.category === f);
-            
             if(filtered.length === 0) {
-                g.innerHTML = '<div style="text-align:center; padding:50px; width:100%;">☕ قريباً جداً... نحن نجهز تشكيلة مميزة في هذا القسم.</div>';
+                g.innerHTML = '<div style="text-align:center; padding:50px; width:100%;">☕ قريباً جداً... نجهز لكم الأفضل.</div>';
             } else {
                 filtered.forEach(p => {
                     g.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><div class="p-img-hold"><img src="${p.images[0]}"></div><div class="p-info"><div class="p-name">${p.name}</div><div class="p-price-tag">${p.price} DA</div></div></div>`;
                 });
             }
-            // إزالة انيميشن التلاشي للدخول
             g.classList.remove('fade-out');
-        }, 300); // 300ms هي نفس مدة الـ transition في الـ CSS
+        }, 300);
     }
 
     function filterCat(c, el) {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
-        
-        // جعل زر التصنيف دائماً في منتصف الرؤية عند النقر (Scroll to Center)
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        
         render(c);
     }
 
@@ -203,6 +197,7 @@
                     <input type="text" id="n" placeholder="الإسم الكامل">
                     <input type="tel" id="ph" placeholder="رقم الهاتف">
                     <select id="w" onchange="updateTotal()">${w_opts}</select>
+                    <input type="text" id="b" placeholder="البلدية / العنوان بالتفصيل">
                 </div>
                 <button class="btn-send" onclick="send()">تأكيد الطلب 🌿</button>
             </div>`;
@@ -220,15 +215,16 @@
     }
 
     function send() {
-        const n = document.getElementById('n').value, ph = document.getElementById('ph').value, w = document.getElementById('w');
-        if(n && ph && w.value !== "none") {
+        const n = document.getElementById('n').value, ph = document.getElementById('ph').value, w = document.getElementById('w'), b = document.getElementById('b').value;
+        if(n && ph && w.value !== "none" && b) {
             const qty = document.getElementById('qty').value;
-            let text = `📦 طلب جديد:\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالكمية: ${qty}\nلون1: ${document.getElementById('c1').value}`;
+            let text = `📦 طلب جديد:\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالبلدية: ${b}\nالكمية: ${qty}\nلون1: ${document.getElementById('c1').value}`;
             if(qty === "2") text += `\nلون2: ${document.getElementById('c2').value}`;
             text += `\nالمجموع: ${document.getElementById('fPrice').innerText} DA`;
+            
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: text }) })
             .then(() => document.getElementById('successScreen').style.display = 'flex');
-        } else { alert("يرجى ملء البيانات"); }
+        } else { alert("يرجى إكمال جميع البيانات"); }
     }
 
     function changeGallery(el, src) {
@@ -238,8 +234,6 @@
     }
 
     function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; }
-    
-    // تشغيل العرض الأولي
     render();
 </script>
 </body>

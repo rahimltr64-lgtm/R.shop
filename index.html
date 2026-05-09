@@ -63,20 +63,19 @@
             padding: 12px; border-radius: 20px; margin: 15px 0;
             display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .timer-text { color: var(--accent); font-weight: 700; font-size: 14px; }
-        #timer-digits { color: var(--accent); font-weight: 900; font-size: 18px; letter-spacing: 1px; }
+        #timer-digits { color: var(--accent); font-weight: 900; font-size: 18px; }
 
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f4f7f9; z-index: 2000; overflow-y: auto;
         }
         .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; }
-        .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; }
+        .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
         .hero-slider { width: 100%; height: 45vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; }
         .hero-slider img { width: 100%; height: 85%; object-fit: contain; }
         .thumbs-strip { display: flex; gap: 12px; padding: 20px; overflow-x: auto; }
-        .t-item { width: 70px; height: 70px; flex-shrink: 0; border-radius: 18px; border: 2px solid transparent; background: #fff; }
+        .t-item { width: 70px; height: 70px; flex-shrink: 0; border-radius: 18px; border: 2px solid transparent; background: #fff; cursor: pointer; }
         .t-item.active { border-color: var(--main); }
 
         .order-form { padding: 0 20px 50px 20px; }
@@ -84,7 +83,7 @@
         .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; }
         .final-price-box span { font-size: 30px; font-weight: 900; }
         
-        input, select { width: 100%; padding: 16px; border-radius: 18px; border: 1px solid #dcdde1; margin-bottom: 12px; font-family: 'Cairo'; outline: none; }
+        input, select { width: 100%; padding: 16px; border-radius: 18px; border: 1px solid #dcdde1; margin-bottom: 12px; font-family: 'Cairo'; outline: none; font-size: 14px; }
         .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 20px; border-radius: 20px; font-size: 19px; font-weight: 700; cursor: pointer; }
         .success-overlay { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
@@ -95,8 +94,8 @@
 
 <div class="categories-nav">
     <div class="cat-btn active" onclick="filterCat('all', this)">الكل</div>
-    <div class="cat-btn" onclick="filterCat('ملابس', this)">الملابس</div>
-    <div class="cat-btn" onclick="filterCat('ساعات', this)">الساعات</div>
+    <div class="cat-btn" onclick="filterCat('ملابس', this)">ملابس</div>
+    <div class="cat-btn" onclick="filterCat('ساعات', this)">ساعات</div>
     <div class="cat-btn" onclick="filterCat('إلكترونيات', this)">إلكترونيات</div>
     <div class="cat-btn" onclick="filterCat('أحذية', this)">أحذية</div>
     <div class="cat-btn" onclick="filterCat('عطور', this)">عطور</div>
@@ -113,7 +112,8 @@
 
 <div class="success-overlay" id="successScreen">
     <div style="font-size: 80px; margin-bottom: 20px;">🕊️</div>
-    <h1>تم استلام طلبك!</h1>
+    <h1>تم استلام طلبك بنجاح!</h1>
+    <p>سنتصل بك لتأكيد العنوان والشحن قريباً.</p>
     <button class="btn-send" onclick="location.reload()" style="width: 150px;">حسناً</button>
 </div>
 
@@ -142,7 +142,7 @@
     ];
 
     const wilayas = [
-        {n: "01-أدرار", p: 1000}, {n: "02-الشلف", p: 600}, {n: "03-الأغواط", p: 700}, {n: "04-أم البواقي", p: 600}, {n: "05-باتنة", p: 600}, {n: "06-بجاية", p: 600}, {n: "07-بسكرة", p: 700}, {n: "08-بشار", p: 800}, {n: "09-البليدة", p: 500}, {n: "10-البويرة", p: 500}, {n: "11-تمنراست", p: 1200}, {n: "12-تبسة", p: 600}, {n: "13-تلمسان", p: 700}, {n: "14-تيارت", p: 700}, {n: "15-تيزي وزو", p: 500}, {n: "16-الجزائر", p: 400}, {n: "17-الجلفة", p: 700}, {n: "18-جيجل", p: 600}, {n: "19-سطيف", p: 600}, {n: "20-سعيدة", p: 700}, {n: "21-سكيكدة", p: 600}, {n: "22-سيدي بلعباس", p: 700}, {n: "23-عنابة", p: 600}, {n: "24-قالمة", p: 600}, {n: "25-قسنطينة", p: 600}, {n: "26-المدية", p: 500}, {n: "27-مستغانم", p: 700}, {n: "28-المسيلة", p: 600}, {n: "29-معسكر", p: 700}, {n: "30-ورقلة", p: 800}, {n: "31-وهران", p: 600}, {n: "32-البيض", p: 800}, {n: "33-إليزي", p: 1200}, {n: "34-برج بوعريريج", p: 600}, {n: "35-بومرداس", p: 500}, {n: "36-الطارف", p: 600}, {n: "37-تندوف", p: 1200}, {n: "38-تيسمسيلت", p: 600}, {n: "39-الوادي", p: 800}, {n: "40-خنشلة", p: 600}, {n: "41-سوق أهراس", p: 600}, {n: "42-تيبازة", p: 500}, {n: "43-ميلة", p: 600}, {n: "44-عين الدفلى", p: 600}, {n: "45-النعامة", p: 800}, {n: "46-عين تموشنت", p: 700}, {n: "47-غرداية", p: 800}, {n: "48-غليزان", p: 700}, {n: "49-تيميمون", p: 1000}, {n: "50-برج باجي مختار", p: 1500}, {n: "51-أولاد جلال", p: 800}, {n: "52-بني عباس", p: 1000}, {n: "53-عين صالح", p: 1200}, {n: "54-عين قزام", p: 1500}, {n: "55-تقرت", p: 800}, {n: "56-جانت", p: 1500}, {n: "57-المغير", p: 800}, {n: "58-المنيعة", p: 1000}
+        {n:"01-أدرار",p:1000},{n:"02-الشلف",p:600},{n:"03-الأغواط",p:700},{n:"04-أم البواقي",p:600},{n:"05-باتنة",p:600},{n:"06-بجاية",p:600},{n:"07-بسكرة",p:700},{n:"08-بشار",p:800},{n:"09-البليدة",p:500},{n:"10-البويرة",p:500},{n:"11-تمنراست",p:1200},{n:"12-تبسة",p:600},{n:"13-تلمسان",p:700},{n:"14-تيارت",p:700},{n:"15-تيزي وزو",p:500},{n:"16-الجزائر",p:400},{n:"17-الجلفة",p:700},{n:"18-جيجل",p:600},{n:"19-سطيف",p:600},{n:"20-سعيدة",p:700},{n:"21-سكيكدة",p:600},{n:"22-سيدي بلعباس",p:700},{n:"23-عنابة",p:600},{n:"24-قالمة",p:600},{n:"25-قسنطينة",p:600},{n:"26-المدية",p:500},{n:"27-مستغانم",p:700},{n:"28-المسيلة",p:600},{n:"29-معسكر",p:700},{n:"30-ورقلة",p:800},{n:"31-وهران",p:600},{n:"32-البيض",p:800},{n:"33-إليزي",p:1200},{n:"34-برج بوعريريج",p:600},{n:"35-بومرداس",p:500},{n:"36-الطارف",p:600},{n:"37-تندوف",p:1200},{n:"38-تيسمسيلت",p:600},{n:"39-الوادي",p:800},{n:"40-خنشلة",p:600},{n:"41-سوق أهراس",p:600},{n:"42-تيبازة",p:500},{n:"43-ميلة",p:600},{n:"44-عين الدفلى",p:600},{n:"45-النعامة",p:800},{n:"46-عين تموشنت",p:700},{n:"47-غرداية",p:800},{n:"48-غليزان",p:700},{n:"49-تيميمون",p:1000},{n:"50-برج باجي مختار",p:1500},{n:"51-أولاد جلال",p:800},{n:"52-بني عباس",p:1000},{n:"53-عين صالح",p:1200},{n:"54-عين قزام",p:1500},{n:"55-تقرت",p:800},{n:"56-جانت",p:1500},{n:"57-المغير",p:800},{n:"58-المنيعة",p:1000}
     ];
 
     function render(f = 'all') {
@@ -152,7 +152,7 @@
             g.innerHTML = '';
             const filtered = products.filter(p => f === 'all' || p.category === f);
             if(filtered.length === 0) {
-                g.innerHTML = '<div style="text-align:center; padding:50px; width:100%;">☕ قريباً جداً... نجهز لكم الأفضل.</div>';
+                g.innerHTML = `<div style="text-align:center; padding:80px 20px; width:100%; grid-column:1/-1;"><h3>☕ قريباً في قسم ${f}...</h3></div>`;
             } else {
                 filtered.forEach(p => {
                     g.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><div class="p-img-hold"><img src="${p.images[0]}"></div><div class="p-info"><div class="p-name">${p.name}</div><div class="p-price-tag">${p.price} DA</div></div></div>`;
@@ -167,7 +167,7 @@
         const display = document.getElementById('timer-digits');
         const interval = setInterval(() => {
             let h = Math.floor(duration / 3600), m = Math.floor((duration % 3600) / 60), s = duration % 60;
-            display.innerText = (h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+            if(display) display.innerText = (h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
             if (--duration < 0) clearInterval(interval);
         }, 1000);
     }
@@ -181,20 +181,16 @@
             <div class="thumbs-strip">${p.images.map((img, i) => `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
             <div class="order-form">
                 <div class="final-price-box"><span id="fPrice">${p.price}</span> DA</div>
-                <div class="timer-box"><span class="timer-text">🔥 ينتهي العرض خلال:</span><span id="timer-digits">02:00:00</span></div>
-                
+                <div class="timer-box"><span>🔥 عرض محدود:</span><span id="timer-digits">02:00:00</span></div>
                 <div class="white-card">
                     <label>الكمية</label>
                     <select id="qty" onchange="updateTotal()"><option value="1">قطعة (1000 دج)</option><option value="2">قطعتين (1800 دج)</option></select>
-                    
-                    <div style="margin-top:10px;">
-                        <label>القطعة الأولى:</label>
+                    <div style="margin-top:10px;"><label>القطعة الأولى:</label>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                             <select id="c1">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
                             <select id="s1">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
                         </div>
                     </div>
-
                     <div id="item2_fields" style="display:none; border-top:1px dashed #ccc; margin-top:15px; padding-top:15px;">
                         <label>القطعة الثانية:</label>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
@@ -203,27 +199,30 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="white-card">
                     <input type="text" id="n" placeholder="الإسم الكامل">
                     <input type="tel" id="ph" placeholder="رقم الهاتف">
                     <select id="w" onchange="updateTotal()">${w_opts}</select>
                     <input type="text" id="b" placeholder="البلدية / العنوان">
                 </div>
-                <button class="btn-send" onclick="send()">تأكيد الطلب 🛍️</button>
+                <button class="btn-send" onclick="send()">تأكيد الطلب الآن 🛍️</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         document.body.style.overflow = 'hidden';
         startTimer();
     }
 
+    function filterCat(c, el) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        render(c);
+    }
+
     function updateTotal() {
         const qty = document.getElementById('qty').value;
         const w_val = document.getElementById('w').value;
-        
-        // إظهار أو إخفاء خيارات القطعة الثانية
         document.getElementById('item2_fields').style.display = (qty === "2") ? 'block' : 'none';
-        
         let base = (qty === "2") ? 1800 : 1000;
         let ship = w_val === "none" ? 0 : parseInt(w_val);
         document.getElementById('fPrice').innerText = base + ship;
@@ -233,17 +232,12 @@
         const n = document.getElementById('n').value, ph = document.getElementById('ph').value, w = document.getElementById('w'), b = document.getElementById('b').value;
         if(n && ph && w.value !== "none" && b) {
             const qty = document.getElementById('qty').value;
-            let text = `📦 طلب جديد:\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالبلدية: ${b}\nالكمية: ${qty}\n\nالمنتج 1: [${document.getElementById('c1').value} / ${document.getElementById('s1').value}]`;
-            
-            if(qty === "2") {
-                text += `\nالمنتج 2: [${document.getElementById('c2').value} / ${document.getElementById('s2').value}]`;
-            }
-            
-            text += `\n\nالمجموع: ${document.getElementById('fPrice').innerText} DA`;
-
+            let text = `📦 طلب جديد:\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🏘️ البلدية: ${b}\n🔢 الكمية: ${qty}\n\n👕 قطعة 1: [${document.getElementById('c1').value} / ${document.getElementById('s1').value}]`;
+            if(qty === "2") text += `\n👕 قطعة 2: [${document.getElementById('c2').value} / ${document.getElementById('s2').value}]`;
+            text += `\n\n💰 الإجمالي: ${document.getElementById('fPrice').innerText} DA`;
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: text }) })
             .then(() => document.getElementById('successScreen').style.display = 'flex');
-        } else { alert("يرجى ملء كافة البيانات"); }
+        } else { alert("يرجى ملء جميع البيانات"); }
     }
 
     function changeGallery(el, src) {
@@ -255,12 +249,8 @@
     function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; location.hash = ''; }
     
     function checkUrl() {
-        const hash = location.hash.replace('#', '');
-        if(hash) {
-            const id = parseInt(hash);
-            const exists = products.find(p => p.id === id);
-            if(exists) openP(id);
-        }
+        const h = location.hash.replace('#', '');
+        if(h && products.find(p => p.id === parseInt(h))) openP(parseInt(h));
     }
 
     render();

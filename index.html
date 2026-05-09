@@ -7,61 +7,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --main: #2c3e50; 
-            --accent: #e74c3c;
+            --main: #2c3e50; --accent: #e74c3c;
             --bg: linear-gradient(135deg, #eef2f3 0%, #dae2e8 100%); 
-            --card-bg: rgba(255, 255, 255, 0.9); 
-            --radius: 30px; 
+            --card-bg: rgba(255, 255, 255, 0.9); --radius: 30px; 
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { 
-            font-family: 'Cairo', sans-serif; 
-            margin: 0; background: var(--bg); 
-            background-attachment: fixed;
-            color: #34495e; overflow-x: hidden; 
+            font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); 
+            background-attachment: fixed; color: #34495e; overflow-x: hidden; 
         }
         header { 
             background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px);
             padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid rgba(255,255,255,0.3);
         }
-        .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; cursor: pointer; }
+        .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; cursor: pointer; }
         
         .categories-nav {
             display: flex; gap: 10px; padding: 15px; overflow-x: auto;
-            white-space: nowrap; background: rgba(238, 242, 243, 0.5);
-            scrollbar-width: none;
+            white-space: nowrap; background: rgba(238, 242, 243, 0.5); scrollbar-width: none;
         }
         .categories-nav::-webkit-scrollbar { display: none; }
-        
         .cat-btn {
             padding: 8px 22px; background: #fff; border-radius: 15px;
             font-size: 14px; font-weight: 700; color: var(--main);
-            border: 1px solid rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
-            flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; flex-shrink: 0;
         }
         .cat-btn.active { background: var(--main); color: #fff; transform: scale(1.05); }
 
         .container { max-width: 500px; margin: auto; padding: 20px 15px; }
-        
-        #main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; transition: opacity 0.3s ease; }
-        .fade-out { opacity: 0; }
+        #main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; transition: 0.3s; }
+        .fade-out { opacity: 0; transform: translateY(10px); }
 
         .p-card { 
             background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.6);
-            transition: 0.3s ease; cursor: pointer;
+            transition: 0.3s; cursor: pointer;
         }
         .p-img-hold { width: 100%; height: 420px; padding: 20px; }
         .p-card img { width: 100%; height: 100%; object-fit: contain; }
         .p-info { padding: 20px; text-align: center; }
         .p-name { font-size: 18px; font-weight: 700; color: var(--main); }
-        .p-price-tag { font-weight: 900; color: #2c3e50; font-size: 22px; display: block; }
+        .p-price-tag { font-weight: 900; color: #2c3e50; font-size: 22px; display: block; margin-top: 5px; }
 
         .timer-box {
-            background: #fff5f5; border: 1px solid #feb2b2;
-            padding: 12px; border-radius: 20px; margin: 15px 0;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: #fff5f5; border: 1px solid #feb2b2; padding: 12px;
+            border-radius: 20px; margin: 15px 0; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         #timer-digits { color: var(--accent); font-weight: 900; font-size: 18px; }
 
@@ -69,8 +60,12 @@
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f4f7f9; z-index: 2000; overflow-y: auto;
         }
-        .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; }
-        .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; pointer-events: none; }
+        .close-circle { 
+            width: 45px; height: 45px; background: #fff; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); pointer-events: auto;
+        }
 
         .hero-slider { width: 100%; height: 45vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; }
         .hero-slider img { width: 100%; height: 85%; object-fit: contain; }
@@ -83,16 +78,27 @@
         .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; }
         .final-price-box span { font-size: 30px; font-weight: 900; }
         
-        input, select { width: 100%; padding: 16px; border-radius: 18px; border: 1px solid #dcdde1; margin-bottom: 12px; font-family: 'Cairo'; outline: none; font-size: 14px; }
-        .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 20px; border-radius: 20px; font-size: 19px; font-weight: 700; cursor: pointer; }
-        .success-overlay { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        input, select { 
+            width: 100%; padding: 16px; border-radius: 18px; border: 1px solid #dcdde1; 
+            margin-bottom: 12px; font-family: 'Cairo'; font-size: 14px; background: #fff;
+        }
+        .btn-send { 
+            background: var(--main); color: #fff; border: none; width: 100%; 
+            padding: 20px; border-radius: 20px; font-size: 19px; font-weight: 700; cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.2); transition: 0.3s;
+        }
+        .btn-send:active { transform: scale(0.98); }
+        .success-overlay { 
+            position: fixed; inset: 0; background: #fff; z-index: 9999; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;
+        }
     </style>
 </head>
 <body>
 
-<header><div class="logo" onclick="location.hash=''; location.reload();">LUXURY STORE</div></header>
+<header><div class="logo" onclick="home()">LUXURY STORE</div></header>
 
-<div class="categories-nav">
+<div class="categories-nav" id="catNav">
     <div class="cat-btn active" onclick="filterCat('all', this)">الكل</div>
     <div class="cat-btn" onclick="filterCat('ملابس', this)">ملابس</div>
     <div class="cat-btn" onclick="filterCat('ساعات', this)">ساعات</div>
@@ -102,7 +108,7 @@
 </div>
 
 <div class="container">
-    <div class="product-grid" id="main-grid"></div>
+    <div id="main-grid"></div>
 </div>
 
 <div id="product-page">
@@ -111,10 +117,10 @@
 </div>
 
 <div class="success-overlay" id="successScreen">
-    <div style="font-size: 80px; margin-bottom: 20px;">🕊️</div>
-    <h1>تم استلام طلبك بنجاح!</h1>
-    <p>سنتصل بك لتأكيد العنوان والشحن قريباً.</p>
-    <button class="btn-send" onclick="location.reload()" style="width: 150px;">حسناً</button>
+    <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+    <h1 style="color:var(--main)">تم استلام طلبك!</h1>
+    <p>شكراً لثقتكم. سنتصل بك قريباً لتأكيد التوصيل.</p>
+    <button class="btn-send" onclick="location.reload()" style="max-width: 200px;">العودة للمتجر</button>
 </div>
 
 <script>
@@ -123,19 +129,13 @@
 
     const products = [
         {
-            id: 1,
-            category: "ملابس",
-            name: "Armani Exchange Premium",
-            price: 1000,
+            id: 1, category: "ملابس", name: "Armani Exchange Premium", price: 1000,
             colors: ["أبيض ملكي", "اسود فخم", "ازرق داكن", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
             sizes: ["M", "L", "XL"],
             images: [
-                "https://i.postimg.cc/3xYKhDnW/1778264788756.png", 
-                "https://i.postimg.cc/SsfTkWHW/1778252993790.png", 
-                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png", 
-                "https://i.postimg.cc/CKnhdK43/1778252936394.png", 
-                "https://i.postimg.cc/xCn5xXq7/1778253038445.png", 
-                "https://i.postimg.cc/FH8mt4Q0/1778253106574.png", 
+                "https://i.postimg.cc/3xYKhDnW/1778264788756.png", "https://i.postimg.cc/SsfTkWHW/1778252993790.png", 
+                "https://i.postimg.cc/pXTGM5CJ/1778251954636.png", "https://i.postimg.cc/CKnhdK43/1778252936394.png", 
+                "https://i.postimg.cc/xCn5xXq7/1778253038445.png", "https://i.postimg.cc/FH8mt4Q0/1778253106574.png", 
                 "https://i.postimg.cc/8C8tvKSK/1778252209457.png"
             ]
         }
@@ -145,6 +145,8 @@
         {n:"01-أدرار",p:1000},{n:"02-الشلف",p:600},{n:"03-الأغواط",p:700},{n:"04-أم البواقي",p:600},{n:"05-باتنة",p:600},{n:"06-بجاية",p:600},{n:"07-بسكرة",p:700},{n:"08-بشار",p:800},{n:"09-البليدة",p:500},{n:"10-البويرة",p:500},{n:"11-تمنراست",p:1200},{n:"12-تبسة",p:600},{n:"13-تلمسان",p:700},{n:"14-تيارت",p:700},{n:"15-تيزي وزو",p:500},{n:"16-الجزائر",p:400},{n:"17-الجلفة",p:700},{n:"18-جيجل",p:600},{n:"19-سطيف",p:600},{n:"20-سعيدة",p:700},{n:"21-سكيكدة",p:600},{n:"22-سيدي بلعباس",p:700},{n:"23-عنابة",p:600},{n:"24-قالمة",p:600},{n:"25-قسنطينة",p:600},{n:"26-المدية",p:500},{n:"27-مستغانم",p:700},{n:"28-المسيلة",p:600},{n:"29-معسكر",p:700},{n:"30-ورقلة",p:800},{n:"31-وهران",p:600},{n:"32-البيض",p:800},{n:"33-إليزي",p:1200},{n:"34-برج بوعريريج",p:600},{n:"35-بومرداس",p:500},{n:"36-الطارف",p:600},{n:"37-تندوف",p:1200},{n:"38-تيسمسيلت",p:600},{n:"39-الوادي",p:800},{n:"40-خنشلة",p:600},{n:"41-سوق أهراس",p:600},{n:"42-تيبازة",p:500},{n:"43-ميلة",p:600},{n:"44-عين الدفلى",p:600},{n:"45-النعامة",p:800},{n:"46-عين تموشنت",p:700},{n:"47-غرداية",p:800},{n:"48-غليزان",p:700},{n:"49-تيميمون",p:1000},{n:"50-برج باجي مختار",p:1500},{n:"51-أولاد جلال",p:800},{n:"52-بني عباس",p:1000},{n:"53-عين صالح",p:1200},{n:"54-عين قزام",p:1500},{n:"55-تقرت",p:800},{n:"56-جانت",p:1500},{n:"57-المغير",p:800},{n:"58-المنيعة",p:1000}
     ];
 
+    let timerInterval;
+
     function render(f = 'all') {
         const g = document.getElementById('main-grid');
         g.classList.add('fade-out');
@@ -152,10 +154,17 @@
             g.innerHTML = '';
             const filtered = products.filter(p => f === 'all' || p.category === f);
             if(filtered.length === 0) {
-                g.innerHTML = `<div style="text-align:center; padding:80px 20px; width:100%; grid-column:1/-1;"><h3>☕ قريباً في قسم ${f}...</h3></div>`;
+                g.innerHTML = `<div style="text-align:center; padding:80px 20px; grid-column:1/-1;"><h3>☕ قريباً في قسم ${f}</h3></div>`;
             } else {
                 filtered.forEach(p => {
-                    g.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><div class="p-img-hold"><img src="${p.images[0]}"></div><div class="p-info"><div class="p-name">${p.name}</div><div class="p-price-tag">${p.price} DA</div></div></div>`;
+                    g.innerHTML += `
+                    <div class="p-card" onclick="openP(${p.id})">
+                        <div class="p-img-hold"><img src="${p.images[0]}"></div>
+                        <div class="p-info">
+                            <div class="p-name">${p.name}</div>
+                            <div class="p-price-tag">${p.price} DA</div>
+                        </div>
+                    </div>`;
                 });
             }
             g.classList.remove('fade-out');
@@ -163,19 +172,22 @@
     }
 
     function startTimer() {
+        if(timerInterval) clearInterval(timerInterval);
         let duration = 2 * 60 * 60;
         const display = document.getElementById('timer-digits');
-        const interval = setInterval(() => {
+        timerInterval = setInterval(() => {
             let h = Math.floor(duration / 3600), m = Math.floor((duration % 3600) / 60), s = duration % 60;
             if(display) display.innerText = (h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
-            if (--duration < 0) clearInterval(interval);
+            if (--duration < 0) clearInterval(timerInterval);
         }, 1000);
     }
 
     function openP(id) {
         location.hash = id;
         const p = products.find(x => x.id === id);
+        if(!p) return;
         let w_opts = `<option value="none">اختر الولاية</option>` + wilayas.map(w => `<option value="${w.p}">${w.n}</option>`).join('');
+        
         document.getElementById('p-content').innerHTML = `
             <div class="hero-slider"><img src="${p.images[0]}" id="activeImg"></div>
             <div class="thumbs-strip">${p.images.map((img, i) => `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')">`).join('')}</div>
@@ -185,15 +197,15 @@
                 <div class="white-card">
                     <label>الكمية</label>
                     <select id="qty" onchange="updateTotal()"><option value="1">قطعة (1000 دج)</option><option value="2">قطعتين (1800 دج)</option></select>
-                    <div style="margin-top:10px;"><label>القطعة الأولى:</label>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div style="margin-top:10px;"><label>تخصيص القطعة 1:</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                             <select id="c1">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
                             <select id="s1">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
                         </div>
                     </div>
                     <div id="item2_fields" style="display:none; border-top:1px dashed #ccc; margin-top:15px; padding-top:15px;">
-                        <label>القطعة الثانية:</label>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <label>تخصيص القطعة 2:</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                             <select id="c2">${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
                             <select id="s2">${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select>
                         </div>
@@ -205,7 +217,7 @@
                     <select id="w" onchange="updateTotal()">${w_opts}</select>
                     <input type="text" id="b" placeholder="البلدية / العنوان">
                 </div>
-                <button class="btn-send" onclick="send()">تأكيد الطلب الآن 🛍️</button>
+                <button class="btn-send" onclick="send()">تأكيد الطلب 🛍️</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
         document.body.style.overflow = 'hidden';
@@ -235,9 +247,12 @@
             let text = `📦 طلب جديد:\n👤 الاسم: ${n}\n📞 الهاتف: ${ph}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🏘️ البلدية: ${b}\n🔢 الكمية: ${qty}\n\n👕 قطعة 1: [${document.getElementById('c1').value} / ${document.getElementById('s1').value}]`;
             if(qty === "2") text += `\n👕 قطعة 2: [${document.getElementById('c2').value} / ${document.getElementById('s2').value}]`;
             text += `\n\n💰 الإجمالي: ${document.getElementById('fPrice').innerText} DA`;
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: text }) })
-            .then(() => document.getElementById('successScreen').style.display = 'flex');
-        } else { alert("يرجى ملء جميع البيانات"); }
+
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+            }).then(() => document.getElementById('successScreen').style.display = 'flex');
+        } else { alert("يرجى ملء جميع البيانات المطلوبة"); }
     }
 
     function changeGallery(el, src) {
@@ -246,15 +261,23 @@
         el.classList.add('active');
     }
 
-    function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; location.hash = ''; }
-    
+    function closeP() { 
+        document.getElementById('product-page').style.display = 'none'; 
+        document.body.style.overflow = 'auto'; 
+        location.hash = ''; 
+    }
+
+    function home() { location.hash = ''; location.reload(); }
+
     function checkUrl() {
         const h = location.hash.replace('#', '');
         if(h && products.find(p => p.id === parseInt(h))) openP(parseInt(h));
     }
 
+    // تهيئة المتجر
     render();
     checkUrl();
+    window.addEventListener('hashchange', checkUrl);
 </script>
 </body>
 </html>

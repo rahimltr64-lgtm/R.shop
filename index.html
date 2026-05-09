@@ -3,176 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | المتجر الرسمي</title>
+    <title>LUXURY STORE | متجر الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --main: #1a1a1a; 
-            --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+            --main: #2c3e50; 
+            --bg: linear-gradient(135deg, #eef2f3 0%, #dae2e8 100%); 
             --card-bg: rgba(255, 255, 255, 0.9); 
-            --accent: #d4af37; 
+            --radius: 30px; 
         }
+        
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); background-attachment: fixed; color: #333; }
+        
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; background: var(--bg); 
+            background-attachment: fixed;
+            color: #34495e; overflow-x: hidden; 
+        }
         
         header { 
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
-            padding: 15px; text-align: center; position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px);
+            padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
         }
-        .logo { font-size: 22px; font-weight: 900; color: var(--main); letter-spacing: 2px; }
-
-        .container { max-width: 600px; margin: auto; padding: 20px; }
         
-        /* شبكة المنتجات */
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .p-card { 
-            background: var(--card-bg); border-radius: 20px; overflow: hidden; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
-        }
-        .p-card:active { transform: scale(0.95); }
-        .p-img-hold { width: 100%; height: 180px; padding: 10px; background: #fff; }
-        .p-card img { width: 100%; height: 100%; object-fit: contain; }
-        .p-info { padding: 12px; text-align: center; }
-        .p-name { font-size: 14px; font-weight: 700; height: 40px; overflow: hidden; }
-        .p-price { color: var(--main); font-weight: 900; font-size: 18px; margin-top: 5px; }
+        .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; }
+        .container { max-width: 500px; margin: auto; padding: 25px 15px; }
 
-        /* صفحة المنتج */
+        .p-card { 
+            background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.3s ease; cursor: pointer; backdrop-filter: blur(5px);
+            margin-bottom: 20px;
+        }
+        .p-card:active { transform: scale(0.98); }
+        .p-img-hold { width: 100%; height: 400px; background: transparent; overflow: hidden; padding: 20px; }
+        .p-card img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .p-info { padding: 20px; text-align: center; }
+        .p-name { font-size: 18px; font-weight: 700; color: var(--main); margin-bottom: 5px; }
+        .p-price-tag { font-weight: 900; color: #2c3e50; font-size: 22px; display: block; }
+
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #fff; z-index: 2000; overflow-y: auto; padding-bottom: 50px;
+            background: #f4f7f9; z-index: 2000; overflow-y: auto;
+            animation: slideIn 0.4s ease-out;
         }
-        .close-btn { position: fixed; top: 15px; right: 15px; width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2100; cursor: pointer; }
-
-        .hero-img { width: 100%; height: 350px; background: #fff; display: flex; align-items: center; padding: 20px; }
-        .hero-img img { width: 100%; height: 100%; object-fit: contain; }
-
-        .order-section { padding: 20px; }
-        .price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
-        .price-box span { font-size: 28px; font-weight: 900; }
-
-        .form-card { background: #f9f9f9; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #eee; }
-        label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; color: #666; }
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 15px; font-family: 'Cairo'; outline: none; }
+        @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        .btn-order { background: var(--main); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: 700; cursor: pointer; }
+        .back-nav { padding: 20px; position: fixed; top: 0; width: 100%; z-index: 2001; }
+        .close-circle { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; }
 
-        .success-screen { position: fixed; inset: 0; background: #fff; z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .hero-slider { width: 100%; height: 45vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; }
+        .hero-slider img { width: 100%; height: 85%; object-fit: contain; }
+        
+        .order-form { padding: 0 20px 50px 20px; }
+        .white-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.5); }
+        
+        .final-price-box { background: var(--main); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 25px; }
+        .final-price-box span { font-size: 30px; font-weight: 900; }
+        
+        input, select { width: 100%; padding: 16px; border-radius: 18px; border: 1px solid #dcdde1; background: #fff; font-family: 'Cairo'; font-size: 15px; outline: none; margin-bottom: 12px; }
+        .btn-send { background: var(--main); color: #fff; border: none; width: 100%; padding: 20px; border-radius: 20px; font-size: 19px; font-weight: 700; cursor: pointer; }
+        .success-overlay { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
     </style>
 </head>
 <body>
 
 <header><div class="logo">LUXURY STORE</div></header>
 
-<div class="container">
-    <div class="product-grid" id="mainGrid"></div>
-</div>
+<div class="container" id="main-grid"></div>
 
 <div id="product-page">
-    <div class="close-btn" onclick="closePage()">✕</div>
-    <div id="p-details"></div>
+    <div class="back-nav"><div class="close-circle" onclick="closeP()">✕</div></div>
+    <div id="p-content"></div>
 </div>
 
-<div class="success-screen" id="successScreen">
-    <div style="font-size: 60px;">🕊️</div>
-    <h2>تم استلام طلبك بنجاح!</h2>
+<div class="success-overlay" id="successScreen">
+    <div style="font-size: 80px; margin-bottom: 20px;">🕊️</div>
+    <h1 style="color:var(--main)">تم استلام طلبك!</h1>
     <p>سنتصل بك قريباً لتأكيد الشحن.</p>
-    <button class="btn-order" onclick="location.reload()" style="width: 200px;">العودة</button>
+    <button class="btn-send" onclick="location.reload()" style="width: 180px; margin-top: 20px;">العودة للمتجر</button>
 </div>
 
 <script>
-    const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM";
+    const TOKEN = "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM"; 
     const CHAT_ID = "5981194410";
 
     const products = [
-        { id: 1, type: 'shirt', name: "Armani Exchange Shirt", price: 1000, promoPrice: 1800, img: "https://i.postimg.cc/3xYKhDnW/1778264788756.png", options: ["M", "L", "XL", "XXL"] },
-        { id: 2, type: 'watch', name: "Luxury Golden Watch", price: 4500, img: "https://i.postimg.cc/SsfTkWHW/1778252993790.png", options: ["ذهبي", "فضي"] },
-        { id: 3, type: 'wallet', name: "Smart Card Holder", price: 800, img: "https://i.postimg.cc/8C8tvKSK/1778252209457.png", options: ["أسود ناعم", "ألياف كربون"] }
+        { id: 1, name: "Armani Exchange Premium", price: 1000, img: "https://i.postimg.cc/3xYKhDnW/1778264788756.png", options: ["M", "L", "XL"] },
+        { id: 2, name: "Luxury Golden Watch", price: 4500, img: "https://i.postimg.cc/SsfTkWHW/1778252993790.png", options: ["ذهبي ملكي", "فضي كلاسيك"] },
+        { id: 3, name: "Smart Card Holder", price: 800, img: "https://i.postimg.cc/8C8tvKSK/1778252209457.png", options: ["أسود كربون", "بني جلد"] }
     ];
 
     const wilayas = [
         {n: "01-أدرار", p: 1200}, {n: "02-الشلف", p: 800}, {n: "03-الأغواط", p: 900}, {n: "04-أم البواقي", p: 800}, {n: "05-باتنة", p: 850}, {n: "06-بجاية", p: 750}, {n: "07-بسكرة", p: 900}, {n: "08-بشار", p: 1000}, {n: "09-البليدة", p: 600}, {n: "10-البويرة", p: 700}, {n: "11-تمنراست", p: 1400}, {n: "12-تبسة", p: 850}, {n: "13-تلمسان", p: 850}, {n: "14-تيارت", p: 800}, {n: "15-تيزي وزو", p: 700}, {n: "16-الجزائر", p: 400}, {n: "17-الجلفة", p: 900}, {n: "18-جيجل", p: 800}, {n: "19-سطيف", p: 750}, {n: "20-سعيدة", p: 850}, {n: "21-سكيكدة", p: 850}, {n: "22-سيدي بلعباس", p: 850}, {n: "23-عنابة", p: 800}, {n: "24-قالمة", p: 800}, {n: "25-قسنطينة", p: 750}, {n: "26-المدية", p: 750}, {n: "27-مستغانم", p: 850}, {n: "28-المسيلة", p: 800}, {n: "29-معسكر", p: 850}, {n: "30-ورقلة", p: 900}, {n: "31-وهران", p: 750}, {n: "32-البيض", p: 950}, {n: "33-إليزي", p: 1400}, {n: "34-برج بوعريريج", p: 750}, {n: "35-بومرداس", p: 650}, {n: "36-الطارف", p: 850}, {n: "37-تندوف", p: 1400}, {n: "38-تيسمسيلت", p: 850}, {n: "39-الوادي", p: 900}, {n: "40-خنشلة", p: 850}, {n: "41-سوق أهراس", p: 850}, {n: "42-تيبازة", p: 650}, {n: "43-ميلة", p: 850}, {n: "44-عين الدفلى", p: 800}, {n: "45-النعامة", p: 950}, {n: "46-عين تموشنت", p: 850}, {n: "47-غرداية", p: 900}, {n: "48-غليزان", p: 800}, {n: "49-تيميمون", p: 1200}, {n: "50-برج باجي مختار", p: 1500}, {n: "51-أولاد جلال", p: 900}, {n: "52-بني عباس", p: 1000}, {n: "53-عين صالح", p: 1400}, {n: "54-عين قزام", p: 1500}, {n: "55-تقرت", p: 900}, {n: "56-جانت", p: 1500}, {n: "57-المغير", p: 900}, {n: "58-المنيعة", p: 1000}
     ];
 
-    function init() {
-        const grid = document.getElementById('mainGrid');
-        products.forEach(p => {
-            grid.innerHTML += `
-                <div class="p-card" onclick="openPage(${p.id})">
-                    <div class="p-img-hold"><img src="${p.img}"></div>
-                    <div class="p-info">
-                        <div class="p-name">${p.name}</div>
-                        <div class="p-price">${p.price} DA</div>
-                    </div>
-                </div>`;
-        });
-    }
+    const grid = document.getElementById('main-grid');
+    products.forEach(p => {
+        grid.innerHTML += `<div class="p-card" onclick="openP(${p.id})"><div class="p-img-hold"><img src="${p.img}"></div><div class="p-info"><div class="p-name">${p.name}</div><div class="p-price-tag">${p.price} DA</div></div></div>`;
+    });
 
-    function openPage(id) {
+    function openP(id) {
         const p = products.find(x => x.id === id);
         let w_opts = `<option value="none">اختر الولاية</option>` + wilayas.map(w => `<option value="${w.p}">${w.n}</option>`).join('');
-        
-        document.getElementById('p-details').innerHTML = `
-            <div class="hero-img"><img src="${p.img}"></div>
-            <div class="order-section">
-                <div class="price-box">المجموع: <span id="finalPrice">${p.price}</span> دج</div>
-                
-                <div class="form-card">
+        document.getElementById('p-content').innerHTML = `
+            <div class="hero-slider"><img src="${p.img}"></div>
+            <div class="order-form">
+                <div class="final-price-box"><span id="fPrice">${p.price}</span> DA</div>
+                <div class="white-card">
                     <label>الكمية</label>
-                    <select id="qty" onchange="updatePrice(${p.id})">
-                        <option value="1">1 قطعة</option>
-                        <option value="2">2 قطع (عرض خاص)</option>
-                    </select>
-                    <label>الخيار (المقاس أو اللون)</label>
+                    <input type="number" id="qty" value="1" min="1" onchange="updateTotal(${p.price})">
+                    <label>الخيار (المقاس/اللون)</label>
                     <select id="opt">${p.options.map(o => `<option value="${o}">${o}</option>`).join('')}</select>
                 </div>
-
-                <div class="form-card">
-                    <input type="text" id="name" placeholder="الإسم الكامل">
-                    <input type="tel" id="phone" placeholder="رقم الهاتف">
-                    <select id="wilaya" onchange="updatePrice(${p.id})">${w_opts}</select>
-                    <select id="dtype" onchange="updatePrice(${p.id})">
-                        <option value="home">توصيل للمنزل</option>
-                        <option value="office">استلام من المكتب (-300 دج)</option>
-                    </select>
+                <div class="white-card">
+                    <input type="text" id="n" placeholder="الإسم الكامل">
+                    <input type="tel" id="ph" placeholder="رقم الهاتف">
+                    <select id="w" onchange="updateTotal(${p.price})">${w_opts}</select>
                 </div>
-                <button class="btn-order" onclick="sendOrder(${p.id})">تأكيد الطلب 🌿</button>
+                <button class="btn-send" onclick="send(${p.id})">تأكيد الطلب الآن 🌿</button>
             </div>`;
         document.getElementById('product-page').style.display = 'block';
     }
 
-    function updatePrice(id) {
-        const p = products.find(x => x.id === id);
-        const qty = document.getElementById('qty').value;
-        const w_val = document.getElementById('wilaya').value;
-        const dtype = document.getElementById('dtype').value;
-
-        let base = (qty == 2 && p.promoPrice) ? p.promoPrice : p.price * qty;
-        let ship = w_val === "none" ? 0 : parseInt(w_val);
-        if(dtype === "office" && ship > 300) ship -= 300;
-
-        document.getElementById('finalPrice').innerText = base + ship;
+    function updateTotal(price) {
+        const q = document.getElementById('qty').value, w = document.getElementById('w').value;
+        let ship = w === "none" ? 0 : parseInt(w);
+        document.getElementById('fPrice').innerText = (price * q) + ship;
     }
 
-    function sendOrder(id) {
-        const p = products.find(x => x.id === id);
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-        const wilaya = document.getElementById('wilaya');
-
-        if(!name || !phone || wilaya.value === "none") return alert("أكمل البيانات");
-
-        const msg = `📦 طلب جديد:\nالمنتج: ${p.name}\nالاسم: ${name}\nالهاتف: ${phone}\nالولاية: ${wilaya.options[wilaya.selectedIndex].text}\nالكمية: ${document.getElementById('qty').value}\nالمجموع: ${document.getElementById('finalPrice').innerText} DA`;
-
-        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({chat_id: CHAT_ID, text: msg})
-        }).then(() => document.getElementById('successScreen').style.display = 'flex');
+    function send(id) {
+        const p = products.find(x => x.id === id), n = document.getElementById('n').value, ph = document.getElementById('ph').value, w = document.getElementById('w');
+        if(n && ph && w.value !== "none") {
+            const msg = `📦 طلب جديد:\nالمنتج: ${p.name}\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالمجموع: ${document.getElementById('fPrice').innerText} DA`;
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: CHAT_ID, text: msg})
+            }).then(res => { if(res.ok) document.getElementById('successScreen').style.display = 'flex'; });
+        } else { alert("يرجى ملء البيانات"); }
     }
 
-    function closePage() { document.getElementById('product-page').style.display = 'none'; }
-    init();
+    function closeP() { document.getElementById('product-page').style.display = 'none'; }
 </script>
 </body>
 </html>

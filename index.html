@@ -24,9 +24,8 @@
             padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid rgba(255,255,255,0.3);
         }
-        .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; }
+        .logo { font-size: 20px; font-weight: 900; color: var(--main); letter-spacing: 4px; margin: 0; cursor: pointer; }
         
-        /* شريط التصنيفات المطور */
         .categories-nav {
             display: flex; gap: 10px; padding: 15px; overflow-x: auto;
             white-space: nowrap; background: rgba(238, 242, 243, 0.5);
@@ -45,7 +44,6 @@
 
         .container { max-width: 500px; margin: auto; padding: 20px 15px; }
         
-        /* تأثير الانتقال السلس للمنتجات */
         #main-grid { 
             display: grid; grid-template-columns: 1fr; gap: 20px;
             transition: opacity 0.3s ease;
@@ -63,7 +61,6 @@
         .p-name { font-size: 18px; font-weight: 700; color: var(--main); }
         .p-price-tag { font-weight: 900; color: #2c3e50; font-size: 22px; display: block; }
 
-        /* صفحة المنتج */
         #product-page { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #f4f7f9; z-index: 2000; overflow-y: auto;
@@ -89,7 +86,7 @@
 </head>
 <body>
 
-<header><div class="logo">LUXURY STORE</div></header>
+<header><div class="logo" onclick="location.hash=''; location.reload();">LUXURY STORE</div></header>
 
 <div class="categories-nav">
     <div class="cat-btn active" onclick="filterCat('all', this)">الكل</div>
@@ -113,7 +110,6 @@
 <div class="success-overlay" id="successScreen">
     <div style="font-size: 80px; margin-bottom: 20px;">🕊️</div>
     <h1>تم استلام طلبك!</h1>
-    <p>سنتصل بك لتأكيد الشحن قريباً.</p>
     <button class="btn-send" onclick="location.reload()" style="width: 150px;">حسناً</button>
 </div>
 
@@ -148,7 +144,6 @@
     function render(f = 'all') {
         const g = document.getElementById('main-grid');
         g.classList.add('fade-out');
-        
         setTimeout(() => {
             g.innerHTML = '';
             const filtered = products.filter(p => f === 'all' || p.category === f);
@@ -171,6 +166,9 @@
     }
 
     function openP(id) {
+        // تحديث الرابط في المتصفح ليحمل ID المنتج
+        location.hash = id;
+
         const p = products.find(x => x.id === id);
         let w_opts = `<option value="none">اختر الولاية</option>` + wilayas.map(w => `<option value="${w.p}">${w.n}</option>`).join('');
         document.getElementById('p-content').innerHTML = `
@@ -221,7 +219,6 @@
             let text = `📦 طلب جديد:\nالاسم: ${n}\nالهاتف: ${ph}\nالولاية: ${w.options[w.selectedIndex].text}\nالبلدية: ${b}\nالكمية: ${qty}\nلون1: ${document.getElementById('c1').value}`;
             if(qty === "2") text += `\nلون2: ${document.getElementById('c2').value}`;
             text += `\nالمجموع: ${document.getElementById('fPrice').innerText} DA`;
-            
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: text }) })
             .then(() => document.getElementById('successScreen').style.display = 'flex');
         } else { alert("يرجى إكمال جميع البيانات"); }
@@ -233,8 +230,24 @@
         el.classList.add('active');
     }
 
-    function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; }
+    function closeP() { 
+        document.getElementById('product-page').style.display = 'none'; 
+        document.body.style.overflow = 'auto';
+        location.hash = ''; // مسح الـ ID من الرابط عند الإغلاق للعودة للرئيسية
+    }
+
+    // الوظيفة السحرية لفحص الرابط عند الدخول
+    function checkUrl() {
+        const hash = location.hash.replace('#', '');
+        if(hash) {
+            const id = parseInt(hash);
+            const exists = products.find(p => p.id === id);
+            if(exists) openP(id);
+        }
+    }
+
     render();
+    checkUrl(); // تنفيذ الفحص بمجرد تشغيل المتجر
 </script>
 </body>
 </html>

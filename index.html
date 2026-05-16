@@ -201,7 +201,6 @@
     <div id="p-content"></div>
 </div>
 
-<!-- Track Order Modal -->
 <div class="modal-overlay" id="trackModal" onclick="closeTrack(event)">
     <div class="modal-box" style="position:relative;">
         <button class="modal-close" onclick="closeTrack()">✕</button>
@@ -225,23 +224,13 @@
 </div>
 
 <script>
-    // =====================================================
-    // ⚙️ الإعدادات — ضع هنا بياناتك فقط
-    // في الإنتاج: انقل هذا لـ backend (PHP/Node.js)
-    // =====================================================
     const CONFIG = {
         BOT_TOKEN: "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM",
         CHAT_ID: "5981194410"
     };
 
-    // =====================================================
-    // منع الإرسال المزدوج
-    // =====================================================
     let isSubmitting = false;
 
-    // =====================================================
-    // قاعدة بيانات الطلبات المحلية (للتتبع)
-    // =====================================================
     function saveOrder(orderId, data) {
         const orders = JSON.parse(localStorage.getItem('ls_orders') || '{}');
         orders[orderId] = { ...data, timestamp: Date.now(), status: 'confirmed' };
@@ -257,9 +246,6 @@
         return 'LS-' + Math.floor(1000 + Math.random() * 9000);
     }
 
-    // =====================================================
-    // المنتجات
-    // =====================================================
     const products = [
         {
             id: 1, category: "ملابس", name: "Armani Exchange Premium", price: 1000,
@@ -277,9 +263,6 @@
         }
     ];
 
-    // =====================================================
-    // الولايات
-    // =====================================================
     const wilayas = [
         {n:"01-أدرار",p:1000},{n:"02-الشلف",p:600},{n:"03-الأغواط",p:700},{n:"04-أم البواقي",p:600},
         {n:"05-باتنة",p:600},{n:"06-بجاية",p:600},{n:"07-بسكرة",p:700},{n:"08-بشار",p:800},
@@ -300,14 +283,8 @@
 
     let timerInterval;
 
-    // =====================================================
-    // التحقق من رقم الهاتف الجزائري
-    // =====================================================
     function validateAlgerianPhone(phone) {
-        // إزالة المسافات والشرطات
         const cleaned = phone.replace(/[\s\-]/g, '');
-        // يبدأ بـ 05, 06, 07 ويتكون من 10 أرقام
-        // أو يبدأ بـ +2135, +2136, +2137 ويتكون من 13 رقم
         const local = /^0[5-7][0-9]{8}$/.test(cleaned);
         const intl  = /^\+213[5-7][0-9]{8}$/.test(cleaned);
         return local || intl;
@@ -319,9 +296,6 @@
         return cleaned;
     }
 
-    // =====================================================
-    // العرض
-    // =====================================================
     function render(f = 'all') {
         const g = document.getElementById('main-grid');
         g.classList.add('fade-out');
@@ -358,9 +332,6 @@
         }, 1000);
     }
 
-    // =====================================================
-    // فتح صفحة المنتج
-    // =====================================================
     function openP(id) {
         location.hash = id;
         const p = products.find(x => x.id === id);
@@ -446,9 +417,6 @@
         isSubmitting = false;
     }
 
-    // =====================================================
-    // التحقق من الحقول
-    // =====================================================
     function validateName(input) {
         const val = input.value.trim();
         const hint = document.getElementById('nameHint');
@@ -495,9 +463,6 @@
         }
     }
 
-    // =====================================================
-    // حساب السعر
-    // =====================================================
     function updateTotal() {
         const qty = document.getElementById('qty').value;
         const w_val = document.getElementById('w').value;
@@ -509,11 +474,9 @@
 
         let base = (qty === "2") ? 1800 : 1000;
         let ship = w_val === "none" ? 0 : parseInt(w_val);
-        let discount = 0;
 
         if (shipType === "desk" && ship > 0) {
-            discount = 200;
-            ship = ship - discount;
+            ship = ship - 200;
             shipNote.style.display = 'block';
             shipNote.innerHTML = `<span class="discount-badge">-200 DA</span> خصم Stop Desk مطبق على سعر الشحن`;
         } else {
@@ -530,9 +493,6 @@
         }
     }
 
-    // =====================================================
-    // إرسال الطلب (مع حماية من الإرسال المزدوج)
-    // =====================================================
     async function send() {
         if (isSubmitting) return;
 
@@ -543,7 +503,6 @@
         const st = document.getElementById('ship_type').value;
         const stLabel = st === 'home' ? 'توصيل للمنزل 🏠' : 'استلام من المكتب 🏢';
 
-        // تحقق شامل
         let valid = true;
 
         if (n.length < 3) {
@@ -575,7 +534,6 @@
         }
 
         if (!valid) {
-            // رج الزر للفت الانتباه
             const btn = document.getElementById('sendBtn');
             btn.style.background = 'var(--accent)';
             btn.textContent = '⚠️ يرجى تصحيح البيانات';
@@ -586,7 +544,6 @@
             return;
         }
 
-        // منع الإرسال المزدوج
         isSubmitting = true;
         const btn = document.getElementById('sendBtn');
         btn.disabled = true;
@@ -630,7 +587,6 @@
             const data = await resp.json();
 
             if (data.ok) {
-                // حفظ الطلب محلياً للتتبع
                 saveOrder(orderId, {
                     name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text,
                     address: b, shipType: stLabel, qty, total,
@@ -646,7 +602,6 @@
         } catch(e) {
             isSubmitting = false;
             btn.disabled = false;
-            btn.textContent = 'تأكيد الطلب 🛍️';
             btn.style.background = 'var(--accent)';
             btn.textContent = '❌ خطأ في الإرسال — حاول مجدداً';
             setTimeout(() => {
@@ -656,9 +611,6 @@
         }
     }
 
-    // =====================================================
-    // تتبع الطلب
-    // =====================================================
     function openTrack() {
         document.getElementById('trackModal').classList.add('show');
         document.getElementById('trackResult').innerHTML = '';
@@ -694,7 +646,6 @@
         const age = Date.now() - order.timestamp;
         const hours = age / (1000 * 60 * 60);
 
-        // تحديد مراحل الطلب بناءً على الوقت
         let stages = [
             { icon: '✅', label: 'تم استلام الطلب', sub: new Date(order.timestamp).toLocaleString('ar'), state: 'done' },
             { icon: '📞', label: 'تأكيد عبر الهاتف', sub: hours < 2 ? 'جاري التواصل...' : 'تم التأكيد', state: hours < 2 ? 'active' : 'done' },
@@ -721,9 +672,6 @@
             </div>`;
     }
 
-    // =====================================================
-    // دوال المساعدة
-    // =====================================================
     function filterCat(c, el) {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
@@ -751,9 +699,6 @@
         if (h && products.find(p => p.id === parseInt(h))) openP(parseInt(h));
     }
 
-    // =====================================================
-    // تشغيل
-    // =====================================================
     render();
     checkUrl();
     window.addEventListener('hashchange', checkUrl);

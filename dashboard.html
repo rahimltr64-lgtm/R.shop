@@ -83,6 +83,7 @@
             <table class="orders-table">
                 <thead>
                     <tr>
+                        <th>رقم الطلب</th>
                         <th>الزبون</th>
                         <th>الهاتف</th>
                         <th>الولاية/العنوان</th>
@@ -93,7 +94,7 @@
                 </thead>
                 <tbody id="ordersTableBody">
                     <tr>
-                        <td colspan="6" style="text-align:center; color:#888;">جاري تحميل الطلبات الحية من السحاب... 🔄</td>
+                        <td colspan="7" style="text-align:center; color:#888;">جاري تحميل الطلبات الحية من السحاب... 🔄</td>
                     </tr>
                 </tbody>
             </table>
@@ -115,7 +116,6 @@
         const colors = document.getElementById('p_colors').value.split(',').map(c => c.trim());
         const sizes = document.getElementById('p_sizes').value.split(',').map(s => s.trim());
         
-        // تجميع روابط الصور المدخلة يدوياً وتنظيف الفراغات
         const images = [];
         const img1 = document.getElementById('p_img1').value.trim();
         const img2 = document.getElementById('p_img2').value.trim();
@@ -133,7 +133,6 @@
         const productData = { id: parseInt(id), category, name, price, colors, sizes, images };
 
         try {
-            // حفظ المنتج باستخدام الـ ID الفريد الخاص به لعدم التكرار والتنظيم
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${id}.json`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -154,7 +153,7 @@
             const tableBody = document.getElementById('ordersTableBody');
             
             if (!data) {
-                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">لا توجد طلبات مسجلة حالياً في السحاب.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">لا توجد طلبات مسجلة حالياً في السحاب.</td></tr>`;
                 return;
             }
 
@@ -169,6 +168,7 @@
 
                 tableBody.innerHTML += `
                     <tr>
+                        <td><strong style="color:#e74c3c;">${order.orderId || 'قديم'}</strong></td>
                         <td><strong>${order.name}</strong></td>
                         <td><a href="tel:${order.phone}" style="color:#2980b9; text-decoration:none; font-weight:700;">${order.phone}</a></td>
                         <td>${order.wilaya}</td>
@@ -200,15 +200,14 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
             });
-            fetchOrders(); // إعادة جلب الطلبات لتحديث الشاشات
+            fetchOrders(); 
         } catch (error) {
             alert("فشل في تحديث الحالة سحابياً.");
         }
     }
 
-    // تشغيل الجلب التلقائي للطلبات
     fetchOrders();
-    setInterval(fetchOrders, 60000); // تحديث كل دقيقة تلقائياً
+    setInterval(fetchOrders, 40000); // تحديث سريع كل 40 ثانية تلقائياً
 </script>
 </body>
 </html>

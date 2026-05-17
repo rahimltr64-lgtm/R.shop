@@ -134,6 +134,7 @@
         .track-icon.done { background: #d4edda; }
         .track-icon.active { background: #fff3cd; }
         .track-icon.pending { background: #f8d7da; }
+        .track-icon.cancelled { background: #e2e8f0; }
         .track-info strong { display: block; font-size: 15px; color: var(--main); }
         .track-info span { font-size: 13px; color: #888; }
 
@@ -201,7 +202,7 @@
 
     function saveOrder(orderId, data) {
         const orders = JSON.parse(localStorage.getItem('ls_orders') || '{}');
-        orders[orderId] = { ...data, timestamp: Date.now(), status: 'confirmed' };
+        orders[orderId] = { ...data, timestamp: Date.now() };
         localStorage.setItem('ls_orders', JSON.stringify(orders));
     }
 
@@ -502,7 +503,7 @@
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text, product: pDetails, status: "قيد الانتظار" })
+                body: JSON.stringify({ orderId: orderId, name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text, product: pDetails, status: "قيد الانتظار" })
             });
 
             const resp = await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, {
@@ -526,30 +527,71 @@
     function openTrack() { document.getElementById('trackModal').classList.add('show'); document.getElementById('trackResult').innerHTML = ''; document.getElementById('trackInput').value = ''; }
     function closeTrack(e) { if (!e || e.target === document.getElementById('trackModal')) { document.getElementById('trackModal').classList.remove('show'); } }
 
-    function trackOrder() {
+    // دالة تتبع الطلب السحابية الجديدة والمربوطة باللوحة حياً
+    async function trackOrder() {
         const input = document.getElementById('trackInput').value.trim().toUpperCase();
         const result = document.getElementById('trackResult');
-        if (!input) { result.innerHTML = `<p style="color:var(--accent); text-align:center;">يرجى إدخال رقم الطلب</p>`; return; }
-        const order = getOrder(input);
-        if (!order) { result.innerHTML = `<div style="text-align:center; padding:20px;"><div style="font-size:40px;">🔍</div><p style="color:#888;">لم يتم العثور على الطلب.</p></div>`; return; }
         
-        const age = Date.now() - order.timestamp;
-        const hours = age / (1000 * 60 * 60);
-        let stages = [
-            { icon: '✅', label: 'تم استلام الطلب', sub: new Date(order.timestamp).toLocaleString('ar'), state: 'done' },
-            { icon: '📞', label: 'تأكيد عبر الهاتف', sub: hours < 2 ? 'جاري التواصل...' : 'تم التأكيد', state: hours < 2 ? 'active' : 'done' },
-            { icon: '📦', label: 'جاري التحضير', sub: hours < 12 ? 'قريباً' : 'تم التحضير', state: hours < 2 ? 'pending' : hours < 12 ? 'active' : 'done' },
-            { icon: '🚚', label: 'في الطريق إليك', sub: hours < 24 ? 'خلال 24-48 ساعة' : 'في الطريق', state: hours < 12 ? 'pending' : 'active' },
-        ];
+        if (!input) { result.innerHTML = `<p style="color:var(--accent); text-align:center;">يرجى إدخال رقم الطلب</p>`; return; }
+        result.innerHTML = `<p style="text-align:center; color:#888;">جاري فحص قاعدة البيانات السحابية... 🔄</p>`;
 
-        result.innerHTML = `<div class="track-result"><div style="background:#f8f9fa; border-radius:15px; padding:15px; margin-bottom:20px; font-size:13px;"><strong style="color:var(--main);">${input}</strong><br>${order.name} • ${order.wilaya}<br><span style="color:var(--green);">💰 ${order.total} DA</span></div>${stages.map(s => `<div class="track-step"><div class="track-icon ${s.state}">${s.icon}</div><div class="track-info"><strong>${s.label}</strong><span>${s.sub}</span></div></div>`).join('')}</div>`;
+        try {
+            const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`);
+            const data = await response.json();
+            
+            let foundOrder = null;
+
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    if (data[key].orderId === input) { foundOrder = data[key]; }
+                });
+            }
+
+            if (!foundOrder) {
+                const localOrder = getOrder(input);
+                if (!localOrder) {
+                    result.innerHTML = `<div style="text-align:center; padding:20px;"><div style="font-size:40px;">🔍</div><p style="color:#888;">لم يتم العثور على هذا الطلب.</p></div>`;
+                    return;
+                }
+                foundOrder = { name: localOrder.name, wilaya: localOrder.wilaya, status: "قيد الانتظار", total: localOrder.total };
+            }
+
+            const currentStatus = foundOrder.status || "قيد الانتظار";
+            let s1 = 'pending', s2 = 'pending', s3 = 'pending', s4 = 'pending';
+            let sub1 = 'تم الاستلام', sub2 = 'في الانتظار', sub3 = 'قريباً', sub4 = 'خلال 24-48 ساعة';
+
+            if (currentStatus === "قيد الانتظار") {
+                s1 = 'done'; s2 = 'active'; sub2 = 'جاري مراجعة طلبك...';
+            } else if (currentStatus === "تم التأكيد") {
+                s1 = 'done'; s2 = 'done'; s3 = 'active'; sub2 = 'تم التأكيد هاتفياً ✓'; sub3 = 'جاري تغليف وتجهيز الطرد...';
+            } else if (currentStatus === "تم الشحن") {
+                s1 = 'done'; s2 = 'done'; s3 = 'done'; s4 = 'active'; sub2 = 'تم التأكيد هاتفياً ✓'; sub3 = 'تم التجهيز وتسليم شركة الشحن ✓'; sub4 = 'الطرد في الطريق إلى ولايتك الآن! 🚚';
+            } else if (currentStatus === "ملغى") {
+                s1 = 'cancelled'; s2 = 'cancelled'; s3 = 'cancelled'; s4 = 'cancelled'; sub1 = 'تم إلغاء الطلب'; sub2 = '❌'; sub3 = '❌'; sub4 = '❌';
+            }
+
+            result.innerHTML = `
+                <div class="track-result">
+                    <div style="background:#f8f9fa; border-radius:15px; padding:15px; margin-bottom:20px; font-size:13px; text-align:right;">
+                        <strong style="color:var(--main);">${input}</strong><br>
+                        👤 الزبون: ${foundOrder.name}<br>
+                        📍 الولاية: ${foundOrder.wilaya}<br>
+                        <span style="color:var(--green); font-weight:700;">📊 الحالة الحالية: ${currentStatus}</span>
+                    </div>
+                    <div class="track-step"><div class="track-icon ${s1}">✅</div><div class="track-info"><strong>تم استقبال الطلب</strong><span>${sub1}</span></div></div>
+                    <div class="track-step"><div class="track-icon ${s2}">📞</div><div class="track-info"><strong>التأكيد الهاتفي</strong><span>${sub2}</span></div></div>
+                    <div class="track-step"><div class="track-icon ${s3}">📦</div><div class="track-info"><strong>تجهيز الطرد</strong><span>${sub3}</span></div></div>
+                    <div class="track-step"><div class="track-icon ${s4}">🚚</div><div class="track-info"><strong>الشحن والتوصيل</strong><span>${sub4}</span></div></div>
+                </div>`;
+        } catch (error) {
+            result.innerHTML = `<p style="color:var(--accent); text-align:center;">حدث مشكلة في الاتصال.</p>`;
+        }
     }
 
     function filterCat(c, el) { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', inline: 'center' }); render(c); }
     function changeGallery(el, src) { document.getElementById('activeImg').src = src; document.querySelectorAll('.t-item').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
     function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; location.hash = ''; if (timerInterval) clearInterval(timerInterval); }
     function home() { location.hash = ''; location.reload(); }
-
     function checkUrl() { const h = location.hash.replace('#', ''); if (h && products.find(p => p.id === parseInt(h))) openP(parseInt(h)); }
 
     loadCloudProducts();

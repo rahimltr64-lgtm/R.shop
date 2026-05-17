@@ -9,8 +9,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="رابط_أيقونتك_هنا">
     <link rel="icon" type="image/png" sizes="192x192" href="رابط_أيقونتك_هنا">
     <link rel="icon" type="image/png" sizes="32x32" href="رابط_أيقونتك_هنا">
-    
     <meta name="theme-color" content="#090d16">
+
     <style>
         :root {
             --bg-dark: #090d16;
@@ -182,7 +182,7 @@
         <h2 style="margin-top:0; color:#fff; font-size:24px; font-weight:900;">شكرًا لك على ثقتك!</h2>
         <p style="color:var(--text-main); font-size:15px; margin: 15px 0 5px 0;">تم تسجيل طلبيتك بنجاح برقم مميز:</p>
         <p id="thankYouOrderId" style="color:var(--accent-gold); font-size:26px; font-weight:900; margin: 5px 0 20px 0; font-family: monospace; letter-spacing: 2px;"></p>
-        <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:25px;">سيقوم فريق خدمة الزبائن بالاتصال بك هاتفياً في غضون ساعات قليلة لتأكيد العنوان وتجهيز طردك للشحن.</p>
+        <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:25px;">سيقوم فريق خدمة الزبائن بالاتصال بك هاتفياً في غضون ساعات قليلة لتأكيد العنوان.</p>
         <button class="btn-buy" style="border-radius:30px; width:60%;" onclick="closeThankYouModal()">متابعة التصفح 🛍️</button>
     </div>
 </div>
@@ -242,12 +242,8 @@
         const dType = document.getElementById('deliveryType').value;
         
         let baseFee = selectedOption && selectedOption.value ? parseInt(selectedOption.dataset.fee) : 0;
-        
-        if (dType === "office" && baseFee > 0) {
-            finalDeliveryFee = Math.max(0, baseFee - 200); 
-        } else {
-            finalDeliveryFee = baseFee;
-        }
+        if (dType === "office" && baseFee > 0) finalDeliveryFee = Math.max(0, baseFee - 200); 
+        else finalDeliveryFee = baseFee;
 
         const finalTotal = selectedProduct.price + finalDeliveryFee;
         document.getElementById('modalDeliveryPrice').innerText = `${finalDeliveryFee.toLocaleString('ar')} DA`;
@@ -262,10 +258,7 @@
             if (seconds < 0) { seconds = 59; minutes--; }
             if (minutes < 0) { minutes = 59; hours--; }
             if (hours < 0) { hours = 3; minutes = 0; seconds = 0; }
-            let hStr = hours < 10 ? '0' + hours : hours;
-            let mStr = minutes < 10 ? '0' + minutes : minutes;
-            let sStr = seconds < 10 ? '0' + seconds : seconds;
-            timerEl.innerText = `${hStr}:${mStr}:${sStr}`;
+            timerEl.innerText = `${hours < 10 ? '0'+hours : hours}:${minutes < 10 ? '0'+minutes : minutes}:${seconds < 10 ? '0'+seconds : seconds}`;
         }, 1000);
     }
 
@@ -274,8 +267,32 @@
             const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
             allProducts = await res.json() || {};
             renderStoreProducts(); updateFavBadge();
+            
+            // تشغيل ميزة فحص الرابط المباشر فور الانتهاء من جلب المنتجات
+            checkDirectProductLink();
         } catch (e) { console.error(e); }
     }
+
+    // الدالة الذكية لفحص الروابط المباشرة (Deep Linking)
+    function checkDirectProductLink() {
+        const hash = window.location.hash; // جلب الجزء الذي يبدأ بـ # من الرابط
+        if (!hash) return;
+        
+        const cleanId = hash.replace('#', '').trim(); // استخراج الـ ID فقط
+        if (!cleanId) return;
+
+        // البحث في المنتجات عن الـ ID المطابق
+        const keys = Object.keys(allProducts);
+        const matchKey = keys.find(key => allProducts[key] && allProducts[key].id.toString() === cleanId);
+
+        if (matchKey) {
+            // فتح مودال الشراء تلقائياً للمنتج المطلوب
+            setTimeout(() => { openOrderModal(matchKey); }, 400);
+        }
+    }
+
+    // الاستماع لأي تغيير في الرابط بدون الحاجة لإعادة تنشيط الصفحة
+    window.addEventListener('hashchange', checkDirectProductLink);
 
     function renderStoreProducts() {
         const container = document.getElementById('productsContainer'); container.innerHTML = '';
@@ -325,8 +342,11 @@
 
     function openOrderModal(key) {
         selectedProduct = allProducts[key]; if(!selectedProduct) return;
-        document.getElementById('modalProductTitle').innerText = `طلب شراء: ${selectedProduct.name}`;
         
+        // تحديث الهاش في الرابط ليتزامن مع المنتج المفتوح حالياً
+        window.location.hash = selectedProduct.id;
+
+        document.getElementById('modalProductTitle').innerText = `طلب شراء: ${selectedProduct.name}`;
         document.getElementById('custWilaya').value = "";
         document.getElementById('deliveryType').value = "home";
         document.getElementById('modalDeliveryPrice').innerText = "0 DA";
@@ -341,8 +361,18 @@
         document.getElementById('orderModal').classList.add('show');
     }
 
-    function closeOrderModal(e) { if (!e || e.target === document.getElementById('orderModal') || e.target.className === 'modal-close') document.getElementById('orderModal').classList.remove('show'); }
-    function closeThankYouModal() { document.getElementById('thankYouModal').classList.remove('show'); }
+    function closeOrderModal(e) { 
+        if (!e || e.target === document.getElementById('orderModal') || e.target.className === 'modal-close') {
+            document.getElementById('orderModal').classList.remove('show');
+            // تنظيف الهاش من الرابط عند إغلاق المودال للعودة للرئيسية
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+    }
+    
+    function closeThankYouModal() { 
+        document.getElementById('thankYouModal').classList.remove('show');
+        history.pushState("", document.title, window.location.pathname + window.location.search);
+    }
 
     function openTrackModal() { document.getElementById('trackModal').classList.add('show'); }
     function closeTrackModal(e) { if (!e || e.target === document.getElementById('trackModal') || e.target.className === 'modal-close') { document.getElementById('trackModal').classList.remove('show'); document.getElementById('trackResult').style.display = 'none'; document.getElementById('trackOrderIdInput').value = ''; } }
@@ -370,12 +400,10 @@
 
                 resultBox.style.display = 'block';
             } else {
-                alert("❌ لم يتم العثور على أي طلب بهذا الرقم. تأكد من صحته!");
+                alert("❌ لم يتم العثور على أي طلب بهذا الرقم.");
                 resultBox.style.display = 'none';
             }
-        } catch(e) {
-            alert("حدث خطأ أثناء الاتصال بالسيرفر لتتبع طلبك.");
-        }
+        } catch(e) { alert("حدث خطأ أثناء الاتصال بالسيرفر."); }
     }
 
     async function submitOrder() {
@@ -420,10 +448,8 @@
             `;
 
             fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: telegramMessage })
-            }).catch(e => console.error("تنبيه تليجرام تعذر مؤقتاً", e));
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: telegramMessage })
+            });
 
             document.getElementById('orderForm').reset();
             document.getElementById('orderModal').classList.remove('show');

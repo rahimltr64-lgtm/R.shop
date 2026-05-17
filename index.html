@@ -226,7 +226,8 @@
 <script>
     const CONFIG = {
         BOT_TOKEN: "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM",
-        CHAT_ID: "5981194410"
+        CHAT_ID: "5981194410",
+        FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com"
     };
 
     let isSubmitting = false;
@@ -246,7 +247,8 @@
         return 'LS-' + Math.floor(1000 + Math.random() * 9000);
     }
 
-    const products = [
+    // المنتجات الحالية المكتوبة يدوياً (ستبقى دائماً كأصل للمتجر)
+    const localProducts = [
         {
             id: 1, category: "ملابس", name: "Armani Exchange Premium", price: 1000,
             colors: ["أبيض ملكي", "اسود فخم", "ازرق داكن", "عنابي", "أزرق بارد", "وردي", "اخضر بارد"],
@@ -262,6 +264,8 @@
             ]
         }
     ];
+
+    let products = [...localProducts];
 
     const wilayas = [
         {n:"01-أدرار",p:1000},{n:"02-الشلف",p:600},{n:"03-الأغواط",p:700},{n:"04-أم البواقي",p:600},
@@ -296,6 +300,21 @@
         return cleaned;
     }
 
+    // جلب المنتجات السحابية الإضافية من الـ Firebase ودمجها مع المنتج الأصلي
+    async function loadCloudProducts() {
+        try {
+            const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
+            const data = await response.json();
+            if (data) {
+                const cloudList = Object.keys(data).map(key => data[key]);
+                products = [...localProducts, ...cloudList];
+            }
+        } catch (error) {
+            console.error("خطأ أثناء جلب منتجات السحاب:", error);
+        }
+        render();
+    }
+
     function render(f = 'all') {
         const g = document.getElementById('main-grid');
         g.classList.add('fade-out');
@@ -306,9 +325,10 @@
                 g.innerHTML = `<div style="text-align:center; padding:80px 20px; grid-column:1/-1;"><h3>☕ قريباً في قسم ${f}</h3></div>`;
             } else {
                 filtered.forEach(p => {
+                    const mainImg = (p.images && p.images.length > 0) ? p.images[0] : '';
                     g.innerHTML += `
                     <div class="p-card" onclick="openP(${p.id})">
-                        <div class="p-img-hold"><img src="${p.images[0]}" loading="lazy"></div>
+                        <div class="p-img-hold"><img src="${mainImg}" loading="lazy"></div>
                         <div class="p-info">
                             <div class="p-name">${p.name}</div>
                             <div class="p-price-tag">${p.price.toLocaleString('ar')} DA</div>
@@ -340,12 +360,19 @@
         let w_opts = `<option value="none">اختر الولاية</option>` + 
             wilayas.map(w => `<option value="${w.p}">${w.n}</option>`).join('');
 
+        const firstImg = (p.images && p.images.length > 0) ? p.images[0] : '';
+
+        // حساب أسعار الخصم الديناميكية بناء على سعر المنتج المختار
+        const singlePrice = p.price;
+        const doublePrice = Math.floor(p.price * 2 * 0.9); // خصم 10% تلقائي للقطعتين
+        const savedAmount = (singlePrice * 2) - doublePrice;
+
         document.getElementById('p-content').innerHTML = `
-            <div class="hero-slider"><img src="${p.images[0]}" id="activeImg"></div>
+            <div class="hero-slider"><img src="${firstImg}" id="activeImg"></div>
             <div class="thumbs-strip">
-                ${p.images.map((img, i) => 
+                ${p.images ? p.images.map((img, i) => 
                     `<img src="${img}" class="t-item ${i===0?'active':''}" onclick="changeGallery(this, '${img}')" loading="lazy">`
-                ).join('')}
+                ).join('') : ''}
             </div>
             <div class="order-form">
                 <div class="final-price-box">
@@ -360,9 +387,9 @@
 
                 <div class="white-card">
                     <label style="font-weight:700; color:var(--main);">🛒 الطلب</label>
-                    <select id="qty" onchange="updateTotal()" style="margin-top:10px;">
-                        <option value="1">قطعة واحدة — 1,000 DA</option>
-                        <option value="2">قطعتان — 1,800 DA (وفر 200 DA)</option>
+                    <select id="qty" onchange="updateTotal(${singlePrice}, ${doublePrice})" style="margin-top:10px;">
+                        <option value="1">قطعة واحدة — ${singlePrice.toLocaleString('ar')} DA</option>
+                        <option value="2">قطعتان — ${doublePrice.toLocaleString('ar')} DA (وفر ${savedAmount.toLocaleString('ar')} DA)</option>
                     </select>
 
                     <div style="margin-top:10px;">
@@ -396,19 +423,19 @@
                         <div class="field-hint" id="phoneHint"></div>
                     </div>
 
-                    <select id="ship_type" onchange="updateTotal()" style="margin-top:5px;">
+                    <select id="ship_type" onchange="updateTotal(${singlePrice}, ${doublePrice})" style="margin-top:5px;">
                         <option value="home">🏠 توصيل للمنزل</option>
                         <option value="desk">🏢 استلام من المكتب (Stop Desk)</option>
                     </select>
                     <div id="shipNote" class="ship-price-note" style="display:none;"></div>
 
-                    <select id="w" onchange="updateTotal()">${w_opts}</select>
+                    <select id="w" onchange="updateTotal(${singlePrice}, ${doublePrice})">${w_opts}</select>
 
                     <input type="text" id="b" placeholder="البلدية / العنوان التفصيلي" oninput="validateAddress(this)">
                     <div class="field-hint" id="addressHint"></div>
                 </div>
 
-                <button class="btn-send" id="sendBtn" onclick="send()">تأكيد الطلب 🛍️</button>
+                <button class="btn-send" id="sendBtn" onclick="send(${id})">تأكيد الطلب 🛍️</button>
             </div>`;
 
         document.getElementById('product-page').style.display = 'block';
@@ -463,7 +490,7 @@
         }
     }
 
-    function updateTotal() {
+    function updateTotal(single, double) {
         const qty = document.getElementById('qty').value;
         const w_val = document.getElementById('w').value;
         const shipType = document.getElementById('ship_type').value;
@@ -472,11 +499,11 @@
 
         document.getElementById('item2_fields').style.display = (qty === "2") ? 'block' : 'none';
 
-        let base = (qty === "2") ? 1800 : 1000;
+        let base = (qty === "2") ? double : single;
         let ship = w_val === "none" ? 0 : parseInt(w_val);
 
         if (shipType === "desk" && ship > 0) {
-            ship = ship - 200;
+            ship = Math.max(0, ship - 200);
             shipNote.style.display = 'block';
             shipNote.innerHTML = `<span class="discount-badge">-200 DA</span> خصم Stop Desk مطبق على سعر الشحن`;
         } else {
@@ -493,8 +520,11 @@
         }
     }
 
-    async function send() {
+    async function send(productId) {
         if (isSubmitting) return;
+
+        const p = products.find(x => x.id === productId);
+        if (!p) return;
 
         const n = document.getElementById('n').value.trim();
         const ph = document.getElementById('ph').value.trim();
@@ -554,6 +584,8 @@
         const formattedPhone = formatPhone(ph);
         const total = document.getElementById('fPrice').innerText;
 
+        const pDetails = `${p.name} (عدد: ${qty})`;
+
         let text = `📦 *طلب جديد — ${orderId}*\n`;
         text += `━━━━━━━━━━━━━━━━━━\n`;
         text += `👤 الاسم: ${n}\n`;
@@ -574,6 +606,20 @@
         text += `🆔 رقم الطلب: ${orderId}`;
 
         try {
+            // 1. الإرسال الفوري للـ Firebase لكي يظهر داخل لوحة التحكم
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: n,
+                    phone: formattedPhone,
+                    wilaya: w.options[w.selectedIndex].text,
+                    product: pDetails,
+                    status: "قيد الانتظار"
+                })
+            });
+
+            // 2. الإرسال الفوري لـ Telegram
             const resp = await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -699,7 +745,8 @@
         if (h && products.find(p => p.id === parseInt(h))) openP(parseInt(h));
     }
 
-    render();
+    // تشغيل جلب المنتجات السحابية فور فتح الصفحة
+    loadCloudProducts();
     checkUrl();
     window.addEventListener('hashchange', checkUrl);
 </script>

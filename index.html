@@ -30,9 +30,10 @@
         header { background: var(--bg-dark); padding: 25px; display: flex; justify-content: space-between; align-items: center; }
         header h1 { margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 0.5px; }
 
-        .nav-buttons { display: flex; gap: 15px; align-items: center; }
-        .btn-fav-toggle { background: #131b2e; border: 1px solid var(--border-smooth); color: var(--text-main); padding: 10px 22px; border-radius: 30px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .nav-buttons { display: flex; gap: 12px; align-items: center; }
+        .btn-fav-toggle, .btn-track-toggle { background: #131b2e; border: 1px solid var(--border-smooth); color: var(--text-main); padding: 10px 22px; border-radius: 30px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .btn-fav-toggle:hover, .btn-fav-toggle.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
+        .btn-track-toggle:hover { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
 
@@ -71,6 +72,13 @@
         input:focus, select:focus { border-color: var(--accent-blue); outline: none; }
         ::placeholder { color: #475569; }
         select option { background: var(--card-bg); color: #fff; }
+
+        /* تصميم صندوق التتبع النظيف */
+        .track-result-box { background: #090d16; border: 1px solid var(--border-smooth); border-radius: 20px; padding: 15px; margin-top: 15px; display: none; text-align: right; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--accent-gold); }
+        .status-shipped { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .status-completed { background: rgba(16, 185, 121, 0.2); color: var(--accent-green); }
     </style>
 </head>
 <body>
@@ -83,6 +91,7 @@
 <header>
     <h1>🛍️ LUXURY STORE</h1>
     <div class="nav-buttons">
+        <button class="btn-track-toggle" onclick="openTrackModal()">🔍 تتبع طلبيتك</button>
         <button class="btn-fav-toggle" id="favToggleBtn" onclick="toggleFavFilter()">
             <span>❤️ المفضلة</span>
             <span id="favCountBadge" style="background:var(--accent-red); color:white; border-radius:50%; padding:1px 6px; font-size:11px; margin-right:5px;">0</span>
@@ -102,6 +111,23 @@
 
     <div class="products-grid" id="productsContainer">
         </div>
+</div>
+
+<div class="modal-overlay" id="trackModal" onclick="closeTrackModal(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeTrackModal()">✕</button>
+        <h2 style="margin-top:0; font-size:20px; font-weight:700;">🔍 تتبع حالة طلبيتك</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">أدخل رقم الطلب المكون من 6 أرقام لمعرفة حالته الحالية مباشرة.</p>
+        
+        <input type="number" id="trackOrderIdInput" placeholder="أدخل رقم الطلب هنا (مثال: 456123)">
+        <button type="button" class="btn-buy" style="border-radius:30px; background: var(--accent-blue);" onclick="trackOrderLive()">استعلام عن حالة الطلب</button>
+        
+        <div class="track-result-box" id="trackResult">
+            <p style="margin:5px 0; font-size:14px;">📦 المنتج: <strong id="resProdName" style="color:#fff;">-</strong></p>
+            <p style="margin:5px 0; font-size:14px;">💰 الإجمالي: <strong id="resTotalPrice" style="color:var(--accent-gold);">-</strong></p>
+            <p style="margin:5px 0; font-size:14px;">🚥 حالة الطلب: <span id="resStatus" class="status-badge">-</span></p>
+        </div>
+    </div>
 </div>
 
 <div class="modal-overlay" id="orderModal" onclick="closeOrderModal(event)">
@@ -157,7 +183,6 @@
 </div>
 
 <script>
-    // تم دمج بيانات تليجرام الخاصة بك هنا بنجاح وتثبيتها
     const CONFIG = {
         FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com",
         TELEGRAM_TOKEN: "8447738345:AAHgpNg_aRPIZAZRsg1tJ4OGjYqA7Tl0ZjM", 
@@ -314,6 +339,42 @@
     function closeOrderModal(e) { if (!e || e.target === document.getElementById('orderModal') || e.target.className === 'modal-close') document.getElementById('orderModal').classList.remove('show'); }
     function closeThankYouModal() { document.getElementById('thankYouModal').classList.remove('show'); }
 
+    // دوال نظام التتبع المباشر من الواجهة
+    function openTrackModal() { document.getElementById('trackModal').classList.add('show'); }
+    function closeTrackModal(e) { if (!e || e.target === document.getElementById('trackModal') || e.target.className === 'modal-close') { document.getElementById('trackModal').classList.remove('show'); document.getElementById('trackResult').style.display = 'none'; document.getElementById('trackOrderIdInput').value = ''; } }
+
+    async function trackOrderLive() {
+        const idInput = document.getElementById('trackOrderIdInput').value.trim();
+        const resultBox = document.getElementById('trackResult');
+        if(!idInput) { alert("من فضلك أدخل رقم الطلب أولاً!"); return; }
+
+        try {
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${idInput}.json`);
+            const order = await res.json();
+
+            if(order) {
+                document.getElementById('resProdName').innerText = order.product;
+                document.getElementById('resTotalPrice').innerText = `${order.totalPrice.toLocaleString('ar')} DA`;
+                
+                const badge = document.getElementById('resStatus');
+                badge.className = "status-badge"; 
+                badge.innerText = order.status || "قيد الانتظار";
+
+                // تنسيق الألوان حسب الحالة المدخلة من لوحة التحكم
+                if(order.status === "تم الشحن") badge.classList.add('status-shipped');
+                else if(order.status === "تم التوصيل" || order.status === "مكتمل") badge.classList.add('status-completed');
+                else badge.classList.add('status-pending');
+
+                resultBox.style.display = 'block';
+            } else {
+                alert("❌ لم يتم العثور على أي طلب بهذا الرقم. تأكد من صحته!");
+                resultBox.style.display = 'none';
+            }
+        } catch(e) {
+            alert("حدث خطأ أثناء الاتصال بالسيرفر لتتبع طلبك.");
+        }
+    }
+
     async function submitOrder() {
         const name = document.getElementById('custName').value.trim();
         const phone = document.getElementById('custPhone').value.trim();
@@ -335,7 +396,7 @@
             product: `${selectedProduct.name} (${color} - ${size})`,
             productId: selectedProduct.id,
             totalPrice: finalTotal,
-            status: "قيد الانتظار"
+            status: "قيد الانتظار" // الحالة الافتراضية عند الطلب
         };
 
         try {

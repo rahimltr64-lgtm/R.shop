@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | لوحة التحكم السحابية المحدثة</title>
+    <title>LUXURY STORE | لوحة التحكم الاحترافية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -11,27 +11,49 @@
             --bg: #f4f7f9; --green: #27ae60;
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #34495e; }
-        .dash-container { max-width: 900px; margin: auto; }
-        header { background: var(--main); color: #fff; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
-        header h1 { margin: 0; font-size: 24px; font-weight: 900; }
+        .dash-container { max-width: 1000px; margin: auto; }
         
+        /* الهيدر المطور مع أيقونة الزائد الفخمة */
+        header { 
+            background: var(--main); color: #fff; padding: 20px 30px; border-radius: 20px; 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; 
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.15);
+        }
+        header h1 { margin: 0; font-size: 22px; font-weight: 900; }
+        
+        .btn-trigger-modal {
+            background: var(--green); color: white; border: none; padding: 10px 20px;
+            border-radius: 12px; font-family: 'Cairo'; font-weight: 700; font-size: 15px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .btn-trigger-modal:hover { background: #219150; transform: translateY(-2px); }
+
         .card { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         h2 { margin-top: 0; color: var(--main); font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
+        /* نافذة إضافة منتج المنبثقة */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { background: #fff; border-radius: 25px; padding: 30px; width: 100%; max-width: 550px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .modal-close { position: absolute; top: 20px; left: 20px; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 16px; font-weight: bold; }
+
         input, select, button { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #dcdde1; margin-bottom: 15px; font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
         input:focus, select:focus { border-color: var(--main); outline: none; }
         
         .btn-add { background: var(--green); color: white; border: none; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; }
         .btn-add:hover { background: #219150; }
         
-        /* شبكة خانات الصور */
         .images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* تصميم الجداول الاحترافية وبطاقات الحذف */
+        .custom-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: right; }
+        .custom-table th, .custom-table td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 14px; vertical-align: middle; }
+        .custom-table th { background: var(--main); color: white; }
         
-        /* تصميم جدول الطلبات المطور */
-        .orders-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: right; }
-        .orders-table th, .orders-table td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 14px; }
-        .orders-table th { background: var(--main); color: white; }
-        
+        .btn-delete { background: none; border: none; color: var(--accent); font-size: 18px; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: 0.2s; }
+        .btn-delete:hover { background: #fff5f5; transform: scale(1.1); }
+
         .status-badge { padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; display: inline-block; }
         .status-pending { background: #ffeaa7; color: #d63031; }
         .status-confirmed { background: #fab1a0; color: #e17055; }
@@ -39,7 +61,7 @@
         .status-cancelled { background: #dfe6e9; color: #636e72; }
         
         .status-select { padding: 5px; border-radius: 8px; font-family: 'Cairo'; font-size: 12px; width: auto; margin: 0; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .product-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: contain; background: #f9f9f9; vertical-align: middle; margin-left: 8px; }
     </style>
 </head>
 <body>
@@ -47,51 +69,78 @@
 <div class="dash-container">
     <header>
         <h1>🛠️ لوحة التحكم وإدارة المتجر السحابي</h1>
+        <button class="btn-trigger-modal" onclick="openModal()">➕ إضافة منتج جديد</button>
     </header>
 
-    <div class="card">
-        <h2>➕ إضافة منتج جديد إلى السحاب (ألبوم مرن حتى 8 صور)</h2>
-        <form id="productForm">
-            <div class="grid-inputs">
-                <input type="number" id="p_id" placeholder="رقم ID فريد للمنتج (مثال: 2)" required>
-                <select id="p_cat" required>
-                    <option value="ملابس">ملابس</option>
-                    <option value="ساعات">ساعات</option>
-                    <option value="إلكترونيات">إلكترونيات</option>
-                    <option value="أحذية">أحذية</option>
-                    <option value="عطور">عطور</option>
-                </select>
-            </div>
-            
-            <input type="text" id="p_name" placeholder="اسم المنتج الفخم" required>
-            <input type="number" id="p_price" placeholder="سعر المنتج بـ DA (مثال: 3500)" required>
-            
-            <input type="text" id="p_colors" placeholder="الألوان المتاحة (فصل بينها بفاصلة مثل: أسود ملكي, أبيض, رمادي)" required>
-            <input type="text" id="p_sizes" placeholder="المقاسات المتاحة (فصل بينها بفاصلة مثل: M, L, XL)" required>
-            
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <label style="font-size: 13px; font-weight: bold; color: var(--main); display: block; margin-bottom: 8px;">🖼️ ألبوم صور المنتج (أدخل الروابط المتوفرة لديك فقط):</label>
-                <input type="url" id="p_img1" placeholder="رابط الصورة 1 (الرئيسية والمطلوبة)" required>
-                
-                <div class="images-grid">
-                    <input type="url" id="p_img2" placeholder="رابط الصورة 2 (اختياري)">
-                    <input type="url" id="p_img3" placeholder="رابط الصورة 3 (اختياري)">
-                    <input type="url" id="p_img4" placeholder="رابط الصورة 4 (اختياري)">
-                    <input type="url" id="p_img5" placeholder="رابط الصورة 5 (اختياري)">
-                    <input type="url" id="p_img6" placeholder="رابط الصورة 6 (اختياري)">
-                    <input type="url" id="p_img7" placeholder="رابط الصورة 7 (اختياري)">
-                    <input type="url" id="p_img8" placeholder="رابط الصورة 8 (اختياري)">
+    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h2 style="border:none; margin-bottom:20px;">➕ إضافة منتج جديد إلى السحاب</h2>
+            <form id="productForm">
+                <div class="grid-inputs">
+                    <input type="number" id="p_id" placeholder="رقم ID فريد للمنتج" required>
+                    <select id="p_cat" required>
+                        <option value="ملابس">ملابس</option>
+                        <option value="ساعات">ساعات</option>
+                        <option value="إلكترونيات">إلكترونيات</option>
+                        <option value="أحذية">أحذية</option>
+                        <option value="عطور">عطور</option>
+                    </select>
                 </div>
-            </div>
-            
-            <button type="button" class="btn-add" onclick="uploadProduct()">🚀 نشر المنتج في المتجر فوراً</button>
-        </form>
+                
+                <input type="text" id="p_name" placeholder="اسم المنتج الفخم" required>
+                <input type="number" id="p_price" placeholder="سعر المنتج بـ DA" required>
+                
+                <input type="text" id="p_colors" placeholder="الألوان المتاحة (فصل بفاصلة: أسود, أبيض)" required>
+                <input type="text" id="p_sizes" placeholder="المقاسات المتاحة (فصل بفاصلة: M, L, XL)" required>
+                
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                    <label style="font-size: 13px; font-weight: bold; color: var(--main); display: block; margin-bottom: 8px;">🖼️ ألبوم الصور (أدخل الروابط المتوفرة):</label>
+                    <input type="url" id="p_img1" placeholder="رابط الصورة 1 (الرئيسية والمطلوبة)" required>
+                    
+                    <div class="images-grid">
+                        <input type="url" id="p_img2" placeholder="رابط الصورة 2 (اختياري)">
+                        <input type="url" id="p_img3" placeholder="رابط الصورة 3 (اختياري)">
+                        <input type="url" id="p_img4" placeholder="رابط الصورة 4 (اختياري)">
+                        <input type="url" id="p_img5" placeholder="رابط الصورة 5 (اختياري)">
+                        <input type="url" id="p_img6" placeholder="رابط الصورة 6 (اختياري)">
+                        <input type="url" id="p_img7" placeholder="رابط الصورة 7 (اختياري)">
+                        <input type="url" id="p_img8" placeholder="رابط الصورة 8 (اختياري)">
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-add" onclick="uploadProduct()">🚀 نشر المنتج في المتجر فوراً</button>
+            </form>
+        </div>
     </div>
 
     <div class="card">
-        <h2>📦 إدارة طلبات الزبائن الحية</h2>
+        <h2>🛍️ إدارة المنتجات المعروضة في المتجر حالياً</h2>
         <div style="overflow-x: auto;">
-            <table class="orders-table">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID المنتج</th>
+                        <th>الصورة</th>
+                        <th>اسم المنتج</th>
+                        <th>القسم</th>
+                        <th>السعر</th>
+                        <th>حذف من المتجر</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align:center; color:#888;">جاري تحميل المنتجات الحالية... 🔄</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📦 إدارة طلبات الزبائن وتصفية العمليات المنتهية</h2>
+        <div style="overflow-x: auto;">
+            <table class="custom-table">
                 <thead>
                     <tr>
                         <th>رقم الطلب</th>
@@ -101,11 +150,12 @@
                         <th>المنتج</th>
                         <th>الحالة</th>
                         <th>تعديل الحالة</th>
+                        <th>حذف السجل</th>
                     </tr>
                 </thead>
                 <tbody id="ordersTableBody">
                     <tr>
-                        <td colspan="7" style="text-align:center; color:#888;">جاري تحميل الطلبات الحية من السحاب... 🔄</td>
+                        <td colspan="8" style="text-align:center; color:#888;">جاري تحميل الطلبات الحية من السحاب... 🔄</td>
                     </tr>
                 </tbody>
             </table>
@@ -118,7 +168,11 @@
         FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com"
     };
 
-    // دالة رفع منتج جديد مع تجميع ذكي للصور المدخلة فقط
+    // دوال التحكم بالنافذة المنبثقة والاستمارة
+    function openModal() { document.getElementById('productModal').classList.add('show'); }
+    function closeModal(e) { if (!e || e.target === document.getElementById('productModal') || e.target.className === 'modal-close') { document.getElementById('productModal').classList.remove('show'); } }
+
+    // 1. دالة رفع منتج جديد بألبوم صور مرن
     async function uploadProduct() {
         const id = document.getElementById('p_id').value.trim();
         const category = document.getElementById('p_cat').value;
@@ -127,13 +181,10 @@
         const colors = document.getElementById('p_colors').value.split(',').map(c => c.trim());
         const sizes = document.getElementById('p_sizes').value.split(',').map(s => s.trim());
         
-        // تجميع ذكي: نمر على الـ 8 خانات ونأخذ الممتلئ منها فقط
         const images = [];
         for (let i = 1; i <= 8; i++) {
             const imgVal = document.getElementById(`p_img${i}`).value.trim();
-            if (imgVal) {
-                images.push(imgVal);
-            }
+            if (imgVal) images.push(imgVal);
         }
 
         if(!id || !name || !price || images.length === 0) {
@@ -149,14 +200,65 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)
             });
-            alert(`🎯 تم نشر المنتج بنجاح مع عرض البوم يحتوي على (${images.length}) صور في متجرك!`);
+            alert("🎯 تم نشر المنتج بنجاح وتحديث المتجر حياً!");
             document.getElementById('productForm').reset();
+            closeModal();
+            fetchProducts(); // إعادة تحديث جدول المنتجات فوراً
         } catch (error) {
-            alert("❌ حدث خطأ أثناء النشر، تأكد من إعدادات قاعدة البيانات.");
+            alert("❌ حدث خطأ أثناء النشر.");
         }
     }
 
-    // دالة جلب الطلبات وعرضها في الجدول مع نظام التحكم
+    // 2. جلب المنتجات وعرضها في جدول الإدارة مع نظام الحذف الفوري
+    async function fetchProducts() {
+        try {
+            const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
+            const data = await response.json();
+            const tableBody = document.getElementById('productsTableBody');
+            
+            if (!data) {
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">لا توجد منتجات مرفوعة على السحاب حالياً.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = '';
+
+            Object.keys(data).forEach(key => {
+                const prod = data[key];
+                if (!prod) return;
+                const thumbImg = (prod.images && prod.images.length > 0) ? prod.images[0] : '';
+                
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><strong>#${prod.id}</strong></td>
+                        <td><img src="${thumbImg}" class="product-thumb" onerror="this.src='https://placehold.co/40'"></td>
+                        <td><strong>${prod.name}</strong></td>
+                        <td><span style="color:#7f8c8d;">${prod.category}</span></td>
+                        <td><strong style="color:var(--main);">${prod.price.toLocaleString('ar')} DA</strong></td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteProduct('${key}', '${prod.name}')" title="حذف المنتج نهائياً من المتجر">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (error) {
+            console.error("خطأ أثناء تحميل المنتجات:", error);
+        }
+    }
+
+    // 3. دالة حذف المنتج السحابية
+    async function deleteProduct(key, name) {
+        if (!confirm(`هل أنت متأكد من حذف منتج (${name}) نهائياً من المتجر؟ سينفذ فوراً.`)) return;
+        try {
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`, { method: 'DELETE' });
+            alert("🗑️ تم مسح المنتج بنجاح واختفى من متجر الزبائن!");
+            fetchProducts();
+        } catch (error) {
+            alert("فشل في حذف المنتج.");
+        }
+    }
+
+    // 4. دالة جلب الطلبات وعرضها في الجدول مع نظام التحكم والحذف
     async function fetchOrders() {
         try {
             const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`);
@@ -164,7 +266,7 @@
             const tableBody = document.getElementById('ordersTableBody');
             
             if (!data) {
-                tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">لا توجد طلبات مسجلة حالياً في السحاب.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#888;">لا توجد طلبات مسجلة حالياً في السحاب.</td></tr>`;
                 return;
             }
 
@@ -194,6 +296,9 @@
                                 <option value="ملغى">ملغى ❌</option>
                             </select>
                         </td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteOrder('${key}', '${order.orderId}')" title="حذف الطلب نهائياً">🗑️</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -202,7 +307,7 @@
         }
     }
 
-    // تحديث حالة الطلب في Firebase حياً
+    // 5. تحديث حالة الطلب في Firebase حياً
     async function updateOrderStatus(key, newStatus) {
         if (!newStatus) return;
         try {
@@ -217,8 +322,21 @@
         }
     }
 
+    // 6. دالة حذف الطلبات الفورية لتنظيف السجلات المنتهية
+    async function deleteOrder(key, orderId) {
+        if (!confirm(`هل تريد حذف الطلب رقم (${orderId}) نهائياً وتصفية السجل؟`)) return;
+        try {
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, { method: 'DELETE' });
+            fetchOrders();
+        } catch (error) {
+            alert("فشل في حذف الطلب سحابياً.");
+        }
+    }
+
+    // شحن البيانات وبدء العمل الفوري عند الفتح
+    fetchProducts();
     fetchOrders();
-    setInterval(fetchOrders, 40000); // تحديث دوري كل 40 ثانية
+    setInterval(() => { fetchOrders(); fetchProducts(); }, 40000); // تحديث دوري موازٍ
 </script>
 </body>
 </html>

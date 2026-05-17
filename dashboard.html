@@ -3,244 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الفخمة | إدارة المتجر</title>
+    <title>LUXURY STORE | لوحة التحكم السحابية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
+        :root { 
             --main: #2c3e50; --accent: #e74c3c;
             --bg: #f4f7f9; --green: #27ae60;
         }
-        body {
-            font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); color: #34495e;
-        }
-        header {
-            background: var(--main); color: #fff; padding: 20px; text-align: center;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        header h1 { margin: 0; font-size: 22px; font-weight: 900; }
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #34495e; }
+        .dash-container { max-width: 900px; margin: auto; }
+        header { background: var(--main); color: #fff; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
+        header h1 { margin: 0; font-size: 24px; font-weight: 900; }
         
-        /* Buttons */
-        .btn {
-            background: var(--green); color: white; border: none; padding: 10px 20px;
-            border-radius: 12px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; transition: 0.3s;
-        }
-        .btn:hover { opacity: 0.9; }
-        .btn-add { background: #3498db; }
+        .card { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h2 { margin-top: 0; color: var(--main); font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
-        /* Stats Cards */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; }
-        .card h3 { margin: 0; color: #888; font-size: 14px; }
-        .card p { margin: 10px 0 0; font-size: 28px; font-weight: 900; color: var(--main); }
-
-        /* Table Area */
-        .table-area { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: right; }
-        th, td { padding: 15px; border-bottom: 1px solid #eee; }
-        th { color: #888; font-weight: 700; }
+        input, select, button { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #dcdde1; margin-bottom: 15px; font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
+        input:focus, select:focus { border-color: var(--main); outline: none; }
         
-        /* Status Select */
-        .status-select {
-            padding: 5px 10px; border-radius: 8px; border: 1px solid #ccc; font-family: 'Cairo'; font-weight: 600;
-        }
-        .status-قيد-الانتظار { background: #fff3cd; color: #856404; }
-        .status-تم-التأكيد { background: #d4edda; color: #155724; }
-        .status-ملغي { background: #f8d7da; color: #721c24; }
-
-        /* Modal Popup */
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 5000;
-            display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal.show { display: flex; }
-        .modal-box {
-            background: white; border-radius: 25px; padding: 30px; width: 100%; max-width: 500px;
-            max-height: 85vh; overflow-y: auto; position: relative;
-        }
-        .modal-close { position: absolute; top: 15px; left: 15px; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; }
+        .btn-add { background: var(--green); color: white; border: none; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .btn-add:hover { background: #219150; }
         
-        input, select, textarea {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #dcdde1; margin-bottom: 15px; font-family: 'Cairo';
-        }
+        /* تصميم جدول الطلبات المطور */
+        .orders-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: right; }
+        .orders-table th, .orders-table td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 14px; }
+        .orders-table th { background: var(--main); color: white; }
+        
+        .status-badge { padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; display: inline-block; }
+        .status-pending { background: #ffeaa7; color: #d63031; }
+        .status-confirmed { background: #fab1a0; color: #e17055; }
+        .status-shipped { background: #55efc4; color: #00b894; }
+        .status-cancelled { background: #dfe6e9; color: #636e72; }
+        
+        .status-select { padding: 5px; border-radius: 8px; font-family: 'Cairo'; font-size: 12px; width: auto; margin: 0; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>💼 لوحة التحكم وإدارة المتجر</h1>
-    <button class="btn btn-add" onclick="toggleModal(true)">➕ إضافة منتج جديد</button>
-</header>
+<div class="dash-container">
+    <header>
+        <h1>🛠️ لوحة التحكم وإدارة المتجر السحابي</h1>
+    </header>
 
-<div class="container">
-    <div class="stats">
-        <div class="card"><h3>إجمالي الطلبات</h3><p id="totalOrders">0</p></div>
-        <div class="card"><h3>قيد الانتظار</h3><p id="pendingOrders" style="color:#f39c12;">0</p></div>
-        <div class="card"><h3>تم التأكيد</h3><p id="confirmedOrders" style="color:#27ae60;">0</p></div>
+    <div class="card">
+        <h2>➕ إضافة منتج جديد إلى السحاب (مع البوم صور)</h2>
+        <form id="productForm">
+            <div class="grid-inputs">
+                <input type="number" id="p_id" placeholder="رقم ID فريد للمنتج (مثال: 2)" required>
+                <select id="p_cat" required>
+                    <option value="ملابس">ملابس</option>
+                    <option value="ساعات">ساعات</option>
+                    <option value="إلكترونيات">إلكترونيات</option>
+                    <option value="أحذية">أحذية</option>
+                    <option value="عطور">عطور</option>
+                </select>
+            </div>
+            
+            <input type="text" id="p_name" placeholder="اسم المنتج الفخم" required>
+            <input type="number" id="p_price" placeholder="سعر المنتج بـ DA (مثال: 3500)" required>
+            
+            <input type="text" id="p_colors" placeholder="الألوان المتاحة (فصل بينها بفاصلة مثل: أسود ملكي, أبيض, رمادي)" required>
+            <input type="text" id="p_sizes" placeholder="المقاسات المتاحة (فصل بينها بفاصلة مثل: M, L, XL)" required>
+            
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <label style="font-size: 13px; font-weight: bold; color: var(--main); display: block; margin-bottom: 8px;">🖼️ ألبوم صور المنتج (أدخل روابط الصور يدوياً):</label>
+                <input type="url" id="p_img1" placeholder="رابط الصورة الرئيسية الأولى (مطلوب)" required>
+                <input type="url" id="p_img2" placeholder="رابط الصورة الثانية (اختياري)">
+                <input type="url" id="p_img3" placeholder="رابط الصورة الثالثة (اختياري)">
+            </div>
+            
+            <button type="button" class="btn-add" onclick="uploadProduct()">🚀 نشر المنتج في المتجر فوراً</button>
+        </form>
     </div>
 
-    <div class="table-area">
-        <h2>📦 الطلبات الواردة</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>الزبون</th>
-                    <th>الهاتف</th>
-                    <th>الولاية</th>
-                    <th>المنتج</th>
-                    <th>الحالة</th>
-                </tr>
-            </thead>
-            <tbody id="ordersTableBody">
-                <tr><td colspan="5" style="text-align:center;">جاري جلب الطلبات من السحاب...</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="modal" id="productModal">
-    <div class="modal-box">
-        <button class="modal-close" onclick="toggleModal(false)">✕</button>
-        <h3 style="margin-top:0; color:var(--main);">🛒 إضافة منتج جديد إلى السحاب</h3>
-        
-        <input type="text" id="pName" placeholder="اسم المنتج (مثال: حذاء نايك سبورت)">
-        <input type="number" id="pPrice" placeholder="السعر بالدينار (مثال: 4500)">
-        
-        <select id="pCategory">
-            <option value="ملابس">ملابس</option>
-            <option value="ساعات">ساعات</option>
-            <option value="إلكترونيات">إلكترونيات</option>
-            <option value="أحذية">أحذية</option>
-            <option value="عطور">عطور</option>
-        </select>
-
-        <input type="text" id="pColors" placeholder="الألوان المتاحة (افصل بينها بفاصلة مثل: أسود, أبيض, أزرق)">
-        <input type="text" id="pSizes" placeholder="المقاسات المتاحة (افصل بينها بفاصلة مثل: M, L, XL)">
-        
-        <textarea id="pImages" rows="3" placeholder="روابط الصور يدوياً (ضع رابط كل صورة في سطر منفصل)"></textarea>
-
-        <button class="btn" style="width:100%; padding:15px;" onclick="saveProductToFirebase()">🚀 نشر المنتج في المتجر فوراً</button>
+    <div class="card">
+        <h2>📦 إدارة طلبات الزبائن الحية</h2>
+        <div style="overflow-x: auto;">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>الزبون</th>
+                        <th>الهاتف</th>
+                        <th>الولاية/العنوان</th>
+                        <th>المنتج</th>
+                        <th>الحالة</th>
+                        <th>تعديل الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align:center; color:#888;">جاري تحميل الطلبات الحية من السحاب... 🔄</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    const FIREBASE_BASE_URL = "https://fast-store-5cb17-default-rtdb.firebaseio.com";
+    const CONFIG = {
+        FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com"
+    };
 
-    // جلب وعرض الطلبات
-    async function loadOrders() {
+    // 1. دالة رفع منتج جديد بألبوم صور
+    async function uploadProduct() {
+        const id = document.getElementById('p_id').value.trim();
+        const category = document.getElementById('p_cat').value;
+        const name = document.getElementById('p_name').value.trim();
+        const price = parseInt(document.getElementById('p_price').value);
+        const colors = document.getElementById('p_colors').value.split(',').map(c => c.trim());
+        const sizes = document.getElementById('p_sizes').value.split(',').map(s => s.trim());
+        
+        // تجميع روابط الصور المدخلة يدوياً وتنظيف الفراغات
+        const images = [];
+        const img1 = document.getElementById('p_img1').value.trim();
+        const img2 = document.getElementById('p_img2').value.trim();
+        const img3 = document.getElementById('p_img3').value.trim();
+        
+        if(img1) images.push(img1);
+        if(img2) images.push(img2);
+        if(img3) images.push(img3);
+
+        if(!id || !name || !price || images.length === 0) {
+            alert("الرجاء ملء الحقول الأساسية وتوفير الصورة الأولى على الأقل!");
+            return;
+        }
+
+        const productData = { id: parseInt(id), category, name, price, colors, sizes, images };
+
         try {
-            const response = await fetch(`${FIREBASE_BASE_URL}/orders.json`);
+            // حفظ المنتج باستخدام الـ ID الفريد الخاص به لعدم التكرار والتنظيم
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${id}.json`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+            alert("🎯 تم نشر المنتج بنجاح بألبومه الكامل على متجرك!");
+            document.getElementById('productForm').reset();
+        } catch (error) {
+            alert("❌ حدث خطأ أثناء النشر، تأكد من إعدادات قاعدة البيانات.");
+        }
+    }
+
+    // 2. دالة جلب الطلبات وعرضها في الجدول مع نظام التحكم
+    async function fetchOrders() {
+        try {
+            const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`);
             const data = await response.json();
-            const tbody = document.getElementById('ordersTableBody');
+            const tableBody = document.getElementById('ordersTableBody');
             
             if (!data) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">لا توجد طلبات بعد.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">لا توجد طلبات مسجلة حالياً في السحاب.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = '';
-            let total = 0, pending = 0, confirmed = 0;
+            tableBody.innerHTML = '';
 
-            Object.keys(data).forEach(id => {
-                const order = data[id];
-                total++;
-                if(order.status === "قيد الانتظار") pending++;
-                if(order.status === "تم التأكيد") confirmed++;
+            Object.keys(data).forEach(key => {
+                const order = data[key];
+                let badgeClass = 'status-pending';
+                if (order.status === 'تم التأكيد') badgeClass = 'status-confirmed';
+                if (order.status === 'تم الشحن') badgeClass = 'status-shipped';
+                if (order.status === 'ملغى') badgeClass = 'status-cancelled';
 
-                tbody.innerHTML += `
+                tableBody.innerHTML += `
                     <tr>
                         <td><strong>${order.name}</strong></td>
-                        <td><a href="tel:${order.phone}">${order.phone}</a></td>
+                        <td><a href="tel:${order.phone}" style="color:#2980b9; text-decoration:none; font-weight:700;">${order.phone}</a></td>
                         <td>${order.wilaya}</td>
-                        <td>${order.product || 'منتج غير محدد'}</td>
+                        <td><small>${order.product}</small></td>
+                        <td><span class="status-badge ${badgeClass}">${order.status || 'قيد الانتظار'}</span></td>
                         <td>
-                            <select class="status-select status-${order.status.replace(' ', '-')}" onchange="updateStatus('${id}', this.value)">
-                                <option value="قيد الانتظار" ${order.status === 'قيد الانتظار'?'selected':''}>⏳ قيد الانتظار</option>
-                                <option value="تم التأكيد" ${order.status === 'تم التأكيد'?'selected':''}>✅ تم التأكيد</option>
-                                <option value="ملغي" ${order.status === 'ملغي'?'selected':''}>❌ ملغي</option>
+                            <select class="status-select" onchange="updateOrderStatus('${key}', this.value)">
+                                <option value="">تعديل الحـالة</option>
+                                <option value="قيد الانتظار">قيد الانتظار ⏳</option>
+                                <option value="تم التأكيد">تم التأكيد 📞</option>
+                                <option value="تم الشحن">تم الشحن 🚚</option>
+                                <option value="ملغى">ملغى ❌</option>
                             </select>
                         </td>
                     </tr>
                 `;
             });
-
-            document.getElementById('totalOrders').innerText = total;
-            document.getElementById('pendingOrders').innerText = pending;
-            document.getElementById('confirmedOrders').innerText = confirmed;
-
         } catch (error) {
-            console.error("خطأ أثناء جلب الطلبات:", error);
+            console.error("خطأ أثناء تحميل الطلبات:", error);
         }
     }
 
-    // تحديث حالة الطلب
-    async function updateStatus(orderId, newStatus) {
+    // 3. تحديث حالة الطلب في Firebase حياً
+    async function updateOrderStatus(key, newStatus) {
+        if (!newStatus) return;
         try {
-            await fetch(`${FIREBASE_BASE_URL}/orders/${orderId}.json`, {
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
             });
-            loadOrders();
+            fetchOrders(); // إعادة جلب الطلبات لتحديث الشاشات
         } catch (error) {
-            alert("فشل تحديث الحالة");
+            alert("فشل في تحديث الحالة سحابياً.");
         }
     }
 
-    // فتح وإغلاق النافذة
-    function toggleModal(show) {
-        document.getElementById('productModal').classList.toggle('show', show);
-    }
-
-    // حفظ المنتج الجديد في السحاب يدوياً
-    async function saveProductToFirebase() {
-        const name = document.getElementById('pName').value.trim();
-        const price = parseInt(document.getElementById('pPrice').value);
-        const category = document.getElementById('pCategory').value;
-        const colors = document.getElementById('pColors').value.split(',').map(c => c.trim()).filter(c => c);
-        const sizes = document.getElementById('pSizes').value.split(',').map(s => s.trim()).filter(s => s);
-        const images = document.getElementById('pImages').value.split('\n').map(i => i.trim()).filter(i => i);
-
-        if (!name || !price || images.length === 0) {
-            alert("الرجاء ملء اسم المنتج، السعر، ووضع صورة واحدة على الأقل!");
-            return;
-        }
-
-        const productData = {
-            id: Date.now(), // معرف فريد للمنتج
-            name,
-            price,
-            category,
-            colors: colors.length > 0 ? colors : ["افتراضي"],
-            sizes: sizes.length > 0 ? sizes : ["افتراضي"],
-            images
-        };
-
-        try {
-            const response = await fetch(`${FIREBASE_BASE_URL}/products.json`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            });
-
-            if (response.ok) {
-                alert("🎉 تم نشر المنتج الجديد في متجرك بنجاح!");
-                toggleModal(false);
-                // تفريغ المدخلات لقادم المرات
-                document.getElementById('pName').value = '';
-                document.getElementById('pPrice').value = '';
-                document.getElementById('pColors').value = '';
-                document.getElementById('pSizes').value = '';
-                document.getElementById('pImages').value = '';
-            }
-        } catch (error) {
-            alert("حدث خطأ أثناء حفظ المنتج السحابي.");
-        }
-    }
-
-    // التحديث التلقائي للطلبات كل 10 ثوانٍ
-    loadOrders();
-    setInterval(loadOrders, 10000);
+    // تشغيل الجلب التلقائي للطلبات
+    fetchOrders();
+    setInterval(fetchOrders, 60000); // تحديث كل دقيقة تلقائياً
 </script>
 </body>
 </html>

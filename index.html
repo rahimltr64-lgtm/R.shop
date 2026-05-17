@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUXURY STORE | المتجر الفخم المتكامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="رابط_أيقونتك_هنا">
+    <link rel="icon" type="image/png" sizes="192x192" href="رابط_أيقونتك_هنا">
+    <link rel="icon" type="image/png" sizes="32x32" href="رابط_أيقونتك_هنا">
+    
+    <meta name="theme-color" content="#090d16">
     <style>
         :root {
             --bg-dark: #090d16;
@@ -73,7 +79,6 @@
         ::placeholder { color: #475569; }
         select option { background: var(--card-bg); color: #fff; }
 
-        /* تصميم صندوق التتبع النظيف */
         .track-result-box { background: #090d16; border: 1px solid var(--border-smooth); border-radius: 20px; padding: 15px; margin-top: 15px; display: none; text-align: right; }
         .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 5px; }
         .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--accent-gold); }
@@ -339,7 +344,6 @@
     function closeOrderModal(e) { if (!e || e.target === document.getElementById('orderModal') || e.target.className === 'modal-close') document.getElementById('orderModal').classList.remove('show'); }
     function closeThankYouModal() { document.getElementById('thankYouModal').classList.remove('show'); }
 
-    // دوال نظام التتبع المباشر من الواجهة
     function openTrackModal() { document.getElementById('trackModal').classList.add('show'); }
     function closeTrackModal(e) { if (!e || e.target === document.getElementById('trackModal') || e.target.className === 'modal-close') { document.getElementById('trackModal').classList.remove('show'); document.getElementById('trackResult').style.display = 'none'; document.getElementById('trackOrderIdInput').value = ''; } }
 
@@ -360,7 +364,6 @@
                 badge.className = "status-badge"; 
                 badge.innerText = order.status || "قيد الانتظار";
 
-                // تنسيق الألوان حسب الحالة المدخلة من لوحة التحكم
                 if(order.status === "تم الشحن") badge.classList.add('status-shipped');
                 else if(order.status === "تم التوصيل" || order.status === "مكتمل") badge.classList.add('status-completed');
                 else badge.classList.add('status-pending');
@@ -396,7 +399,7 @@
             product: `${selectedProduct.name} (${color} - ${size})`,
             productId: selectedProduct.id,
             totalPrice: finalTotal,
-            status: "قيد الانتظار" // الحالة الافتراضية عند الطلب
+            status: "قيد الانتظار"
         };
 
         try {

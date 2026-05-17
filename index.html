@@ -118,7 +118,12 @@
                 <option value="">-- اختر الولاية --</option>
             </select>
             
-            <input type="text" id="custBaladia" placeholder="اكتب بلديتك أو عنوانك السكني هنا..." required>
+            <input type="text" id="custBaladia" placeholder="اكتب بلديتك هنا..." required>
+
+            <select id="deliveryType" onchange="updateTotalPriceDynamic()" required>
+                <option value="home">🏠 التوصيل للمنزل</option>
+                <option value="office">🏢 التوصيل للمكتب (نقطة استلام)</option>
+            </select>
             
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                 <select id="custColor" required><option value="">اختر اللون</option></select>
@@ -126,7 +131,7 @@
             </div>
             
             <div style="margin: 15px 0 5px 0; font-size: 13px; color: var(--text-muted); display:flex; justify-content:space-between;">
-                <span>سعر التوصيل لهذه الولاية:</span>
+                <span>سعر التوصيل:</span>
                 <span id="modalDeliveryPrice">0 DA</span>
             </div>
 
@@ -146,20 +151,22 @@
         <h2 style="margin-top:0; color:#fff; font-size:24px; font-weight:900;">شكرًا لك على ثقتك!</h2>
         <p style="color:var(--text-main); font-size:15px; margin: 15px 0 5px 0;">تم تسجيل طلبيتك بنجاح برقم مميز:</p>
         <p id="thankYouOrderId" style="color:var(--accent-gold); font-size:26px; font-weight:900; margin: 5px 0 20px 0; font-family: monospace; letter-spacing: 2px;"></p>
-        <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:25px;">سيقوم فريق خدمة الزبائن للاتصال بك هاتفياً في غضون ساعات قليلة لتأكيد العنوان وتجهيز طردك للشحن.</p>
+        <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:25px;">سيقوم فريق خدمة الزبائن بالاتصال بك هاتفياً في غضون ساعات قليلة لتأكيد العنوان وتجهيز طردك للشحن.</p>
         <button class="btn-buy" style="border-radius:30px; width:60%;" onclick="closeThankYouModal()">متابعة التصفح 🛍️</button>
     </div>
 </div>
 
 <script>
+    // الإعدادات الموحدة للربط بقواعد البيانات وتليجرام
     const CONFIG = {
-        FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com"
+        FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com",
+        TELEGRAM_TOKEN: "YOUR_BOT_TOKEN", // ضع توكن البوت الخاص بك هنا
+        TELEGRAM_CHAT_ID: "YOUR_CHAT_ID"    // ضع الآيدي الخاص بحسابك هنا
     };
 
-    // مصفوفة الولايات الـ 58 مع أسعار التوصيل المخصصة الذكية
     const algerianWilayas = [
         { code: "01", name: "أدرار", fee: 800 }, { code: "02", name: "الشلف", fee: 500 }, { code: "03", name: "الأغواط", fee: 600 },
-        { code: "04", name: "أم البواقي", fee: 400 }, { code: "05", name: "باتنة", fee: 400 }, { code: "06", name: "بجابة", fee: 400 },
+        { code: "04", name: "أم البواقي", fee: 400 }, { code: "05", name: "باتنة", fee: 400 }, { code: "06", name: "بجاية", fee: 400 },
         { code: "07", name: "بسكرة", fee: 500 }, { code: "08", name: "بشار", fee: 800 }, { code: "09", name: "البليدة", fee: 400 },
         { code: "10", name: "البويرة", fee: 400 }, { code: "11", name: "تمنراست", fee: 900 }, { code: "12", name: "تبسة", fee: 500 },
         { code: "13", name: "تلمسان", fee: 500 }, { code: "14", name: "تيارت", fee: 500 }, { code: "15", name: "تيزي وزو", fee: 400 },
@@ -185,7 +192,7 @@
     let currentCategory = 'الكل';
     let showFavoritesOnly = false;
     let selectedProduct = null;
-    let currentDeliveryFee = 0;
+    let finalDeliveryFee = 0;
 
     function populateWilayas() {
         const select = document.getElementById('custWilaya');
@@ -198,16 +205,24 @@
         });
     }
 
-    // دالة التحديث الحركي للحساب الفوري لشامل السعر مع الشحن
+    // دالة تحديث السعر مع تطبيق الخصم الخفي بقيمة 200 دج للمكتب تلقائياً
     function updateTotalPriceDynamic() {
         if (!selectedProduct) return;
         const select = document.getElementById('custWilaya');
         const selectedOption = select.options[select.selectedIndex];
+        const dType = document.getElementById('deliveryType').value;
         
-        currentDeliveryFee = selectedOption && selectedOption.value ? parseInt(selectedOption.dataset.fee) : 0;
-        const finalTotal = selectedProduct.price + currentDeliveryFee;
+        let baseFee = selectedOption && selectedOption.value ? parseInt(selectedOption.dataset.fee) : 0;
+        
+        // الخصم الخفي دون إظهاره صراحة في النصوص
+        if (dType === "office" && baseFee > 0) {
+            finalDeliveryFee = Math.max(0, baseFee - 200); 
+        } else {
+            finalDeliveryFee = baseFee;
+        }
 
-        document.getElementById('modalDeliveryPrice').innerText = `${currentDeliveryFee.toLocaleString('ar')} DA`;
+        const finalTotal = selectedProduct.price + finalDeliveryFee;
+        document.getElementById('modalDeliveryPrice').innerText = `${finalDeliveryFee.toLocaleString('ar')} DA`;
         document.getElementById('modalProductPrice').innerText = `${finalTotal.toLocaleString('ar')} DA`;
     }
 
@@ -284,8 +299,8 @@
         selectedProduct = allProducts[key]; if(!selectedProduct) return;
         document.getElementById('modalProductTitle').innerText = `طلب شراء: ${selectedProduct.name}`;
         
-        // إعادة تصفير أسعار الشحن المبدئية
         document.getElementById('custWilaya').value = "";
+        document.getElementById('deliveryType').value = "home";
         document.getElementById('modalDeliveryPrice').innerText = "0 DA";
         document.getElementById('modalProductPrice').innerText = `${selectedProduct.price.toLocaleString('ar')} DA`;
 
@@ -301,39 +316,63 @@
     function closeOrderModal(e) { if (!e || e.target === document.getElementById('orderModal') || e.target.className === 'modal-close') document.getElementById('orderModal').classList.remove('show'); }
     function closeThankYouModal() { document.getElementById('thankYouModal').classList.remove('show'); }
 
+    // إرسال الطلبية إلى السيرفر وإلى تليجرام معاً حياً
     async function submitOrder() {
         const name = document.getElementById('custName').value.trim();
         const phone = document.getElementById('custPhone').value.trim();
         const wilaya = document.getElementById('custWilaya').value;
         const baladia = document.getElementById('custBaladia').value.trim();
+        const dTypeSel = document.getElementById('deliveryType').value;
         const color = document.getElementById('custColor').value;
         const size = document.getElementById('custSize').value;
 
-        if(!name || !phone || !wilaya || !baladia || !color || !size) { alert("يرجى ملء البيانات واختيار المقاس واللون والولاية!"); return; }
+        if(!name || !phone || !wilaya || !baladia || !color || !size) { alert("يرجى ملء كافة البيانات المطلوبة!"); return; }
 
-        // كود رقمي بحت مبني على طريقتنا السابقة تماماً
         const orderId = Math.floor(100000 + Math.random() * 900000).toString();
-        const finalTotal = selectedProduct.price + currentDeliveryFee;
-        
+        const finalTotal = selectedProduct.price + finalDeliveryFee;
+        const typeText = dTypeSel === "home" ? " توصيل للمنزل 🏠" : " توصيل للمكتب 🏢";
+
         const orderData = {
-            orderId, name, phone, 
-            wilaya: wilaya,
-            baladia: baladia,
+            orderId, name, phone, wilaya, baladia,
+            deliveryType: typeText,
             product: `${selectedProduct.name} (${color} - ${size})`,
             productId: selectedProduct.id,
-            totalPrice: finalTotal, // الحفظ الصافي للمبلغ شامل الشحن
+            totalPrice: finalTotal,
             status: "قيد الانتظار"
         };
 
+        // 1. الحفظ في Firebase السحابي للوحة التحكم
         try {
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${orderId}.json`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData)
             });
+
+            // 2. الإرسال المباشر لبوت التليجرام بصيغة احترافية منظمة
+            const telegramMessage = `
+🔔 طلبيّة جديدة رقم: ${orderId}
+👤 العميل: ${name}
+📞 الهاتف: ${phone}
+📍 الولاية: ${wilaya}
+🏙️ البلدية: ${baladia}
+🚚 نوع الشحن:${typeText}
+🛍️ المنتج: ${selectedProduct.name}
+🎨 اللون: ${color} | 📏 المقاس: ${size}
+💰 الحساب الإجمالي: ${finalTotal.toLocaleString()} DA
+            `;
+
+            fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: telegramMessage })
+            }).catch(e => console.error("تنبيه تليجرام تعذر مؤقتاً", e));
+
+            // فتح نافذة الشكر المخصصة الفخمة
             document.getElementById('orderForm').reset();
             document.getElementById('orderModal').classList.remove('show');
             document.getElementById('thankYouOrderId').innerText = orderId;
             document.getElementById('thankYouModal').classList.add('show');
-        } catch(e) { alert("❌ عذراً، فشل الاتصال بالسيرفر السحابي."); }
+
+        } catch(e) { alert("❌ عذراً، فشل تسجيل طلبيتك."); }
     }
 
     populateWilayas();

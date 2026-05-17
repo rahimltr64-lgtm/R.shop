@@ -6,9 +6,10 @@
     <title>LUXURY STORE | المتجر الفخم المتكامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <link rel="apple-touch-icon" sizes="180x180" href="رابط_أيقونتك_هنا">
-    <link rel="icon" type="image/png" sizes="192x192" href="رابط_أيقونتك_هنا">
-    <link rel="icon" type="image/png" sizes="32x32" href="رابط_أيقونتك_هنا">
+    <!-- استبدل الروابط أدناه بأيقونات موقعك الحقيقية لاحقاً -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://placehold.co/180">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://placehold.co/192">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://placehold.co/32">
     <meta name="theme-color" content="#090d16">
 
     <style>
@@ -24,7 +25,7 @@
             --border-smooth: #1e293b;
         }
 
-        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         body { font-family: 'Cairo', sans-serif; background-color: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; }
 
         .promo-banner {
@@ -49,14 +50,14 @@
 
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 30px; }
         .product-card { background: var(--card-bg); border-radius: 32px; border: 1px solid var(--border-smooth); overflow: hidden; position: relative; display: flex; flex-direction: column; }
-        .product-card:hover { transform: translateY(-6px); border-color: #334155; }
+        .product-card:hover { transform: translateY(-6px); border-color: #334155; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
 
         .fav-heart-btn { position: absolute; top: 18px; left: 18px; background: rgba(9, 13, 22, 0.7); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 18px; backdrop-filter: blur(4px); }
         .fav-heart-btn.is-fav { color: var(--accent-red); background: #fff; }
 
         .product-img-wrapper { width: 90%; height: 260px; background: #ffffff; position: relative; margin: 15px auto 0 auto; border-radius: 24px; overflow: hidden; }
         .product-img-wrapper img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
-        .stock-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(239, 68, 68, 0.85); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
+        .stock-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(239, 68, 68, 0.9); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
 
         .product-details { padding: 22px; display: flex; flex-direction: column; flex-grow: 1; }
         .product-title { margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #fff; line-height: 1.4; }
@@ -68,14 +69,14 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(9, 13, 22, 0.8); backdrop-filter: blur(10px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.show { display: flex; }
-        .modal-box { background: var(--card-bg); border-radius: 36px; padding: 35px; width: 100%; max-width: 480px; position: relative; border: 1px solid var(--border-smooth); box-shadow: 0 25px 50px rgba(0,0,0,0.4); }
-        .modal-close { position: absolute; top: 22px; left: 22px; background: #1e293b; border: none; color: #fff; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; }
+        .modal-box { background: var(--card-bg); border-radius: 36px; padding: 35px; width: 100%; max-width: 480px; position: relative; border: 1px solid var(--border-smooth); box-shadow: 0 25px 50px rgba(0,0,0,0.4); overflow-y: auto; max-height: 90vh; }
+        .modal-close { position: absolute; top: 22px; left: 22px; background: #1e293b; border: none; color: #fff; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
         .thankyou-box { background: var(--card-bg); border-radius: 36px; padding: 40px; text-align: center; width: 100%; max-width: 450px; border: 1px solid var(--border-smooth); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
         .success-icon { width: 70px; height: 70px; background: rgba(16, 185, 121, 0.15); color: var(--accent-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px auto; }
 
         input, select { width: 100%; padding: 14px 20px; background: #090d16; border: 1px solid var(--border-smooth); color: #fff; border-radius: 25px; margin-bottom: 15px; font-family: 'Cairo'; font-size: 14px; }
-        input:focus, select:focus { border-color: var(--accent-blue); outline: none; }
+        input:focus, select:focus { border-color: var(--accent-blue); outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         ::placeholder { color: #475569; }
         select option { background: var(--card-bg); color: #fff; }
 
@@ -115,9 +116,11 @@
     </div>
 
     <div class="products-grid" id="productsContainer">
-        </div>
+        <!-- يتم جلب المنتجات وعرضها هنا برمجياً -->
+    </div>
 </div>
 
+<!-- مودال التتبع -->
 <div class="modal-overlay" id="trackModal" onclick="closeTrackModal(event)">
     <div class="modal-box">
         <button class="modal-close" onclick="closeTrackModal()">✕</button>
@@ -135,15 +138,18 @@
     </div>
 </div>
 
+<!-- مودال طلب الشراء -->
 <div class="modal-overlay" id="orderModal" onclick="closeOrderModal(event)">
     <div class="modal-box">
         <button class="modal-close" onclick="closeOrderModal()">✕</button>
         <h2 style="margin-top:0; font-size:20px; font-weight:700;" id="modalProductTitle">تأكيد طلب الشراء</h2>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">يرجى تزويدنا بمعلوماتك بدقة للشحن السريع والآمن.</p>
         
-        <form id="orderForm">
+        <form id="orderForm" onsubmit="event.preventDefault(); submitOrder();">
             <input type="text" id="custName" placeholder="الاسم واللقب الكامل" required>
-            <input type="tel" id="custPhone" placeholder="رقم الهاتف الشخصي" required>
+            
+            <!-- تم تحسين حقل الهاتف ليدعم أرقام الجزائر بدقة ويمنع الأخطاء -->
+            <input type="tel" id="custPhone" placeholder="رقم الهاتف (مثال: 0661234567)" pattern="^(05|06|07|09)[0-9]{8}$" maxlength="10" title="يرجى إدخال رقم هاتف جزائري صحيح مكون من 10 أرقام ويبدأ بـ 05 أو 06 أو 07 أو 09" required>
             
             <select id="custWilaya" onchange="updateTotalPriceDynamic()" required>
                 <option value="">-- اختر الولاية --</option>
@@ -171,11 +177,12 @@
                 <span id="modalProductPrice" style="color:var(--accent-gold); font-size:20px; font-weight:900;">0 DA</span>
             </div>
 
-            <button type="button" class="btn-buy" style="border-radius:30px;" onclick="submitOrder()">⚡ تأكيد طلب الشراء الآن</button>
+            <button type="submit" class="btn-buy" style="border-radius:30px;">⚡ تأكيد طلب الشراء الآن</button>
         </form>
     </div>
 </div>
 
+<!-- مودال نجاح الطلب -->
 <div class="modal-overlay" id="thankYouModal">
     <div class="thankyou-box">
         <div class="success-icon">✓</div>
@@ -246,8 +253,10 @@
         else finalDeliveryFee = baseFee;
 
         const finalTotal = selectedProduct.price + finalDeliveryFee;
-        document.getElementById('modalDeliveryPrice').innerText = `${finalDeliveryFee.toLocaleString('ar')} DA`;
-        document.getElementById('modalProductPrice').innerText = `${finalTotal.toLocaleString('ar')} DA`;
+        
+        // تم إصلاح العرض النصي هنا ليعرض باللغة الإنجليزية/الرسمية منعاً لتشوهات الأرقام
+        document.getElementById('modalDeliveryPrice').innerText = `${finalDeliveryFee} DA`;
+        document.getElementById('modalProductPrice').innerText = `${finalTotal} DA`;
     }
 
     function startPromoCountdown() {
@@ -267,31 +276,25 @@
             const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
             allProducts = await res.json() || {};
             renderStoreProducts(); updateFavBadge();
-            
-            // تشغيل ميزة فحص الرابط المباشر فور الانتهاء من جلب المنتجات
             checkDirectProductLink();
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error fetching products:", e); }
     }
 
-    // الدالة الذكية لفحص الروابط المباشرة (Deep Linking)
     function checkDirectProductLink() {
-        const hash = window.location.hash; // جلب الجزء الذي يبدأ بـ # من الرابط
+        const hash = window.location.hash;
         if (!hash) return;
         
-        const cleanId = hash.replace('#', '').trim(); // استخراج الـ ID فقط
+        const cleanId = hash.replace('#', '').trim();
         if (!cleanId) return;
 
-        // البحث في المنتجات عن الـ ID المطابق
         const keys = Object.keys(allProducts);
         const matchKey = keys.find(key => allProducts[key] && allProducts[key].id.toString() === cleanId);
 
         if (matchKey) {
-            // فتح مودال الشراء تلقائياً للمنتج المطلوب
             setTimeout(() => { openOrderModal(matchKey); }, 400);
         }
     }
 
-    // الاستماع لأي تغيير في الرابط بدون الحاجة لإعادة تنشيط الصفحة
     window.addEventListener('hashchange', checkDirectProductLink);
 
     function renderStoreProducts() {
@@ -321,7 +324,7 @@
                             <span>القسم: <strong>${prod.category}</strong></span>
                             <span>📦 الدفع عند الاستلام</span>
                         </div>
-                        <div class="product-price">${prod.price.toLocaleString('ar')} DA</div>
+                        <div class="product-price">${prod.price} DA</div>
                         <button class="btn-buy" onclick="openOrderModal('${key}')">🛒 اطلب الآن</button>
                     </div>
                 </div>`;
@@ -343,14 +346,13 @@
     function openOrderModal(key) {
         selectedProduct = allProducts[key]; if(!selectedProduct) return;
         
-        // تحديث الهاش في الرابط ليتزامن مع المنتج المفتوح حالياً
         window.location.hash = selectedProduct.id;
 
         document.getElementById('modalProductTitle').innerText = `طلب شراء: ${selectedProduct.name}`;
         document.getElementById('custWilaya').value = "";
         document.getElementById('deliveryType').value = "home";
         document.getElementById('modalDeliveryPrice').innerText = "0 DA";
-        document.getElementById('modalProductPrice').innerText = `${selectedProduct.price.toLocaleString('ar')} DA`;
+        document.getElementById('modalProductPrice').innerText = `${selectedProduct.price} DA`;
 
         const colorSelect = document.getElementById('custColor'); colorSelect.innerHTML = '<option value="">اختر اللون</option>';
         if (selectedProduct.colors) { selectedProduct.colors.forEach(c => colorSelect.innerHTML += `<option value="${c}">${c}</option>`); }
@@ -364,7 +366,6 @@
     function closeOrderModal(e) { 
         if (!e || e.target === document.getElementById('orderModal') || e.target.className === 'modal-close') {
             document.getElementById('orderModal').classList.remove('show');
-            // تنظيف الهاش من الرابط عند إغلاق المودال للعودة للرئيسية
             history.pushState("", document.title, window.location.pathname + window.location.search);
         }
     }
@@ -388,7 +389,7 @@
 
             if(order) {
                 document.getElementById('resProdName').innerText = order.product;
-                document.getElementById('resTotalPrice').innerText = `${order.totalPrice.toLocaleString('ar')} DA`;
+                document.getElementById('resTotalPrice').innerText = `${order.totalPrice} DA`;
                 
                 const badge = document.getElementById('resStatus');
                 badge.className = "status-badge"; 
@@ -431,32 +432,31 @@
         };
 
         try {
+            // 1. الحفظ في فايربيس أولاً
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${orderId}.json`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData)
             });
 
-            const telegramMessage = `
-🔔 طلبيّة جديدة رقم: ${orderId}
-👤 العميل: ${name}
-📞 الهاتف: ${phone}
-📍 الولاية: ${wilaya}
-🏙️ البلدية: ${baladia}
-🚚 نوع الشحن:${typeText}
-🛍️ المنتج: ${selectedProduct.name}
-🎨 اللون: ${color} | 📏 المقاس: ${size}
-💰 الحساب الإجمالي: ${finalTotal.toLocaleString()} DA
-            `;
+            // 2. صياغة النص للتليجرام
+            const telegramMessage = `🔔 طلبيّة جديدة رقم: ${orderId}\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n🏙️ البلدية: ${baladia}\n🚚 نوع الشحن: ${typeText}\n🛍️ المنتج: ${selectedProduct.name}\n🎨 اللون: ${color} | 📏 المقاس: ${size}\n💰 الحساب الإجمالي: ${finalTotal} DA`;
 
-            fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: telegramMessage })
+            // 3. إرسال الإشعار لبوت التليجرام
+            await fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: telegramMessage })
             });
 
+            // 4. تصفير النموذج وفتح واجهة النجاح
             document.getElementById('orderForm').reset();
             document.getElementById('orderModal').classList.remove('show');
             document.getElementById('thankYouOrderId').innerText = orderId;
             document.getElementById('thankYouModal').classList.add('show');
 
-        } catch(e) { alert("❌ عذراً، فشل تسجيل طلبيتك."); }
+        } catch(e) { 
+            console.error(e);
+            alert("❌ عذراً، فشل تسجيل طلبيتك. يرجى المحاولة مرة أخرى."); 
+        }
     }
 
     populateWilayas();

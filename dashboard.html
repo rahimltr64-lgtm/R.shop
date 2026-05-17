@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | لوحة التحكم السحابية</title>
+    <title>LUXURY STORE | لوحة التحكم السحابية المحدثة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -23,6 +23,9 @@
         
         .btn-add { background: var(--green); color: white; border: none; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; }
         .btn-add:hover { background: #219150; }
+        
+        /* شبكة خانات الصور */
+        .images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
         /* تصميم جدول الطلبات المطور */
         .orders-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: right; }
@@ -47,7 +50,7 @@
     </header>
 
     <div class="card">
-        <h2>➕ إضافة منتج جديد إلى السحاب (مع البوم صور)</h2>
+        <h2>➕ إضافة منتج جديد إلى السحاب (ألبوم مرن حتى 8 صور)</h2>
         <form id="productForm">
             <div class="grid-inputs">
                 <input type="number" id="p_id" placeholder="رقم ID فريد للمنتج (مثال: 2)" required>
@@ -67,10 +70,18 @@
             <input type="text" id="p_sizes" placeholder="المقاسات المتاحة (فصل بينها بفاصلة مثل: M, L, XL)" required>
             
             <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <label style="font-size: 13px; font-weight: bold; color: var(--main); display: block; margin-bottom: 8px;">🖼️ ألبوم صور المنتج (أدخل روابط الصور يدوياً):</label>
-                <input type="url" id="p_img1" placeholder="رابط الصورة الرئيسية الأولى (مطلوب)" required>
-                <input type="url" id="p_img2" placeholder="رابط الصورة الثانية (اختياري)">
-                <input type="url" id="p_img3" placeholder="رابط الصورة الثالثة (اختياري)">
+                <label style="font-size: 13px; font-weight: bold; color: var(--main); display: block; margin-bottom: 8px;">🖼️ ألبوم صور المنتج (أدخل الروابط المتوفرة لديك فقط):</label>
+                <input type="url" id="p_img1" placeholder="رابط الصورة 1 (الرئيسية والمطلوبة)" required>
+                
+                <div class="images-grid">
+                    <input type="url" id="p_img2" placeholder="رابط الصورة 2 (اختياري)">
+                    <input type="url" id="p_img3" placeholder="رابط الصورة 3 (اختياري)">
+                    <input type="url" id="p_img4" placeholder="رابط الصورة 4 (اختياري)">
+                    <input type="url" id="p_img5" placeholder="رابط الصورة 5 (اختياري)">
+                    <input type="url" id="p_img6" placeholder="رابط الصورة 6 (اختياري)">
+                    <input type="url" id="p_img7" placeholder="رابط الصورة 7 (اختياري)">
+                    <input type="url" id="p_img8" placeholder="رابط الصورة 8 (اختياري)">
+                </div>
             </div>
             
             <button type="button" class="btn-add" onclick="uploadProduct()">🚀 نشر المنتج في المتجر فوراً</button>
@@ -107,7 +118,7 @@
         FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com"
     };
 
-    // 1. دالة رفع منتج جديد بألبوم صور
+    // دالة رفع منتج جديد مع تجميع ذكي للصور المدخلة فقط
     async function uploadProduct() {
         const id = document.getElementById('p_id').value.trim();
         const category = document.getElementById('p_cat').value;
@@ -116,14 +127,14 @@
         const colors = document.getElementById('p_colors').value.split(',').map(c => c.trim());
         const sizes = document.getElementById('p_sizes').value.split(',').map(s => s.trim());
         
+        // تجميع ذكي: نمر على الـ 8 خانات ونأخذ الممتلئ منها فقط
         const images = [];
-        const img1 = document.getElementById('p_img1').value.trim();
-        const img2 = document.getElementById('p_img2').value.trim();
-        const img3 = document.getElementById('p_img3').value.trim();
-        
-        if(img1) images.push(img1);
-        if(img2) images.push(img2);
-        if(img3) images.push(img3);
+        for (let i = 1; i <= 8; i++) {
+            const imgVal = document.getElementById(`p_img${i}`).value.trim();
+            if (imgVal) {
+                images.push(imgVal);
+            }
+        }
 
         if(!id || !name || !price || images.length === 0) {
             alert("الرجاء ملء الحقول الأساسية وتوفير الصورة الأولى على الأقل!");
@@ -138,14 +149,14 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)
             });
-            alert("🎯 تم نشر المنتج بنجاح بألبومه الكامل على متجرك!");
+            alert(`🎯 تم نشر المنتج بنجاح مع عرض البوم يحتوي على (${images.length}) صور في متجرك!`);
             document.getElementById('productForm').reset();
         } catch (error) {
             alert("❌ حدث خطأ أثناء النشر، تأكد من إعدادات قاعدة البيانات.");
         }
     }
 
-    // 2. دالة جلب الطلبات وعرضها في الجدول مع نظام التحكم
+    // دالة جلب الطلبات وعرضها في الجدول مع نظام التحكم
     async function fetchOrders() {
         try {
             const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`);
@@ -191,7 +202,7 @@
         }
     }
 
-    // 3. تحديث حالة الطلب في Firebase حياً
+    // تحديث حالة الطلب في Firebase حياً
     async function updateOrderStatus(key, newStatus) {
         if (!newStatus) return;
         try {
@@ -207,7 +218,7 @@
     }
 
     fetchOrders();
-    setInterval(fetchOrders, 40000); // تحديث سريع كل 40 ثانية تلقائياً
+    setInterval(fetchOrders, 40000); // تحديث دوري كل 40 ثانية
 </script>
 </body>
 </html>

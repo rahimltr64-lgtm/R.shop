@@ -553,13 +553,14 @@
         const orderId = generateOrderId();
         const formattedPhone = formatPhone(ph);
         const total = document.getElementById('fPrice').innerText;
+        const selectedWilayaText = w.options[w.selectedIndex].text;
 
         let text = `📦 *طلب جديد — ${orderId}*\n`;
         text += `━━━━━━━━━━━━━━━━━━\n`;
         text += `👤 الاسم: ${n}\n`;
         text += `📞 الهاتف: ${formattedPhone}\n`;
         text += `🚚 نوع التوصيل: ${stLabel}\n`;
-        text += `📍 الولاية: ${w.options[w.selectedIndex].text}\n`;
+        text += `📍 الولاية: ${selectedWilayaText}\n`;
         text += `🏘️ البلدية/العنوان: ${b}\n`;
         text += `━━━━━━━━━━━━━━━━━━\n`;
         text += `🔢 الكمية: ${qty}\n`;
@@ -574,6 +575,7 @@
         text += `🆔 رقم الطلب: ${orderId}`;
 
         try {
+            // 1. إرسال الإشعار إلى تليجرام أولاً كما كان سابقاً
             const resp = await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -587,8 +589,24 @@
             const data = await resp.json();
 
             if (data.ok) {
+                
+                // 2. [إضافة سحابية]: إرسال نفس الطلب الحقيقي إلى Firebase لتشغيل لوحة التحكم فوراً
+                const firebaseUrl = "https://fast-store-5cb17-default-rtdb.firebaseio.com/orders.json";
+                await fetch(firebaseUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: n,
+                        phone: formattedPhone,
+                        wilaya: selectedWilayaText,
+                        product: qty === "1" ? "قميص Armani (قطعة واحدة)" : "قميص Armani (قطعتين)",
+                        status: "قيد الانتظار" // الحالة الافتراضية داخل لوحة التحكم
+                    })
+                });
+
+                // 3. حفظ محلي للتتبع داخل المتصفح وعرض شاشة النجاح للزبون
                 saveOrder(orderId, {
-                    name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text,
+                    name: n, phone: formattedPhone, wilaya: selectedWilayaText,
                     address: b, shipType: stLabel, qty, total,
                     item1: `${document.getElementById('c1').value} / ${document.getElementById('s1').value}`,
                     item2: qty === "2" ? `${document.getElementById('c2').value} / ${document.getElementById('s2').value}` : null

@@ -75,9 +75,9 @@
         }
 
         .hero-slider { width: 100%; height: 45vh; background: #fff; display: flex; align-items: center; border-radius: 0 0 50px 50px; }
-        .hero-slider img { width: 100%; height: 85%; object-fit: contain; }
-        .thumbs-strip { display: flex; gap: 12px; padding: 20px; overflow-x: auto; }
-        .t-item { width: 70px; height: 70px; flex-shrink: 0; border-radius: 18px; border: 2px solid transparent; background: #fff; cursor: pointer; }
+        .hero-slider img { width: 100%; height: 85%; object-fit: contain; margin: auto; }
+        .thumbs-strip { display: flex; gap: 12px; padding: 20px; overflow-x: auto; justify-content: center; }
+        .t-item { width: 70px; height: 70px; flex-shrink: 0; border-radius: 18px; border: 2px solid transparent; background: #fff; cursor: pointer; object-fit: contain; }
         .t-item.active { border-color: var(--main); }
 
         .order-form { padding: 0 20px 50px 20px; }
@@ -97,7 +97,6 @@
         .field-hint.error { color: var(--accent); display: block; }
         .field-hint.valid { color: var(--green); display: block; }
 
-        /* Phone input special */
         .phone-wrap { position: relative; }
         .phone-wrap input { padding-left: 16px; padding-right: 55px; }
         .phone-prefix { 
@@ -113,66 +112,33 @@
             font-family: 'Cairo';
         }
         .btn-send:active { transform: scale(0.98); }
-        .btn-send:disabled { 
-            background: #95a5a6; cursor: not-allowed; 
-            box-shadow: none; transform: none;
-        }
-        .btn-send.loading::after {
-            content: ' ⏳'; animation: spin 1s linear infinite;
-        }
+        .btn-send:disabled { background: #95a5a6; cursor: not-allowed; box-shadow: none; transform: none; }
 
-        /* Success */
         .success-overlay { 
             position: fixed; inset: 0; background: #fff; z-index: 9999; 
             display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;
         }
-        .order-id-box {
-            background: #f0fff4; border: 2px solid var(--green); border-radius: 20px;
-            padding: 15px 30px; margin: 20px 0;
-        }
+        .order-id-box { background: #f0fff4; border: 2px solid var(--green); border-radius: 20px; padding: 15px 30px; margin: 20px 0; }
         .order-id-box small { color: #666; font-size: 13px; }
         .order-id-box strong { display: block; font-size: 28px; color: var(--green); font-weight: 900; letter-spacing: 3px; }
 
-        /* Track Order Modal */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 5000;
-            display: none; align-items: center; justify-content: center; padding: 20px;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.show { display: flex; }
-        .modal-box {
-            background: #fff; border-radius: 30px; padding: 30px; width: 100%; max-width: 400px;
-            text-align: center;
-        }
+        .modal-box { background: #fff; border-radius: 30px; padding: 30px; width: 100%; max-width: 400px; text-align: center; }
         .modal-box h3 { margin: 0 0 20px; color: var(--main); font-size: 20px; }
-        .modal-close { 
-            position: absolute; top: 15px; left: 15px;
-            background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px;
-            cursor: pointer; font-size: 16px;
-        }
+        .modal-close { position: absolute; top: 15px; left: 15px; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 16px; }
 
-        /* Tracking Result */
         .track-result { margin-top: 20px; text-align: right; }
-        .track-step {
-            display: flex; gap: 15px; align-items: flex-start; margin-bottom: 20px;
-        }
-        .track-icon {
-            width: 40px; height: 40px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
-        }
+        .track-step { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 20px; }
+        .track-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
         .track-icon.done { background: #d4edda; }
         .track-icon.active { background: #fff3cd; }
         .track-icon.pending { background: #f8d7da; }
         .track-info strong { display: block; font-size: 15px; color: var(--main); }
         .track-info span { font-size: 13px; color: #888; }
 
-        .ship-price-note {
-            background: #e8f4fd; border-radius: 15px; padding: 12px 15px;
-            font-size: 13px; color: #2980b9; margin: -5px 0 12px; text-align: center;
-        }
-        .discount-badge {
-            background: #d4edda; color: var(--green); border-radius: 10px;
-            padding: 3px 10px; font-size: 12px; font-weight: 700; margin-right: 8px;
-        }
+        .ship-price-note { background: #e8f4fd; border-radius: 15px; padding: 12px 15px; font-size: 13px; color: #2980b9; margin: -5px 0 12px; text-align: center; }
+        .discount-badge { background: #d4edda; color: var(--green); border-radius: 10px; padding: 3px 10px; font-size: 12px; font-weight: 700; margin-right: 8px; }
     </style>
 </head>
 <body>
@@ -231,6 +197,7 @@
     };
 
     let isSubmitting = false;
+    let timerInterval;
 
     function saveOrder(orderId, data) {
         const orders = JSON.parse(localStorage.getItem('ls_orders') || '{}');
@@ -247,7 +214,6 @@
         return 'LS-' + Math.floor(1000 + Math.random() * 9000);
     }
 
-    // المنتجات الحالية المكتوبة يدوياً (ستبقى دائماً كأصل للمتجر)
     const localProducts = [
         {
             id: 1, category: "ملابس", name: "Armani Exchange Premium", price: 1000,
@@ -285,22 +251,6 @@
         {n:"55-تقرت",p:800},{n:"56-جانت",p:1500},{n:"57-المغير",p:800},{n:"58-المنيعة",p:1000}
     ];
 
-    let timerInterval;
-
-    function validateAlgerianPhone(phone) {
-        const cleaned = phone.replace(/[\s\-]/g, '');
-        const local = /^0[5-7][0-9]{8}$/.test(cleaned);
-        const intl  = /^\+213[5-7][0-9]{8}$/.test(cleaned);
-        return local || intl;
-    }
-
-    function formatPhone(phone) {
-        const cleaned = phone.replace(/[\s\-\+]/g, '');
-        if (cleaned.startsWith('213')) return '0' + cleaned.slice(3);
-        return cleaned;
-    }
-
-    // جلب المنتجات السحابية الإضافية من الـ Firebase ودمجها مع المنتج الأصلي
     async function loadCloudProducts() {
         try {
             const response = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
@@ -313,6 +263,17 @@
             console.error("خطأ أثناء جلب منتجات السحاب:", error);
         }
         render();
+    }
+
+    function validateAlgerianPhone(phone) {
+        const cleaned = phone.replace(/[\s\-]/g, '');
+        return /^0[5-7][0-9]{8}$/.test(cleaned) || /^\+213[5-7][0-9]{8}$/.test(cleaned);
+    }
+
+    function formatPhone(phone) {
+        const cleaned = phone.replace(/[\s\-\+]/g, '');
+        if (cleaned.startsWith('213')) return '0' + cleaned.slice(3);
+        return cleaned;
     }
 
     function render(f = 'all') {
@@ -361,10 +322,8 @@
             wilayas.map(w => `<option value="${w.p}">${w.n}</option>`).join('');
 
         const firstImg = (p.images && p.images.length > 0) ? p.images[0] : '';
-
-        // حساب أسعار الخصم الديناميكية بناء على سعر المنتج المختار
         const singlePrice = p.price;
-        const doublePrice = Math.floor(p.price * 2 * 0.9); // خصم 10% تلقائي للقطعتين
+        const doublePrice = Math.floor(p.price * 2 * 0.9);
         const savedAmount = (singlePrice * 2) - doublePrice;
 
         document.getElementById('p-content').innerHTML = `
@@ -448,13 +407,9 @@
         const val = input.value.trim();
         const hint = document.getElementById('nameHint');
         if (val.length < 3) {
-            input.className = 'error';
-            hint.className = 'field-hint error';
-            hint.textContent = 'يرجى إدخال الاسم الكامل (3 أحرف على الأقل)';
+            input.className = 'error'; hint.className = 'field-hint error'; hint.textContent = 'يرجى إدخال الاسم الكامل (3 أحرف على الأقل)';
         } else {
-            input.className = 'valid';
-            hint.className = 'field-hint valid';
-            hint.textContent = '✓ صحيح';
+            input.className = 'valid'; hint.className = 'field-hint valid'; hint.textContent = '✓ صحيح';
         }
     }
 
@@ -462,15 +417,10 @@
         const val = input.value.trim();
         const hint = document.getElementById('phoneHint');
         if (!val) { input.className = ''; hint.className = 'field-hint'; return; }
-        
         if (validateAlgerianPhone(val)) {
-            input.className = 'valid';
-            hint.className = 'field-hint valid';
-            hint.textContent = '✓ رقم جزائري صحيح';
+            input.className = 'valid'; hint.className = 'field-hint valid'; hint.textContent = '✓ رقم جزائري صحيح';
         } else {
-            input.className = 'error';
-            hint.className = 'field-hint error';
-            hint.textContent = 'رقم غير صحيح — مثال: 0550123456 أو 0661234567';
+            input.className = 'error'; hint.className = 'field-hint error'; hint.textContent = 'رقم غير صحيح — مثال: 0550123456';
         }
     }
 
@@ -478,15 +428,9 @@
         const val = input.value.trim();
         const hint = document.getElementById('addressHint');
         if (val.length < 5) {
-            if (val.length > 0) {
-                input.className = 'error';
-                hint.className = 'field-hint error';
-                hint.textContent = 'يرجى إدخال عنوان أكثر تفصيلاً';
-            }
+            if (val.length > 0) { input.className = 'error'; hint.className = 'field-hint error'; hint.textContent = 'يرجى إدخال عنوان أكثر تفصيلاً'; }
         } else {
-            input.className = 'valid';
-            hint.className = 'field-hint valid';
-            hint.textContent = '✓ صحيح';
+            input.className = 'valid'; hint.className = 'field-hint valid'; hint.textContent = '✓ صحيح';
         }
     }
 
@@ -512,17 +456,11 @@
 
         const total = base + ship;
         document.getElementById('fPrice').innerText = total.toLocaleString('ar');
-
-        if (ship > 0) {
-            breakdown.innerHTML = `المنتج: ${base.toLocaleString('ar')} DA + شحن: ${ship.toLocaleString('ar')} DA`;
-        } else {
-            breakdown.innerHTML = '';
-        }
+        breakdown.innerHTML = ship > 0 ? `المنتج: ${base.toLocaleString('ar')} DA + شحن: ${ship.toLocaleString('ar')} DA` : '';
     }
 
     async function send(productId) {
         if (isSubmitting) return;
-
         const p = products.find(x => x.id === productId);
         if (!p) return;
 
@@ -534,164 +472,69 @@
         const stLabel = st === 'home' ? 'توصيل للمنزل 🏠' : 'استلام من المكتب 🏢';
 
         let valid = true;
-
-        if (n.length < 3) {
-            document.getElementById('n').className = 'error';
-            document.getElementById('nameHint').className = 'field-hint error';
-            document.getElementById('nameHint').textContent = 'يرجى إدخال الاسم الكامل';
-            valid = false;
-        }
-
-        if (!validateAlgerianPhone(ph)) {
-            document.getElementById('ph').className = 'error';
-            document.getElementById('phoneHint').className = 'field-hint error';
-            document.getElementById('phoneHint').textContent = 'رقم الهاتف غير صحيح — مثال: 0550123456';
-            valid = false;
-        }
-
-        if (w.value === "none") {
-            w.style.borderColor = 'var(--accent)';
-            valid = false;
-        } else {
-            w.style.borderColor = '';
-        }
-
-        if (b.length < 5) {
-            document.getElementById('b').className = 'error';
-            document.getElementById('addressHint').className = 'field-hint error';
-            document.getElementById('addressHint').textContent = 'يرجى إدخال عنوان أكثر تفصيلاً';
-            valid = false;
-        }
+        if (n.length < 3) { document.getElementById('n').className = 'error'; document.getElementById('nameHint').className = 'field-hint error'; document.getElementById('nameHint').textContent = 'يرجى إدخال الاسم الكامل'; valid = false; }
+        if (!validateAlgerianPhone(ph)) { document.getElementById('ph').className = 'error'; document.getElementById('phoneHint').className = 'field-hint error'; document.getElementById('phoneHint').textContent = 'رقم الهاتف غير صحيح'; valid = false; }
+        if (w.value === "none") { w.style.borderColor = 'var(--accent)'; valid = false; } else { w.style.borderColor = ''; }
+        if (b.length < 5) { document.getElementById('b').className = 'error'; document.getElementById('addressHint').className = 'field-hint error'; document.getElementById('addressHint').textContent = 'يرجى إدخال عنوان أكثر تفصيلاً'; valid = false; }
 
         if (!valid) {
             const btn = document.getElementById('sendBtn');
-            btn.style.background = 'var(--accent)';
-            btn.textContent = '⚠️ يرجى تصحيح البيانات';
-            setTimeout(() => {
-                btn.style.background = '';
-                btn.textContent = 'تأكيد الطلب 🛍️';
-            }, 2000);
+            btn.style.background = 'var(--accent)'; btn.textContent = '⚠️ يرجى تصحيح البيانات';
+            setTimeout(() => { btn.style.background = ''; btn.textContent = 'تأكيد الطلب 🛍️'; }, 2000);
             return;
         }
 
         isSubmitting = true;
         const btn = document.getElementById('sendBtn');
-        btn.disabled = true;
-        btn.textContent = '⏳ جاري إرسال الطلب...';
+        btn.disabled = true; btn.textContent = '⏳ جاري إرسال الطلب...';
 
         const qty = document.getElementById('qty').value;
         const orderId = generateOrderId();
         const formattedPhone = formatPhone(ph);
         const total = document.getElementById('fPrice').innerText;
-
         const pDetails = `${p.name} (عدد: ${qty})`;
 
-        let text = `📦 *طلب جديد — ${orderId}*\n`;
-        text += `━━━━━━━━━━━━━━━━━━\n`;
-        text += `👤 الاسم: ${n}\n`;
-        text += `📞 الهاتف: ${formattedPhone}\n`;
-        text += `🚚 نوع التوصيل: ${stLabel}\n`;
-        text += `📍 الولاية: ${w.options[w.selectedIndex].text}\n`;
-        text += `🏘️ البلدية/العنوان: ${b}\n`;
-        text += `━━━━━━━━━━━━━━━━━━\n`;
-        text += `🔢 الكمية: ${qty}\n`;
-        text += `👕 قطعة 1: [${document.getElementById('c1').value} / ${document.getElementById('s1').value}]\n`;
-
-        if (qty === "2") {
-            text += `👕 قطعة 2: [${document.getElementById('c2').value} / ${document.getElementById('s2').value}]\n`;
-        }
-
-        text += `━━━━━━━━━━━━━━━━━━\n`;
-        text += `💰 الإجمالي: ${total} DA\n`;
-        text += `🆔 رقم الطلب: ${orderId}`;
+        let text = `📦 *طلب جديد — ${orderId}*\n━━━━━━━━━━━━━━━━━━\n👤 الاسم: ${n}\n📞 الهاتف: ${formattedPhone}\n🚚 نوع التوصيل: ${stLabel}\n📍 الولاية: ${w.options[w.selectedIndex].text}\n🏘️ البلدية/العنوان: ${b}\n━━━━━━━━━━━━━━━━━━\n🔢 الكمية: ${qty}\n👕 قطعة 1: [${document.getElementById('c1').value} / ${document.getElementById('s1').value}]\n`;
+        if (qty === "2") { text += `👕 قطعة 2: [${document.getElementById('c2').value} / ${document.getElementById('s2').value}]\n`; }
+        text += `━━━━━━━━━━━━━━━━━━\n💰 الإجمالي: ${total} DA\n🆔 رقم الطلب: ${orderId}`;
 
         try {
-            // 1. الإرسال الفوري للـ Firebase لكي يظهر داخل لوحة التحكم
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: n,
-                    phone: formattedPhone,
-                    wilaya: w.options[w.selectedIndex].text,
-                    product: pDetails,
-                    status: "قيد الانتظار"
-                })
+                body: JSON.stringify({ name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text, product: pDetails, status: "قيد الانتظار" })
             });
 
-            // 2. الإرسال الفوري لـ Telegram
             const resp = await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CONFIG.CHAT_ID,
-                    text: text,
-                    parse_mode: 'Markdown'
-                })
+                body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: text, parse_mode: 'Markdown' })
             });
 
             const data = await resp.json();
-
             if (data.ok) {
-                saveOrder(orderId, {
-                    name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text,
-                    address: b, shipType: stLabel, qty, total,
-                    item1: `${document.getElementById('c1').value} / ${document.getElementById('s1').value}`,
-                    item2: qty === "2" ? `${document.getElementById('c2').value} / ${document.getElementById('s2').value}` : null
-                });
-
+                saveOrder(orderId, { name: n, phone: formattedPhone, wilaya: w.options[w.selectedIndex].text, address: b, shipType: stLabel, qty, total });
                 document.getElementById('generatedOrderId').textContent = orderId;
                 document.getElementById('successScreen').style.display = 'flex';
-            } else {
-                throw new Error('Telegram error');
-            }
+            } else { throw new Error('Telegram error'); }
         } catch(e) {
-            isSubmitting = false;
-            btn.disabled = false;
-            btn.style.background = 'var(--accent)';
-            btn.textContent = '❌ خطأ في الإرسال — حاول مجدداً';
-            setTimeout(() => {
-                btn.style.background = '';
-                btn.textContent = 'تأكيد الطلب 🛍️';
-            }, 3000);
+            isSubmitting = false; btn.disabled = false; btn.style.background = 'var(--accent)'; btn.textContent = '❌ خطأ في الإرسال — حاول مجدداً';
+            setTimeout(() => { btn.style.background = ''; btn.textContent = 'تأكيد الطلب 🛍️'; }, 3000);
         }
     }
 
-    function openTrack() {
-        document.getElementById('trackModal').classList.add('show');
-        document.getElementById('trackResult').innerHTML = '';
-        document.getElementById('trackInput').value = '';
-    }
-
-    function closeTrack(e) {
-        if (!e || e.target === document.getElementById('trackModal')) {
-            document.getElementById('trackModal').classList.remove('show');
-        }
-    }
+    function openTrack() { document.getElementById('trackModal').classList.add('show'); document.getElementById('trackResult').innerHTML = ''; document.getElementById('trackInput').value = ''; }
+    function closeTrack(e) { if (!e || e.target === document.getElementById('trackModal')) { document.getElementById('trackModal').classList.remove('show'); } }
 
     function trackOrder() {
         const input = document.getElementById('trackInput').value.trim().toUpperCase();
         const result = document.getElementById('trackResult');
-
-        if (!input) {
-            result.innerHTML = `<p style="color:var(--accent); text-align:center;">يرجى إدخال رقم الطلب</p>`;
-            return;
-        }
-
+        if (!input) { result.innerHTML = `<p style="color:var(--accent); text-align:center;">يرجى إدخال رقم الطلب</p>`; return; }
         const order = getOrder(input);
-
-        if (!order) {
-            result.innerHTML = `
-                <div style="text-align:center; padding:20px;">
-                    <div style="font-size:40px;">🔍</div>
-                    <p style="color:#888;">لم يتم العثور على طلب بهذا الرقم.<br>تأكد من الرقم أو تواصل معنا.</p>
-                </div>`;
-            return;
-        }
-
+        if (!order) { result.innerHTML = `<div style="text-align:center; padding:20px;"><div style="font-size:40px;">🔍</div><p style="color:#888;">لم يتم العثور على الطلب.</p></div>`; return; }
+        
         const age = Date.now() - order.timestamp;
         const hours = age / (1000 * 60 * 60);
-
         let stages = [
             { icon: '✅', label: 'تم استلام الطلب', sub: new Date(order.timestamp).toLocaleString('ar'), state: 'done' },
             { icon: '📞', label: 'تأكيد عبر الهاتف', sub: hours < 2 ? 'جاري التواصل...' : 'تم التأكيد', state: hours < 2 ? 'active' : 'done' },
@@ -699,53 +542,16 @@
             { icon: '🚚', label: 'في الطريق إليك', sub: hours < 24 ? 'خلال 24-48 ساعة' : 'في الطريق', state: hours < 12 ? 'pending' : 'active' },
         ];
 
-        result.innerHTML = `
-            <div class="track-result">
-                <div style="background:#f8f9fa; border-radius:15px; padding:15px; margin-bottom:20px; font-size:13px;">
-                    <strong style="color:var(--main);">${input}</strong><br>
-                    ${order.name} • ${order.wilaya}<br>
-                    <span style="color:var(--green);">💰 ${order.total} DA</span>
-                </div>
-                ${stages.map(s => `
-                    <div class="track-step">
-                        <div class="track-icon ${s.state}">${s.icon}</div>
-                        <div class="track-info">
-                            <strong>${s.label}</strong>
-                            <span>${s.sub}</span>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>`;
+        result.innerHTML = `<div class="track-result"><div style="background:#f8f9fa; border-radius:15px; padding:15px; margin-bottom:20px; font-size:13px;"><strong style="color:var(--main);">${input}</strong><br>${order.name} • ${order.wilaya}<br><span style="color:var(--green);">💰 ${order.total} DA</span></div>${stages.map(s => `<div class="track-step"><div class="track-icon ${s.state}">${s.icon}</div><div class="track-info"><strong>${s.label}</strong><span>${s.sub}</span></div></div>`).join('')}</div>`;
     }
 
-    function filterCat(c, el) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-        render(c);
-    }
-
-    function changeGallery(el, src) {
-        document.getElementById('activeImg').src = src;
-        document.querySelectorAll('.t-item').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function closeP() {
-        document.getElementById('product-page').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        location.hash = '';
-        if (timerInterval) clearInterval(timerInterval);
-    }
-
+    function filterCat(c, el) { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', inline: 'center' }); render(c); }
+    function changeGallery(el, src) { document.getElementById('activeImg').src = src; document.querySelectorAll('.t-item').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+    function closeP() { document.getElementById('product-page').style.display = 'none'; document.body.style.overflow = 'auto'; location.hash = ''; if (timerInterval) clearInterval(timerInterval); }
     function home() { location.hash = ''; location.reload(); }
 
-    function checkUrl() {
-        const h = location.hash.replace('#', '');
-        if (h && products.find(p => p.id === parseInt(h))) openP(parseInt(h));
-    }
+    function checkUrl() { const h = location.hash.replace('#', ''); if (h && products.find(p => p.id === parseInt(h))) openP(parseInt(h)); }
 
-    // تشغيل جلب المنتجات السحابية فور فتح الصفحة
     loadCloudProducts();
     checkUrl();
     window.addEventListener('hashchange', checkUrl);

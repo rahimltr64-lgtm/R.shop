@@ -3,94 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | المتجر الفخم والأنيق</title>
+    <title>LUXURY STORE | الأناقة الانسيابية الهادئة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #f1f5f9; /* خلفية عامة مضيئة ونظيفة جداً */
-            --card-light: #ffffff; /* كروت بيضاء ناصعة تبرز المنتجات */
-            --text-dark: #0f172a; /* نصوص داكنة حادة وواضحة */
+            --bg-dark: #090d16; /* خلفية ليلية هادئة جداً وعميقة */
+            --card-bg: #131b2e; /* بطاقات ناعمة مدمجة بصرياً */
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --text-main: #f1f5f9;
             --text-muted: #64748b;
-            --navbar-dark: #0f172a; /* هيدر داكن ملكي ليعطي التباين الفخم */
-            --accent-gold: #d97706; /* ذهبي دافئ وعميق متناسق مع الخلفية البيضاء */
-            --accent-blue: #2563eb; 
-            --accent-red: #dc2626;
-            --border-light: #e2e8f0;
+            --border-smooth: #1e293b;
         }
 
-        * { box-sizing: border-box; transition: all 0.25s ease; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-main); color: var(--text-dark); margin: 0; padding: 0; }
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); } /* حركة بطيئة وانسيابية */
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; }
 
-        /* شريط الإعلان العلوي المثير للشراء */
+        /* شريط الإعلان العلوي المنحني وبسيط */
         .promo-banner {
-            background: linear-gradient(90deg, #1e293b, #0f172a, #1e293b);
-            color: #fbbf24; padding: 11px; text-align: center; font-weight: 700;
-            font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: #131b2e;
+            color: var(--text-main); padding: 12px; text-align: center; font-weight: 600;
+            font-size: 13px; display: flex; justify-content: center; align-items: center; gap: 15px;
+            border-bottom: 1px solid var(--border-smooth);
         }
-        .countdown-timer { background: #fbbf24; color: #0f172a; padding: 3px 10px; border-radius: 6px; font-family: monospace; font-size: 15px; font-weight: 900; }
+        .countdown-timer { background: #090d16; color: var(--accent-gold); padding: 4px 14px; border-radius: 20px; font-family: monospace; font-size: 15px; font-weight: 700; }
 
-        /* الهيدر الداكن الملكي */
-        header { background: var(--navbar-dark); padding: 18px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        header h1 { margin: 0; font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 1px; }
+        /* هيدر ناعم بدون زوايا حادة */
+        header { background: var(--bg-dark); padding: 25px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 0.5px; }
 
-        /* أزرار التنقل والمفضلة المحدثة */
+        /* أزرار التنقل والمفضلة بانحناء كامل */
         .nav-buttons { display: flex; gap: 15px; align-items: center; }
-        .btn-fav-toggle { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 16px; border-radius: 12px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .btn-fav-toggle:hover, .btn-fav-toggle.active { background: var(--accent-red); border-color: var(--accent-red); color: white; }
+        .btn-fav-toggle { background: #131b2e; border: 1px solid var(--border-smooth); color: var(--text-main); padding: 10px 22px; border-radius: 30px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-fav-toggle:hover, .btn-fav-toggle.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
-        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
 
-        /* بار الأقسام والفلاتر النظيفة */
-        .categories-bar { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 8px; }
-        .cat-btn { background: var(--card-light); border: 1px solid var(--border-light); color: var(--text-dark); padding: 9px 22px; border-radius: 12px; cursor: pointer; font-family: 'Cairo'; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .cat-btn.active, .cat-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); color: white; transform: translateY(-2px); }
+        /* بار الأقسام بانحناء بيضاوي كامل ومريح */
+        .categories-bar { display: flex; gap: 12px; margin-bottom: 35px; overflow-x: auto; padding-bottom: 8px; }
+        .cat-btn { background: #131b2e; border: 1px solid var(--border-smooth); color: var(--text-muted); padding: 10px 24px; border-radius: 30px; cursor: pointer; font-family: 'Cairo'; font-weight: 700; white-space: nowrap; }
+        .cat-btn.active, .cat-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); color: white; }
 
-        /* شبكة المنتجات ذات الخلفية المضيئة المذهلة */
+        /* شبكة المنتجات ذات الانحناءات الفخمة الكبيرة */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 30px; }
         
-        .product-card { background: var(--card-light); border-radius: 24px; border: 1px solid var(--border-light); overflow: hidden; position: relative; box-shadow: 0 10px 20px rgba(15,23,42,0.03); display: flex; flex-direction: column; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px rgba(15,23,42,0.08); border-color: #cbd5e1; }
+        /* الكارت الفخم المنحني والمطفي بدون زوايا */
+        .product-card { background: var(--card-bg); border-radius: 32px; border: 1px solid var(--border-smooth); overflow: hidden; position: relative; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-6px); border-color: #334155; }
 
-        /* زر القلب للمفضلة */
-        .fav-heart-btn { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.8); border: 1px solid #e2e8f0; color: #94a3b8; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 18px; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .fav-heart-btn.is-fav { color: var(--accent-red); background: #fff; border-color: rgba(254,226,226,1); }
+        /* زر المفضلة الدائري تماماً */
+        .fav-heart-btn { position: absolute; top: 18px; left: 18px; background: rgba(9, 13, 22, 0.7); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 18px; backdrop-filter: blur(4px); }
+        .fav-heart-btn.is-fav { color: var(--accent-red); background: #fff; }
 
-        /* حاوية الصورة (بيضاء تماماً وخلفيتها نظيفة لعرض التفاصيل) */
-        .product-img-wrapper { width: 100%; height: 270px; background: #ffffff; position: relative; border-bottom: 1px solid #f1f5f9; }
-        .product-img-wrapper img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+        /* حاوية الصورة المستديرة والناعمة */
+        .product-img-wrapper { width: 90%; height: 260px; background: #ffffff; position: relative; margin: 15px auto 0 auto; border-radius: 24px; overflow: hidden; }
+        .product-img-wrapper img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
 
-        /* شارة الطوارئ (المخزون المتبقي) بلون نيون ملفت */
-        .stock-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(220, 38, 38, 0.9); color: white; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; animation: pulse 1.5s infinite; box-shadow: 0 4px 10px rgba(220,38,38,0.2); }
+        /* شارة الطوارئ (المخزون) الدائرية الأنيقة */
+        .stock-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(239, 68, 68, 0.85); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
 
-        /* تفاصيل المنتج المضيئة والأنيقة */
+        /* تفاصيل السلعة الهادئة */
         .product-details { padding: 22px; display: flex; flex-direction: column; flex-grow: 1; }
-        .product-title { margin: 0 0 10px 0; font-size: 17px; font-weight: 700; color: var(--text-dark); line-height: 1.4; }
-        .product-meta { color: var(--text-muted); font-size: 13px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .product-price { font-size: 20px; font-weight: 900; color: var(--accent-gold); margin-top: auto; margin-bottom: 16px; }
+        .product-title { margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #fff; line-height: 1.4; }
+        .product-meta { color: var(--text-muted); font-size: 13px; margin-bottom: 15px; display: flex; justify-content: space-between; }
+        .product-price { font-size: 19px; font-weight: 900; color: var(--accent-gold); margin-top: auto; margin-bottom: 16px; }
 
-        /* زر الشراء الاحترافي */
-        .btn-buy { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; border: none; padding: 14px; border-radius: 14px; font-family: 'Cairo'; font-weight: 700; font-size: 15px; cursor: pointer; width: 100%; text-align: center; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15); }
-        .btn-buy:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(15, 23, 42, 0.25); background: linear-gradient(135deg, var(--accent-blue) 0%, #1d4ed8 100%); }
+        /* أزرار الطلب الفورية المقوسة بالكامل */
+        .btn-buy { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--border-smooth); color: white; padding: 14px; border-radius: 25px; font-family: 'Cairo'; font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; text-align: center; }
+        .btn-buy:hover { background: linear-gradient(135deg, var(--accent-blue) 0%, #1d4ed8 100%); border-color: var(--accent-blue); }
 
-        /* واجهة الشراء المنبثقة المضيئة والفاخرة */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        /* نافذة الشراء المنبثقة المستديرة والراقية */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(9, 13, 22, 0.8); backdrop-filter: blur(10px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.show { display: flex; }
-        .modal-box { background: var(--card-light); border-radius: 28px; padding: 35px; width: 100%; max-width: 500px; position: relative; border: 1px solid var(--border-light); box-shadow: 0 25px 50px rgba(0,0,0,0.15); color: var(--text-dark); }
-        .modal-close { position: absolute; top: 20px; left: 20px; background: #e2e8f0; border: none; color: var(--text-dark); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-weight: bold; }
-        .modal-close:hover { background: var(--accent-red); color: white; }
+        .modal-box { background: var(--card-bg); border-radius: 36px; padding: 35px; width: 100%; max-width: 480px; position: relative; border: 1px solid var(--border-smooth); box-shadow: 0 25px 50px rgba(0,0,0,0.4); }
+        .modal-close { position: absolute; top: 22px; left: 22px; background: #1e293b; border: none; color: #fff; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; }
 
-        input, select { width: 100%; padding: 14px; background: #f8fafc; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 12px; margin-bottom: 16px; font-family: 'Cairo'; font-size: 14px; }
-        input:focus, select:focus { border-color: var(--accent-blue); background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        ::placeholder { color: #94a3b8; }
-
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+        /* مدخلات وقوائم منحنية بالكامل */
+        input, select { width: 100%; padding: 14px 20px; background: #090d16; border: 1px solid var(--border-smooth); color: #fff; border-radius: 25px; margin-bottom: 15px; font-family: 'Cairo'; font-size: 14px; }
+        input:focus, select:focus { border-color: var(--accent-blue); outline: none; }
+        ::placeholder { color: #475569; }
     </style>
 </head>
 <body>
 
 <div class="promo-banner">
-    <span>🔥 تخفيضات كبرى وحصرية لفترة محدودة جداً! التوصيل متوفر لـ 58 ولاية والدفع عند الاستلام 📦</span>
+    <span>✨ عرض حصري ومحدود لفترة وجيزة! التوصيل متوفر لجميع الولايات والدفع عند الاستلام</span>
     <div class="countdown-timer" id="promoCountdown">02:45:12</div>
 </div>
 
@@ -98,15 +96,15 @@
     <h1>🛍️ LUXURY STORE</h1>
     <div class="nav-buttons">
         <button class="btn-fav-toggle" id="favToggleBtn" onclick="toggleFavFilter()">
-            <span>❤️ المنتجات المفضلة</span>
-            <span id="favCountBadge" style="background:var(--accent-red); color:white; border-radius:50%; padding:2px 8px; font-size:11px; margin-right:5px;">0</span>
+            <span>❤️ المفضلة</span>
+            <span id="favCountBadge" style="background:var(--accent-red); color:white; border-radius:50%; padding:1px 6px; font-size:11px; margin-right:5px;">0</span>
         </button>
     </div>
 </header>
 
 <div class="container">
     <div class="categories-bar" id="categoriesBar">
-        <button class="cat-btn active" onclick="filterCategory('الكل', this)">كل المنتجات 🌍</button>
+        <button class="cat-btn active" onclick="filterCategory('الكل', this)">الكل 🌍</button>
         <button class="cat-btn" onclick="filterCategory('ملابس', this)">ملابس 👕</button>
         <button class="cat-btn" onclick="filterCategory('ساعات', this)">ساعات ⌚</button>
         <button class="cat-btn" onclick="filterCategory('إلكترونيات', this)">إلكترونيات 💻</button>
@@ -121,25 +119,25 @@
 <div class="modal-overlay" id="orderModal" onclick="closeOrderModal(event)">
     <div class="modal-box">
         <button class="modal-close" onclick="closeOrderModal()">✕</button>
-        <h2 style="margin-top:0; font-size:22px; font-weight:900;" id="modalProductTitle">تأكيد طلب الشراء</h2>
-        <p style="color:var(--text-muted); font-size:13px; margin-bottom:25px;">الرجاء كتابة معلوماتك بشكل صحيح لضمان اتصال فريق الشحن بك فوراً.</p>
+        <h2 style="margin-top:0; font-size:20px; font-weight:700;" id="modalProductTitle">تأكيد طلب الشراء</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">يرجى تزويدنا بمعلوماتك بدقة للشحن السريع.</p>
         
         <form id="orderForm">
-            <input type="text" id="custName" placeholder="الاسم الكامل للزبون" required>
-            <input type="tel" id="custPhone" placeholder="رقم الهاتف (الرجاء التأكد منه)" required>
-            <input type="text" id="custWilaya" placeholder="الولاية والعنوان السكني بالتفصيل" required>
+            <input type="text" id="custName" placeholder="الاسم واللقب" required>
+            <input type="tel" id="custPhone" placeholder="رقم الهاتف الحقيقي" required>
+            <input type="text" id="custWilaya" placeholder="الولاية والعنوان السكني" required>
             
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                 <select id="custColor" required><option value="">اختر اللون</option></select>
                 <select id="custSize" required><option value="">اختر المقاس</option></select>
             </div>
             
-            <div style="margin: 20px 0; font-weight: 700; color:var(--text-dark); display:flex; justify-content:space-between; font-size:16px; border-top:1px solid var(--border-light); padding-top:15px;">
-                <span>السعر الإجمالي الصافي:</span>
-                <span id="modalProductPrice" style="color:var(--accent-gold); font-size:20px; font-weight:900;">0 DA</span>
+            <div style="margin: 20px 0; font-weight: 700; color:#fff; display:flex; justify-content:space-between; border-top:1px solid var(--border-smooth); padding-top:15px;">
+                <span>المبلغ الإجمالي المستحق:</span>
+                <span id="modalProductPrice" style="color:var(--accent-gold); font-size:18px;">0 DA</span>
             </div>
 
-            <button type="button" class="btn-buy" onclick="submitOrder()">⚡ إرسال الطلب وتأكيد الشراء الفوري</button>
+            <button type="button" class="btn-buy" style="border-radius:30px;" onclick="submitOrder()">⚡ تأكيد طلب الشراء الآن</button>
         </form>
     </div>
 </div>
@@ -174,9 +172,8 @@
         try {
             const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
             allProducts = await res.json() || {};
-            renderStoreProducts();
-            updateFavBadge();
-        } catch (e) { console.error("خطأ جلب منتجات المتجر", e); }
+            renderStoreProducts(); updateFavBadge();
+        } catch (e) { console.error(e); }
     }
 
     function renderStoreProducts() {
@@ -193,44 +190,38 @@
             displayedCount++;
             const isFav = favoriteIds.includes(prod.id.toString());
             const mainImg = (prod.images && prod.images.length > 0) ? prod.images[0] : 'https://placehold.co/300';
-            const fakeStock = Math.floor(Math.random() * 4) + 2;
+            const fakeStock = Math.floor(Math.random() * 3) + 2;
 
             container.innerHTML += `
                 <div class="product-card">
                     <button class="fav-heart-btn ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${prod.id}', this)">❤️</button>
                     <div class="product-img-wrapper">
                         <img src="${mainImg}" onerror="this.src='https://placehold.co/300'">
-                        <div class="stock-badge">⚠️ متبقي ${fakeStock} قطع فقط في المخزن!</div>
+                        <div class="stock-badge">⚠️ متبقي ${fakeStock} قطع فقط!</div>
                     </div>
                     <div class="product-details">
                         <h3 class="product-title">${prod.name}</h3>
                         <div class="product-meta">
-                            <span>القسم: <strong style="color:var(--text-dark);">${prod.category}</strong></span>
-                            <span style="color:#16a34a; font-weight:700;">✓ متوفر للشحن</span>
+                            <span>القسم: <strong>${prod.category}</strong></span>
+                            <span>📦 الدفع عند الاستلام</span>
                         </div>
                         <div class="product-price">${prod.price.toLocaleString('ar')} DA</div>
-                        <button class="btn-buy" onclick="openOrderModal('${key}')">🛒 اطلب الآن مباشرة</button>
+                        <button class="btn-buy" onclick="openOrderModal('${key}')">🛒 اطلب الآن</button>
                     </div>
                 </div>`;
         });
 
         if (displayedCount === 0) {
-            container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:50px; font-weight:600;">لا توجد سلع معروضة في هذا القسم حالياً.</p>`;
+            container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:50px;">لا توجد سلع هنا حالياً.</p>`;
         }
     }
 
     function toggleFavorite(id, btn) {
         id = id.toString();
-        if (favoriteIds.includes(id)) {
-            favoriteIds = favoriteIds.filter(favId => favId !== id);
-            btn.classList.remove('is-fav');
-        } else {
-            favoriteIds.push(id);
-            btn.classList.add('is-fav');
-        }
+        if (favoriteIds.includes(id)) { favoriteIds = favoriteIds.filter(favId => favId !== id); btn.classList.remove('is-fav'); }
+        else { favoriteIds.push(id); btn.classList.add('is-fav'); }
         localStorage.setItem('storeFavorites', JSON.stringify(favoriteIds));
-        updateFavBadge();
-        if (showFavoritesOnly) renderStoreProducts();
+        updateFavBadge(); if (showFavoritesOnly) renderStoreProducts();
     }
 
     function updateFavBadge() { document.getElementById('favCountBadge').innerText = favoriteIds.length; }
@@ -254,12 +245,10 @@
         document.getElementById('modalProductTitle').innerText = `طلب شراء: ${selectedProduct.name}`;
         document.getElementById('modalProductPrice').innerText = `${selectedProduct.price.toLocaleString('ar')} DA`;
 
-        const colorSelect = document.getElementById('custColor');
-        colorSelect.innerHTML = '<option value="">اختر اللون</option>';
+        const colorSelect = document.getElementById('custColor'); colorSelect.innerHTML = '<option value="">اختر اللون</option>';
         if (selectedProduct.colors) { selectedProduct.colors.forEach(c => colorSelect.innerHTML += `<option value="${c}">${c}</option>`); }
 
-        const sizeSelect = document.getElementById('custSize');
-        sizeSelect.innerHTML = '<option value="">اختر المقاس</option>';
+        const sizeSelect = document.getElementById('custSize'); sizeSelect.innerHTML = '<option value="">اختر المقاس</option>';
         if (selectedProduct.sizes) { selectedProduct.sizes.forEach(s => sizeSelect.innerHTML += `<option value="${s}">${s}</option>`); }
 
         document.getElementById('orderModal').classList.add('show');
@@ -274,7 +263,7 @@
         const color = document.getElementById('custColor').value;
         const size = document.getElementById('custSize').value;
 
-        if(!name || !phone || !wilaya || !color || !size) { alert("الرجاء إدخال كافة البيانات المطلوبة واختيار اللون والمقاس!"); return; }
+        if(!name || !phone || !wilaya || !color || !size) { alert("يرجى ملء البيانات واختيار المقاس واللون!"); return; }
 
         const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
         const orderData = {
@@ -289,9 +278,9 @@
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${orderId}.json`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData)
             });
-            alert(`🎯 ممتاز! تم إرسال طلبك بنجاح تحت رقم: ${orderId}. سنتصل بك قريباً جداً لتأكيد الشحن.`);
+            alert(`🎯 تم تسجيل طلبك بنجاح برقم: ${orderId}. سيتصل بك فريق الدعم الهاتفي فوراً.`);
             document.getElementById('orderForm').reset(); closeOrderModal();
-        } catch(e) { alert("❌ فشل الاتصال بالسيرفر السحابي لإرسال الطلب."); }
+        } catch(e) { alert("❌ خطأ بالاتصال السحابي."); }
     }
 
     startPromoCountdown();

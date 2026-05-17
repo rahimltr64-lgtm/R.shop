@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المتجر السريع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --panel-bg: #ffffff;
+            --text-main: #2c3e50;
+            --primary: #1e3d59;
+            --accent: #ff6e40;
+            --success: #2ecc71;
+            --pending: #f1c40f;
+            --border-color: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; background: var(--panel-bg); padding: 20px;
+            border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        header h1 { font-size: 24px; color: var(--primary); }
+        header h1 i { margin-left: 10px; color: var(--accent); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card {
+            background: var(--panel-bg); padding: 20px; border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex;
+            justify-content: space-between; align-items: center; border-right: 5px solid var(--primary);
+        }
+        .stat-card.pending { border-right-color: var(--pending); }
+        .stat-card.success { border-right-color: var(--success); }
+        .stat-info h3 { font-size: 14px; color: #7f8c8d; margin-bottom: 5px; }
+        .stat-info .number { font-size: 28px; font-weight: 700; color: var(--text-main); }
+        .stat-icon { font-size: 32px; color: #bdc3c7; }
+
+        .orders-section { background: var(--panel-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); padding: 20px; }
+        .section-title { font-size: 18px; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: right; }
+        th, td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 15px; }
+        th { background-color: #f8fafc; color: #64748b; font-weight: 600; }
+        tr:hover { background-color: #f8fafc; }
+
+        .badge { padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .badge.status-pending { background-color: #fef9c3; color: #713f12; }
+        .badge.status-completed { background-color: #dcfce7; color: #14532d; }
+
+        .actions-btn { background: none; border: none; cursor: pointer; padding: 5px; margin: 0 2px; font-size: 16px; }
+        .btn-complete { color: var(--success); }
+        .btn-delete { color: #e74c3c; }
+        .actions-btn:hover { transform: scale(1.1); }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-chart-line"></i> لوحة تحكم متجري الحقيقي</h1>
+            <div style="color: #64748b; font-weight: 600;">
+                <i class="fa-regular fa-calendar-days"></i> متصل بالسحاب مباشر 🟢
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>إجمالي الطلبات</h3>
+                    <div class="number" id="total-orders">0</div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-info">
+                    <h3>طلبات قيد الانتظار</h3>
+                    <div class="number" id="pending-orders">0</div>
+                </div>
+                <div class="stat-icon" style="color: var(--pending);"><i class="fa-solid fa-clock"></i></div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-info">
+                    <h3>طلبات مكتملة</h3>
+                    <div class="number" id="completed-orders">0</div>
+                </div>
+                <div class="stat-icon" style="color: var(--success);"><i class="fa-solid fa-circle-check"></i></div>
+            </div>
+        </div>
+
+        <div class="orders-section">
+            <div class="section-title">
+                <i class="fa-solid fa-list-check" style="color: var(--accent);"></i>
+                <h2>الطلبات الحالية القادمة من المتجر</h2>
+            </div>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الزبون</th>
+                            <th>رقم الهاتف</th>
+                            <th>الولاية</th>
+                            <th>المنتج</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // رابط قاعدة البيانات الخاصة بك
+        const firebaseUrl = "https://fast-store-5cb17-default-rtdb.firebaseio.com/orders.json";
+
+        // دالة لجلب الطلبات وعرضها وتحديث الإحصائيات
+        async function fetchOrders() {
+            try {
+                const response = await fetch(firebaseUrl);
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('orders-table-body');
+                tableBody.innerHTML = ''; // تنظيف الجدول أولاً
+
+                let total = 0;
+                let pending = 0;
+                let completed = 0;
+
+                if (data) {
+                    // تحويل البيانات القادمة من فايربيس إلى أسطر في الجدول
+                    Object.keys(data).forEach(key => {
+                        const order = data[key];
+                        total++;
+
+                        if (order.status === 'مكتمل') {
+                            completed++;
+                        } else {
+                            pending++;
+                        }
+
+                        const badgeClass = order.status === 'مكتمل' ? 'status-completed' : 'status-pending';
+                        
+                        const row = `
+                            <tr>
+                                <td>${order.name}</td>
+                                <td>${order.phone}</td>
+                                <td>${order.wilaya}</td>
+                                <td>${order.product}</td>
+                                <td><span class="badge ${badgeClass}">${order.status}</span></td>
+                                <td>
+                                    ${order.status !== 'مكتمل' ? `<button class="actions-btn btn-complete" onclick="completeOrder('${key}')" title="تأكيد الطلب"><i class="fa-solid fa-check"></i></button>` : ''}
+                                    <button class="actions-btn btn-delete" onclick="deleteOrder('${key}')" title="حذف"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#7f8c8d;">لا توجد طلبات واردة حالياً. جرب إرسال طلب من المتجر!</td></tr>';
+                }
+
+                // تحديث الأرقام في كروت الإحصائيات
+                document.getElementById('total-orders').innerText = total;
+                document.getElementById('pending-orders').innerText = pending;
+                document.getElementById('completed-orders').innerText = completed;
+
+            } catch (error) {
+                console.error("خطأ في جلب البيانات:", error);
+            }
+        }
+
+        // دالة لتحويل حالة الطلب إلى مكتمل
+        async function completeOrder(key) {
+            const updateUrl = `https://fast-store-5cb17-default-rtdb.firebaseio.com/orders/${key}.json`;
+            await fetch(updateUrl, {
+                method: 'PATCH',
+                body: JSON.stringify({ status: 'مكتمل' })
+            });
+            fetchOrders(); // إعادة تحديث الجدول
+        }
+
+        // دالة لحذف الطلب
+        async function deleteOrder(key) {
+            if(confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
+                const deleteUrl = `https://fast-store-5cb17-default-rtdb.firebaseio.com/orders/${key}.json`;
+                await fetch(deleteUrl, { method: 'DELETE' });
+                fetchOrders(); // إعادة تحديث الجدول
+            }
+        }
+
+        // تشغيل الدالة تلقائياً وتحديث اللوحة كل 5 ثوانٍ لمراقبة الطلبات الجديدة
+        fetchOrders();
+        setInterval(fetchOrders, 5000);
+    </script>
+</body>
+</html>

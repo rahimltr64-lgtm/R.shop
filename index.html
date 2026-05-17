@@ -45,7 +45,6 @@
 
         .nav-buttons { display: flex; gap: 8px; align-items: center; }
         .nav-btn { background: #151b26; border: 1px solid var(--border-smooth); color: var(--text-main); padding: 8px 14px; border-radius: 30px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 12px; }
-        .btn-cart { background: var(--gradient-blue); color: white; border: none; }
         .btn-fav-toggle.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
         .badge { background: rgba(255,255,255,0.15); color: white; border-radius: 50%; padding: 1px 6px; font-size: 10px; font-weight: 700; }
@@ -88,7 +87,7 @@
         .btn-action { background: #1e2533; border: 1px solid var(--border-smooth); color: white; padding: 10px; border-radius: 50px; font-family: 'Cairo'; font-weight: 700; font-size: 13px; cursor: pointer; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; border: none; }
         .btn-action:hover { background: var(--gradient-blue); }
 
-        /* نوافذ العرض والعمليات */
+        /* الألواح الجانبية المتحركة */
         .drawer-overlay { position: fixed; inset: 0; background: rgba(5, 8, 15, 0.6); backdrop-filter: blur(6px); z-index: 5000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; display: flex; justify-content: flex-start; }
         .drawer-overlay.show { opacity: 1; pointer-events: auto; }
         
@@ -96,7 +95,7 @@
         .drawer-overlay.show .drawer-box { transform: translateX(0); }
         .drawer-close { background: #0f1319; border: 1px solid var(--border-smooth); color: #fff; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; position: absolute; top: 20px; right: 20px; z-index: 10; }
 
-        /* معرض الصور المصغرة داخل نافذة المنتج */
+        /* معرض الصور المصغرة التفاعلي */
         .modal-gallery { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
         .main-modal-img-wrap { width: 100%; height: 240px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-smooth); }
         .main-modal-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 15px; }
@@ -113,6 +112,12 @@
         .price-summary-box { background: #0f1319; padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 13px; border: 1px solid var(--border-smooth); }
         .price-row { display: flex; justify-content: space-between; margin-bottom: 6px; color: var(--text-muted); }
         .price-row.total { border-top: 1px dashed var(--border-smooth); padding-top: 6px; font-weight: 900; color: #fff; }
+
+        .track-result-box { background: #0f1319; border: 1px solid var(--border-smooth); border-radius: 12px; padding: 14px; margin-top: 15px; display: none; text-align: right; }
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+        .status-pending { background: rgba(226, 168, 85, 0.15); color: var(--accent-gold); }
+        .status-shipped { background: rgba(74, 123, 176, 0.15); color: var(--accent-blue); }
+        .status-completed { background: rgba(82, 183, 136, 0.15); color: var(--accent-green); }
 
         .modal-center { position: fixed; inset: 0; background: rgba(5, 8, 15, 0.8); backdrop-filter: blur(8px); z-index: 6000; display: none; align-items: center; justify-content: center; padding: 15px; }
         .modal-center.show { display: flex; }
@@ -134,6 +139,7 @@
 <header>
     <h1>🛍️ LUXURY STORE</h1>
     <div class="nav-buttons">
+        <button class="nav-btn" onclick="openDrawer('trackDrawer')">🔍 <span>تتبع الطلب</span></button>
         <button class="nav-btn btn-fav-toggle" id="favToggleBtn" onclick="toggleFavFilter()">
             <span>❤️ المفضلة</span><span class="badge" id="favCountBadge">0</span>
         </button>
@@ -159,15 +165,33 @@
     </div>
 </div>
 
-<!-- واجهة المنتج التفصيلية المحدثة مع استمارة الشراء الفورية ومعرض الصور المصغرة -->
+<!-- لوحة التتبع الحية الجانبية (المسترجعة) -->
+<div class="drawer-overlay" id="trackDrawer" onclick="closeDrawer(event, 'trackDrawer')">
+    <div class="drawer-box">
+        <button class="drawer-close" onclick="forceCloseDrawer('trackDrawer')">✕</button>
+        <h2 style="margin: 0 0 5px 0; font-size:18px; font-weight:900; color:#fff;">🔍 تتبع طلبيتك الإليكترونية</h2>
+        <p style="color:var(--text-muted); font-size:12px; margin: 0 0 20px 0;">أدخل رقم التتبع المكون من 6 أرقام لمعرفة الحالة المباشرة لطلبك.</p>
+        
+        <input type="number" id="trackOrderIdInput" placeholder="أدخل رقم الطلب المكون من 6 أرقام">
+        <button type="button" class="btn-action" style="background: var(--gradient-blue); color: #fff;" onclick="trackOrderLive()">استعلام عن حالة الشحن</button>
+        
+        <div class="track-result-box" id="trackResult">
+            <p style="margin:5px 0; font-size:13px;">📦 المنتج المطلـوب: <strong id="resProdName" style="color:#fff;">-</strong></p>
+            <p style="margin:5px 0; font-size:13px;">💰 الإجمالي المستحق: <strong id="resTotalPrice" style="color:var(--accent-gold);">-</strong></p>
+            <p style="margin:5px 0; font-size:13px;">🚥 حالة الطرد الحالية: <span id="resStatus" class="status-badge">-</span></p>
+        </div>
+    </div>
+</div>
+
+<!-- واجهة تفاصيل المنتج واستمارة الشراء الفورية والمعرض تفاعلي -->
 <div class="drawer-overlay" id="productViewDrawer" onclick="closeDrawer(event, 'productViewDrawer')">
     <div class="drawer-box">
         <button class="drawer-close" onclick="forceCloseDrawer('productViewDrawer')">✕</button>
         
-        <!-- معرض صور المنتج -->
+        <!-- معرض الصور الرئيسي والمصغر -->
         <div class="modal-gallery">
             <div class="main-modal-img-wrap">
-                <img id="modalMainImg" src="" alt="صورة المنتج الرئيسية">
+                <img id="modalMainImg" src="" alt="صورة المعرض">
             </div>
             <div class="thumbnails-container" id="modalThumbnailsRow"></div>
         </div>
@@ -177,9 +201,9 @@
         
         <hr style="border: 0; border-top: 1px solid var(--border-smooth); margin-bottom: 15px;">
 
-        <!-- استمارة الشراء المباشر المدمجة -->
+        <!-- استمارة الطلب المباشر المدمجة -->
         <form id="directOrderForm" onsubmit="event.preventDefault(); submitDirectOrder();">
-            <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #fff;">📋 خيارات المنتج والطلب السريع</h3>
+            <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #fff;">📋 خيارات السلعة والمعلومات الفورية للطلب</h3>
             
             <div class="options-grid">
                 <select id="modalColorSelect" required><option value="">اختر اللون</option></select>
@@ -187,23 +211,23 @@
             </div>
 
             <input type="text" id="custName" placeholder="الاسم واللقب الكامل" required>
-            <input type="tel" id="custPhone" placeholder="رقم الهاتف الالكتروني (06/07/05XXXXXXXX)" pattern="^(05|06|07|09)[0-9]{8}$" maxlength="10" required>
+            <input type="tel" id="custPhone" placeholder="رقم الهاتف (مثال: 0661234567)" pattern="^(05|06|07|09)[0-9]{8}$" maxlength="10" required>
             
             <select id="custWilaya" onchange="calculateLiveShipping()" required>
-                <option value="">-- اختر ولاية الإقامة --</option>
+                <option value="">-- اختر ولاية الإقامة (58 ولاية) --</option>
             </select>
             
-            <input type="text" id="custBaladia" placeholder="بلدية السكن الحالية" required>
+            <input type="text" id="custBaladia" placeholder="اسم بلدية الإقامة الحالية" required>
 
             <select id="deliveryType" onchange="calculateLiveShipping()" required>
-                <option value="home">🏠 توصيل لباب المنزل</option>
-                <option value="office">🏢 استلام من مكتب شركة يالادين</option>
+                <option value="home">🏠 توصيل مباشر لباب المنزل</option>
+                <option value="office">🏢 استلام شخصي من مكتب شركة يالادين</option>
             </select>
 
-            <!-- حساب السعر الإجمالي التلقائي -->
+            <!-- تفصيل وحساب التكلفة الإجمالية تلقائياً -->
             <div class="price-summary-box">
-                <div class="price-row"><span>سعر المنتج الأصلي:</span><span id="summaryProductPrice" style="color:#fff;">0 DA</span></div>
-                <div class="price-row"><span>تكلفة توصيل يالادين:</span><span id="summaryShippingFee" style="color:#fff;">0 DA</span></div>
+                <div class="price-row"><span>سعر السلعة:</span><span id="summaryProductPrice" style="color:#fff;">0 DA</span></div>
+                <div class="price-row"><span>تكلفة شحن يالادين:</span><span id="summaryShippingFee" style="color:#fff;">0 DA</span></div>
                 <div class="price-row total"><span>المبلغ الإجمالي المستحق:</span><span id="summaryGrandTotal" style="color:var(--accent-gold); font-size:16px;">0 DA</span></div>
             </div>
 
@@ -212,14 +236,14 @@
     </div>
 </div>
 
-<!-- مودال نجاح الطلب العائم -->
+<!-- مودال نجاح العمليات والطلب -->
 <div class="modal-center" id="thankYouModal">
     <div class="thankyou-box">
         <div class="success-icon">✓</div>
         <h2 style="margin-top:0; color:#fff; font-size:20px; font-weight:900;">تم تسجيل طلبك بنجاح</h2>
         <p style="color:var(--text-main); font-size:13px;">رقم تتبع طلبك الحصري والمباشر:</p>
-        <p id="thankYouOrderId" style="color:var(--accent-gold); font-size:24px; font-weight:900; margin: 5px 0 15px 0; font-family: monospace;"></p>
-        <p style="color:var(--text-muted); font-size:11px; line-height:1.5; margin-bottom:20px;">يرجى تذكر الرقم أو تصوير الشاشة، سيتصل بك فريقنا قريباً لتأكيد الإرسال.</p>
+        <p id="thankYouOrderId" style="color:var(--accent-gold); font-size:24px; font-weight:900; margin: 5px 0 15px 0; font-family: monospace; letter-spacing: 1px;"></p>
+        <p style="color:var(--text-muted); font-size:11px; line-height:1.5; margin-bottom:20px;">يرجى تذكر الرقم لاستخدامه في خانة تتبع طلبك بالترويسة لاحقاً.</p>
         <button class="btn-action" style="background: var(--gradient-blue); width:80%; margin:0 auto;" onclick="closeThankYouModal()">متابعة التسوق 🛍️</button>
     </div>
 </div>
@@ -231,7 +255,7 @@
         TELEGRAM_CHAT_ID: "5981194410"    
     };
 
-    // أسعار شحن شركة يالادين (Yalidine) الرسمية لـ 58 ولاية جزائرية
+    // أسعار شحن شركة يالادين (Yalidine) لـ 58 ولاية جزائرية
     const yalidineShippingRates = [
         { code: "01", name: "أدرار", fee: 900 }, { code: "02", name: "الشلف", fee: 600 }, { code: "03", name: "الأغواط", fee: 600 },
         { code: "04", name: "أم البواقي", fee: 550 }, { code: "05", name: "باتنة", fee: 550 }, { code: "06", name: "بجاية", fee: 550 },
@@ -290,7 +314,7 @@
             allProducts = await res.json() || {};
             renderStoreProducts(); 
             updateFavBadge();
-        } catch (e) { console.error("Error loading elements:", e); }
+        } catch (e) { console.error("Error loading marketplace data:", e); }
     }
 
     function renderStoreProducts() {
@@ -315,21 +339,20 @@
                     <div class="fav-heart-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); toggleFavorite('${prod.id}', this)">❤️</div>
                     <div class="product-img-wrapper">
                         <img src="${mainImg}" onerror="this.src='https://placehold.co/300'">
-                        <div class="stock-badge">🔥 متوفر حالياً</div>
+                        <div class="stock-badge">🔥 متوفر بالمخزن</div>
                     </div>
                     <div class="product-details">
                         <h3 class="product-title">${prod.name}</h3>
                         <div class="product-price">${prod.price} DA</div>
-                        <button class="btn-action">⚡ شراء الآن</button>
+                        <button class="btn-action">⚡ شراء مباشر</button>
                     </div>
                 </div>`;
         });
 
         htmlGrid += '</div>';
-        container.innerHTML = displayedCount === 0 ? `<p style="text-align:center; color:var(--text-muted); padding:50px;">لا توجد سلع هنا حالياً.</p>` : htmlGrid;
+        container.innerHTML = displayedCount === 0 ? `<p style="text-align:center; color:var(--text-muted); padding:50px;">لا توجد سلع عرض حالية.</p>` : htmlGrid;
     }
 
-    // فتح تفاصيل المنتج وبناء ألبوم الصور المصغرة والخيارات
     function openProductQuickView(key) {
         const prod = allProducts[key]; if(!prod) return;
         selectedActiveProduct = prod;
@@ -338,7 +361,6 @@
         document.getElementById('modalProductPrice').innerText = `${prod.price} DA`;
         document.getElementById('summaryProductPrice').innerText = `${prod.price} DA`;
 
-        // إعداد وتبديل معرض الصور
         const mainImg = document.getElementById('modalMainImg');
         const thumbRow = document.getElementById('modalThumbnailsRow');
         thumbRow.innerHTML = '';
@@ -358,7 +380,6 @@
             thumbRow.appendChild(thumb);
         });
 
-        // تعبئة خيارات المقاس والألوان
         const colorSel = document.getElementById('modalColorSelect');
         const sizeSel = document.getElementById('modalSizeSelect');
         colorSel.innerHTML = '<option value="">اختر اللون</option>';
@@ -371,7 +392,6 @@
         openDrawer('productViewDrawer');
     }
 
-    // حساب مباشر لأسعار يالادين حسب الولاية ونوع التوصيل
     function calculateLiveShipping() {
         if(!selectedActiveProduct) return;
         const basePrice = selectedActiveProduct.price;
@@ -381,15 +401,32 @@
         const dType = document.getElementById('deliveryType').value;
 
         let baseShippingFee = selectedOption && selectedOption.value ? parseInt(selectedOption.dataset.fee) : 0;
-        
-        // إذا كان الاستلام من المكتب، يتم خصم 200 دج من قيمة شحن يالادين القياسي للمنزل
         let finalShippingFee = (dType === "office" && baseShippingFee > 0) ? Math.max(0, baseShippingFee - 200) : baseShippingFee;
 
         document.getElementById('summaryShippingFee').innerText = `${finalShippingFee} DA`;
         document.getElementById('summaryGrandTotal').innerText = `${basePrice + finalShippingFee} DA`;
     }
 
-    // إرسال الطلب المباشر من صفحة المنتج
+    // خاصية تتبع حالة الشحنات المباشرة (تمت استعادتها بالكامل)
+    async function trackOrderLive() {
+        const idInput = document.getElementById('trackOrderIdInput').value.trim();
+        const resultBox = document.getElementById('trackResult');
+        if(!idInput) { alert("يرجى إدخال رقم الطرد بشكل صحيح!"); return; }
+        try {
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${idInput}.json`);
+            const order = await res.json();
+            if(order) {
+                document.getElementById('resProdName').innerText = order.product;
+                document.getElementById('resTotalPrice').innerText = `${order.totalPrice} DA`;
+                const badge = document.getElementById('resStatus'); badge.className = "status-badge"; badge.innerText = order.status || "قيد الانتظار";
+                if(order.status === "تم الشحن") badge.classList.add('status-shipped');
+                else if(order.status === "تم التوصيل") badge.classList.add('status-completed');
+                else badge.classList.add('status-pending');
+                resultBox.style.display = 'block';
+            } else { alert("❌ عذراً، لم يتم العثور على أي بيانات مطابقة لهذا الرقم."); resultBox.style.display = 'none'; }
+        } catch(e) { alert("حدث خطأ أثناء فحص البيانات من السيرفر."); }
+    }
+
     async function submitDirectOrder() {
         if(!selectedActiveProduct) return;
         
@@ -401,7 +438,7 @@
         const baladia = document.getElementById('custBaladia').value.trim();
         const dType = document.getElementById('deliveryType').value;
 
-        if(!color || !size || !name || !phone || !wilaya || !baladia) { alert("⚠️ يرجى ملء كافة الخيارات والمعلومات الشخصية!"); return; }
+        if(!color || !size || !name || !phone || !wilaya || !baladia) { alert("⚠️ يرجى استكمال البيانات الاختيارية أولاً!"); return; }
 
         const orderId = Math.floor(100000 + Math.random() * 900000).toString();
         
@@ -413,16 +450,15 @@
         const orderData = {
             orderId, name, phone, wilaya, baladia,
             deliveryType: dType === "home" ? "توصيل للمنزل" : "استلام من المكتب",
-            product: `${selectedActiveProduct.name} (اللون: ${color} / المقاس: ${size})`,
+            product: `${selectedActiveProduct.name} (${color} - ${size})`,
             totalPrice: finalTotal,
             status: "قيد الانتظار"
         };
 
         try {
-            // حفظ في الفايربيس وإرسال للتليجرام
             await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${orderId}.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
             
-            const telegramMessage = `🔔 طلب فوري جديد رقم: ${orderId}\n👤 الزبون: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n🏙️ البلدية: ${baladia}\n🚚 نوع التوصيل: ${orderData.deliveryType}\n🛍️ السلعة: ${orderData.product}\n💰 المجموع الكلي: ${finalTotal} DA`;
+            const telegramMessage = `🔔 طلبية فورية رقم: ${orderId}\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n🏙️ البلدية: ${baladia}\n🚚 التوصيل: ${orderData.deliveryType}\n🛍️ السلعة: ${orderData.product}\n💰 السعر الكلي: ${finalTotal} DA`;
             
             await fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: telegramMessage }) });
 
@@ -431,7 +467,7 @@
             
             document.getElementById('thankYouOrderId').innerText = orderId; 
             document.getElementById('thankYouModal').classList.add('show');
-        } catch(e) { alert("حدث خطأ في الشبكة، يرجى إعادة المحاولة."); }
+        } catch(e) { alert("خطأ مؤقت بالشبكة."); }
     }
 
     function toggleFavorite(id, btn) {

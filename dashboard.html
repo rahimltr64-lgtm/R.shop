@@ -1,418 +1,516 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXURY STORE | لوحة التحكم المتكاملة والمتقدمة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --main-dark: #0f172a; --card-bg: #1e293b;
-            --accent-red: #ef4444; --accent-green: #10b981;
-            --accent-blue: #3b82f6; --accent-gold: #f59e0b;
-            --text-main: #f8fafc; --text-muted: #94a3b8;
-            --border-color: #334155;
-        }
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--main-dark); margin: 0; padding: 25px; color: var(--text-main); }
-        .dash-container { max-width: 1200px; margin: auto; display: none; }
-        
-        header { 
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 25px 35px; border-radius: 24px; 
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; 
-            border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        header h1 { margin: 0; font-size: 24px; font-weight: 900; color: #fff; }
-        
-        .btn-trigger-modal {
-            background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%); color: white; border: none; 
-            padding: 12px 24px; border-radius: 14px; font-family: 'Cairo'; font-weight: 700; font-size: 15px;
-            cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
-        }
-        .btn-trigger-modal:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(16, 185, 129, 0.4); }
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Sun, Moon, LayoutDashboard, Package, ShoppingCart, Maximize, LogOut, Search, RefreshCw, Trash2, Plus } from 'lucide-react';
 
-        /* شاشة تسجيل الدخول المحدثة */
-        .login-overlay { position: fixed; inset: 0; background: var(--main-dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .login-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+// ==========================================
+// 1. إعدادات قاعدة البيانات والثيم
+// ==========================================
+const CONFIG = {
+  FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com",
+  ADMIN_PASSWORD: "Admin2026"
+};
 
-        /* شبكة الإحصائيات والأرباح المتقدمة */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: var(--card-bg); padding: 20px 25px; border-radius: 20px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
-        .stat-info h3 { margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 600; }
-        .stat-info .stat-num { font-size: 24px; font-weight: 900; color: #fff; margin-top: 5px; display: block; }
+const ThemeContext = createContext();
 
-        .card { background: var(--card-bg); border-radius: 24px; padding: 30px; margin-bottom: 35px; border: 1px solid var(--border-color); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        h2 { margin-top: 0; color: #fff; font-size: 19px; font-weight: 700; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
-        
-        /* أدوات الفلترة والبحث */
-        .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; background: #0f172a; padding: 15px; border-radius: 16px; border: 1px solid var(--border-color); }
-        .search-input { flex: 1; min-width: 200px; margin-bottom: 0; background: var(--card-bg); }
-        .filter-select { width: auto; margin-bottom: 0; background: var(--card-bg); }
+const ThemeProvider = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
-        /* النافذة المنبثقة */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.show { display: flex; }
-        .modal-box { background: var(--card-bg); border-radius: 28px; padding: 35px; width: 100%; max-width: 600px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
-        .modal-close { position: absolute; top: 25px; left: 25px; background: #334155; border: none; color: #fff; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 14px; }
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
-        input, select { width: 100%; padding: 14px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; border-radius: 14px; margin-bottom: 15px; font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
-        input:focus, select:focus { border-color: var(--accent-blue); outline: none; }
-        
-        .btn-add { background: linear-gradient(135deg, var(--accent-blue) 0%, #2563eb 100%); color: white; border: none; font-weight: 700; font-size: 16px; padding: 15px; border-radius: 14px; cursor: pointer; }
-        .btn-add:hover { transform: translateY(-2px); }
-        
-        .images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  return (
+    <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
-        /* الجداول */
-        .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid var(--border-color); background: #0f172a; }
-        .custom-table { width: 100%; border-collapse: collapse; text-align: right; min-width: 850px; }
-        .custom-table th, .custom-table td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        .custom-table th { background: #1e293b; color: var(--text-muted); font-weight: 700; }
-        
-        .btn-delete { background: rgba(239, 68, 68, 0.1); border: none; color: var(--accent-red); font-size: 15px; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
-        .btn-delete:hover { background: var(--accent-red); color: white; }
+// ==========================================
+// 2. مكون الهيكل الرئيسي (القائمة والشريط العلوي)
+// ==========================================
+function Layout({ children, activeTab, setActiveTab, onLogout }) {
+  const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
+  const [greeting, setGreeting] = useState('');
 
-        .status-badge { padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; display: inline-block; }
-        .status-pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-        .status-confirmed { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-        .status-shipped { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-        .status-cancelled { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
-        
-        .status-select { padding: 5px; background: #1e293b; border-radius: 8px; font-family: 'Cairo'; font-size: 12px; width: auto; margin: 0; }
-        .product-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: contain; background: #fff; }
-    </style>
-</head>
-<body>
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('صباح الخير ☀️');
+    else if (hour < 18) setGreeting('مساء الخير 🌤️');
+    else setGreeting('طاب مساؤك 🌙');
+  }, []);
 
-<div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-        <span style="font-size: 40px; display: block; margin-bottom: 15px;">🔒</span>
-        <h2 style="border: none; margin-bottom: 10px;">منطقة آمنة ومحمية</h2>
-        <input type="password" id="adminPassInput" placeholder="أدخل كلمة المرور هنا..." style="text-align: center; font-size: 16px;">
-        <button class="btn-add" style="width: 100%; padding: 12px;" onclick="checkAdminPassword()">🔓 تسجيل الدخول</button>
-        <p id="loginError" style="color: var(--accent-red); font-size: 13px; margin-top: 15px; display: none;">❌ كلمة المرور خاطئة!</p>
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300" dir="rtl">
+      <aside className="w-64 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+        <div className="p-6 text-2xl font-black text-center border-b border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-400">
+          LUXURY STORE
+        </div>
+        <nav className="flex-1 p-4 space-y-2">
+          <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-semibold transition ${activeTab === 'dashboard' ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : 'hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
+            <LayoutDashboard size={20} /> الإحصائيات
+          </button>
+          <button onClick={() => setActiveTab('products')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-semibold transition ${activeTab === 'products' ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : 'hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
+            <Package size={20} /> المنتجات
+          </button>
+          <button onClick={() => setActiveTab('orders')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-semibold transition ${activeTab === 'orders' ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : 'hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
+            <ShoppingCart size={20} /> تتبع الطلبات
+          </button>
+        </nav>
+        <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+          <button onClick={onLogout} className="w-full flex items-center gap-3 p-3 rounded-xl font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition">
+            <LogOut size={20} /> تسجيل الخروج
+          </button>
+        </div>
+      </aside>
+
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <header className="h-20 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-8 shadow-sm">
+          <h2 className="text-xl font-bold">{greeting}</h2>
+          <div className="flex gap-4">
+            <button onClick={toggleFullScreen} className="p-2 rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+              <Maximize size={20} />
+            </button>
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+              {isDarkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-slate-400" />}
+            </button>
+          </div>
+        </header>
+        <div className="flex-1 overflow-auto p-8">
+          {children}
+        </div>
+      </main>
     </div>
-</div>
+  );
+}
 
-<div class="dash-container" id="dashContainer">
-    <header>
-        <h1>🛠️ لوحة الإدارة المتطورة والأرباح السحابية</h1>
-        <button class="btn-trigger-modal" onclick="openModal()">➕ إضافة منتج جديد</button>
-    </header>
+// ==========================================
+// 3. مكون الإحصائيات
+// ==========================================
+function DashboardStats({ stats }) {
+  const chartData = [
+    { name: 'السبت', sales: 4000 },
+    { name: 'الأحد', sales: 3000 },
+    { name: 'الإثنين', sales: 2000 },
+    { name: 'الثلاثاء', sales: 2780 },
+    { name: 'الأربعاء', sales: 1890 },
+    { name: 'الخميس', sales: 2390 },
+    { name: 'الجمعة', sales: Math.max(stats.sales, 3490) }, 
+  ];
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-info">
-                <h3>إجمالي المنتجات</h3>
-                <span class="stat-num" id="totalProductsNum">0</span>
-            </div>
-            <div style="font-size:22px;">🛍️</div>
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <h3 className="text-slate-500 dark:text-slate-400 text-sm font-bold mb-2">إجمالي المنتجات</h3>
+          <p className="text-3xl font-black text-blue-600">{stats.products}</p>
         </div>
-        <div class="stat-card">
-            <div class="stat-info">
-                <h3>إجمالي الطلبات</h3>
-                <span class="stat-num" id="totalOrdersNum">0</span>
-            </div>
-            <div style="font-size:22px;">📦</div>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <h3 className="text-slate-500 dark:text-slate-400 text-sm font-bold mb-2">إجمالي الطلبات</h3>
+          <p className="text-3xl font-black text-purple-600">{stats.orders}</p>
         </div>
-        <div class="stat-card" style="border-right: 4px solid var(--accent-gold);">
-            <div class="stat-info">
-                <h3>إجمالي المبيعات المؤكدة</h3>
-                <span class="stat-num" id="totalSalesNum" style="color: var(--accent-gold);">0 DA</span>
-            </div>
-            <div style="font-size:22px;">💰</div>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <h3 className="text-slate-500 dark:text-slate-400 text-sm font-bold mb-2">المبيعات المؤكدة</h3>
+          <p className="text-3xl font-black text-amber-500">{stats.sales.toLocaleString('ar')} DA</p>
         </div>
-        <div class="stat-card" style="border-right: 4px solid var(--accent-green);">
-            <div class="stat-info">
-                <h3>الربح الصافي التقريبي</h3>
-                <span class="stat-num" id="netProfitNum" style="color: var(--accent-green);">0 DA</span>
-            </div>
-            <div style="font-size:22px;">📈</div>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <h3 className="text-slate-500 dark:text-slate-400 text-sm font-bold mb-2">الربح الصافي</h3>
+          <p className="text-3xl font-black text-emerald-500">{stats.profit.toLocaleString('ar')} DA</p>
         </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 h-96">
+        <h3 className="text-lg font-bold mb-6">منحنى المبيعات الأسبوعي</h3>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
+            <XAxis dataKey="name" stroke="#94a3b8" />
+            <YAxis stroke="#94a3b8" />
+            <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }} />
+            <Line type="monotone" dataKey="sales" stroke="#3b82f6" strokeWidth={4} dot={{ r: 6 }} activeDot={{ r: 8 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
+  );
+}
 
-    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
-        <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <h2 style="border:none;">➕ إضافة منتج جديد إلى السحاب</h2>
-            <form id="productForm">
-                <div class="grid-inputs">
-                    <input type="number" id="p_id" placeholder="رقم ID فريد للمنتج" required>
-                    <select id="p_cat" required>
-                        <option value="ملابس">ملابس</option>
-                        <option value="ساعات">ساعات</option>
-                        <option value="إلكترونيات">إلكترونيات</option>
-                        <option value="أحذية">أحذية</option>
-                        <option value="عطور">عطور</option>
-                    </select>
-                </div>
-                <input type="text" id="p_name" placeholder="اسم المنتج الفخم" required>
-                
-                <div class="grid-inputs">
-                    <input type="number" id="p_price" placeholder="سعر البيع لزبون (DA)" required>
-                    <input type="number" id="p_cost" placeholder="سعر الجملة / رأس المال (DA)">
-                </div>
-                
-                <input type="text" id="p_colors" placeholder="الألوان (فصل بفاصلة: أسود, أبيض)" required>
-                <input type="text" id="p_sizes" placeholder="المقاسات (فصل بفاصلة: M, L, XL)" required>
-                
-                <div style="background: #0f172a; padding: 20px; border-radius: 16px; margin-bottom: 20px; border:1px solid var(--border-color);">
-                    <label style="font-size: 13px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 12px;">🖼️ ألبوم صور المنتج (حتى 8 صور):</label>
-                    <input type="url" id="p_img1" placeholder="رابط الصورة 1 (الرئيسية والمطلوبة)" style="background:#1e293b;" required>
-                    <div class="images-grid">
-                        <input type="url" id="p_img2" placeholder="رابط الصورة 2" style="background:#1e293b;"><input type="url" id="p_img3" placeholder="رابط الصورة 3" style="background:#1e293b;">
-                        <input type="url" id="p_img4" placeholder="رابط الصورة 4" style="background:#1e293b;"><input type="url" id="p_img5" placeholder="رابط الصورة 5" style="background:#1e293b;">
-                        <input type="url" id="p_img6" placeholder="رابط الصورة 6" style="background:#1e293b;"><input type="url" id="p_img7" placeholder="رابط الصورة 7" style="background:#1e293b;">
-                        <input type="url" id="p_img8" placeholder="رابط الصورة 8" style="background:#1e293b;">
-                    </div>
-                </div>
-                <button type="button" class="btn-add" onclick="uploadProduct()">🚀 نشر المنتج وحفظ الحسابات</button>
+// ==========================================
+// 4. مكون تتبع الطلبات
+// ==========================================
+function OrdersTracker({ orders, onUpdateStatus, onDeleteOrder, loading }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('الكل');
+
+  const filteredOrders = Object.entries(orders).filter(([key, order]) => {
+    const matchSearch = order.name?.includes(searchTerm) || order.phone?.includes(searchTerm);
+    const matchStatus = statusFilter === 'الكل' || order.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const getStatusColor = (status) => {
+    switch(status) {
+      case 'تم التأكيد': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+      case 'تم الشحن': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
+      case 'ملغى': return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400';
+      default: return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
+    }
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex flex-wrap gap-4 items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          📦 نظام تتبع الطلبات
+          {loading && <RefreshCw size={18} className="animate-spin text-blue-500" />}
+        </h2>
+        <div className="flex gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64">
+            <Search className="absolute right-3 top-3 text-slate-400" size={18} />
+            <input 
+              type="text" 
+              placeholder="ابحث برقم الهاتف أو الاسم..." 
+              className="w-full pr-10 p-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-blue-500 outline-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <select 
+            className="p-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 outline-none"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="الكل">كل الحالات</option>
+            <option value="قيد الانتظار">قيد الانتظار</option>
+            <option value="تم التأكيد">تم التأكيد</option>
+            <option value="تم الشحن">تم الشحن</option>
+            <option value="ملغى">ملغى</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-right">
+          <thead className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-sm">
+            <tr>
+              <th className="p-4">الزبون</th>
+              <th className="p-4">الهاتف</th>
+              <th className="p-4">المنتج</th>
+              <th className="p-4">المبلغ</th>
+              <th className="p-4">تتبع الحالة</th>
+              <th className="p-4">إجراء</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+            {filteredOrders.map(([key, order]) => (
+              <tr key={key} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                <td className="p-4 font-bold">{order.name}</td>
+                <td className="p-4 text-blue-500 font-bold" dir="ltr">{order.phone}</td>
+                <td className="p-4 text-sm text-slate-500 dark:text-slate-400">{order.product}</td>
+                <td className="p-4 font-bold text-amber-500">{order.totalPrice} DA</td>
+                <td className="p-4">
+                  <select 
+                    className={`p-1.5 text-sm rounded-lg font-bold outline-none border-none ${getStatusColor(order.status || 'قيد الانتظار')}`}
+                    value={order.status || 'قيد الانتظار'}
+                    onChange={(e) => onUpdateStatus(key, e.target.value)}
+                  >
+                    <option value="قيد الانتظار">قيد الانتظار ⏳</option>
+                    <option value="تم التأكيد">تم التأكيد 📞</option>
+                    <option value="تم الشحن">تم الشحن 🚚</option>
+                    <option value="ملغى">ملغى ❌</option>
+                  </select>
+                </td>
+                <td className="p-4">
+                  <button onClick={() => onDeleteOrder(key)} className="text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 p-2 rounded-lg transition">
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {filteredOrders.length === 0 && (
+              <tr>
+                <td colSpan="6" className="text-center p-8 text-slate-500">لا توجد طلبات مطابقة</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// 5. مكون إدارة المنتجات
+// ==========================================
+function ProductsManager({ products, onAddProduct, onDeleteProduct }) {
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    id: '', name: '', category: 'ملابس', price: '', cost: '', colors: '', sizes: '', image: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onAddProduct({
+      ...formData,
+      price: parseInt(formData.price),
+      cost: parseInt(formData.cost) || 0,
+      colors: formData.colors.split(',').map(c => c.trim()),
+      sizes: formData.sizes.split(',').map(s => s.trim()),
+      images: [formData.image]
+    });
+    setShowModal(false);
+    setFormData({ id: '', name: '', category: 'ملابس', price: '', cost: '', colors: '', sizes: '', image: '' });
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+        <h2 className="text-xl font-bold flex items-center gap-2">🛍️ إدارة المنتجات</h2>
+        <button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition">
+          <Plus size={18} /> إضافة منتج
+        </button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-right">
+          <thead className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-sm">
+            <tr>
+              <th className="p-4">ID</th>
+              <th className="p-4">الصورة</th>
+              <th className="p-4">اسم المنتج</th>
+              <th className="p-4">سعر البيع</th>
+              <th className="p-4">رأس المال</th>
+              <th className="p-4">حذف</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+            {Object.entries(products).map(([key, prod]) => (
+              <tr key={key} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                <td className="p-4 font-bold text-blue-500">#{prod.id}</td>
+                <td className="p-4">
+                  <img src={prod.images?.[0] || 'https://placehold.co/40'} alt={prod.name} className="w-10 h-10 rounded-lg object-cover" />
+                </td>
+                <td className="p-4 font-bold">{prod.name}</td>
+                <td className="p-4 font-bold text-emerald-500">{prod.price} DA</td>
+                <td className="p-4 text-slate-500">{prod.cost || 0} DA</td>
+                <td className="p-4">
+                  <button onClick={() => onDeleteProduct(key)} className="text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 p-2 rounded-lg transition">
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg p-6 border border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-bold mb-4">إضافة منتج جديد</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <input required type="number" placeholder="رقم ID" className="p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} />
+                <select className="p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                  <option>ملابس</option><option>ساعات</option><option>إلكترونيات</option>
+                </select>
+              </div>
+              <input required type="text" placeholder="اسم المنتج" className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+              <div className="grid grid-cols-2 gap-4">
+                <input required type="number" placeholder="سعر البيع (DA)" className="p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                <input type="number" placeholder="رأس المال (DA)" className="p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.cost} onChange={e => setFormData({...formData, cost: e.target.value})} />
+              </div>
+              <input required type="text" placeholder="الألوان (مثال: أسود, أبيض)" className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} />
+              <input required type="text" placeholder="المقاسات (مثال: M, L, XL)" className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
+              <input required type="url" placeholder="رابط الصورة الرئيسية" className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
+              
+              <div className="flex gap-4 mt-6">
+                <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl font-bold transition">حفظ المنتج</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white p-3 rounded-xl font-bold transition">إلغاء</button>
+              </div>
             </form>
+          </div>
         </div>
+      )}
     </div>
+  );
+}
 
-    <div class="card">
-        <h2>🛍️ إدارة قائمة المنتجات المعروضة</h2>
-        <div class="table-container">
-            <table class="custom-table">
-                <thead>
-                    <tr><th>ID</th><th>الصورة</th><th>اسم المنتج</th><th>القسم</th><th>سعر البيع</th><th>رأس المال</th><th>حذف</th></tr>
-                </thead>
-                <tbody id="productsTableBody"></tbody>
-            </table>
+// ==========================================
+// 6. التطبيق الأساسي (نقطة الدخول)
+// ==========================================
+export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [loginError, setLoginError] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [orders, setOrders] = useState({});
+  const [products, setProducts] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [stats, setStats] = useState({ products: 0, orders: 0, sales: 0, profit: 0 });
+
+  useEffect(() => {
+    const authStatus = localStorage.getItem('isStoreAdmin');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+      fetchData();
+    }
+  }, []);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (passwordInput === CONFIG.ADMIN_PASSWORD) {
+      localStorage.setItem('isStoreAdmin', 'true');
+      setIsAuthenticated(true);
+      setLoginError(false);
+      fetchData();
+    } else {
+      setLoginError(true);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isStoreAdmin');
+    setIsAuthenticated(false);
+  };
+
+  const fetchData = async () => {
+    if (!isAuthenticated) return;
+    setLoading(true);
+    try {
+      const [pRes, oRes] = await Promise.all([
+        fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`),
+        fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`)
+      ]);
+      const pData = await pRes.json() || {};
+      const oData = await oRes.json() || {};
+      
+      setProducts(pData);
+      setOrders(oData);
+      calculateStats(pData, oData);
+    } catch (error) {
+      console.error("خطأ في جلب البيانات", error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
+
+  const calculateStats = (pData, oData) => {
+    let totalSales = 0;
+    let totalProfit = 0;
+    
+    Object.values(oData).forEach(order => {
+      if (order.status === 'تم التأكيد' || order.status === 'تم الشحن') {
+        const price = order.totalPrice || 0;
+        totalSales += price;
+        const cost = (order.productId && pData[order.productId]) ? pData[order.productId].cost || 0 : 0;
+        totalProfit += (price - cost);
+      }
+    });
+
+    setStats({
+      products: Object.keys(pData).length,
+      orders: Object.keys(oData).length,
+      sales: totalSales,
+      profit: totalProfit
+    });
+  };
+
+  const updateOrderStatus = async (key, newStatus) => {
+    await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: newStatus })
+    });
+    fetchData();
+  };
+
+  const deleteOrder = async (key) => {
+    if (window.confirm("هل أنت متأكد من حذف هذا الطلب نهائياً؟")) {
+      await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, { method: 'DELETE' });
+      fetchData();
+    }
+  };
+
+  const addProduct = async (productData) => {
+    await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${productData.id}.json`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(productData)
+    });
+    fetchData();
+  };
+
+  const deleteProduct = async (key) => {
+    if (window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+      await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`, { method: 'DELETE' });
+      fetchData();
+    }
+  };
+
+  // شاشة تسجيل الدخول
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 text-white" dir="rtl">
+        <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 w-full max-w-md text-center shadow-2xl">
+          <div className="text-5xl mb-6">🔒</div>
+          <h2 className="text-2xl font-bold mb-6">منطقة آمنة ومحمية</h2>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input 
+              type="password" 
+              placeholder="أدخل كلمة المرور..." 
+              className="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-center text-lg focus:border-blue-500 outline-none"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+            />
+            {loginError && <p className="text-red-500 text-sm font-bold">❌ كلمة المرور خاطئة!</p>}
+            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-lg transition">
+              🔓 تسجيل الدخول
+            </button>
+          </form>
         </div>
-    </div>
+      </div>
+    );
+  }
 
-    <div class="card">
-        <h2>📦 تصفية وإدارة طلبات الزبائن الحية</h2>
+  // عرض اللوحة الأساسية بعد تسجيل الدخول
+  return (
+    <ThemeProvider>
+      <Layout activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout}>
+        {activeTab === 'dashboard' && <DashboardStats stats={stats} />}
         
-        <div class="filter-bar">
-            <input type="text" id="orderSearchInput" class="search-input" placeholder="🔍 ابحث باسم الزبون، الهاتف، أو اسم المنتج..." oninput="filterOrdersTable()">
-            <select id="statusFilterSelect" class="filter-select" onchange="filterOrdersTable()">
-                <option value="كل الحالات">كل الحالات 🌍</option>
-                <option value="قيد الانتظار">قيد الانتظار ⏳</option>
-                <option value="تم التأكيد">تم التأكيد 📞</option>
-                <option value="تم الشحن">تم الشحن 🚚</option>
-                <option value="ملغى">ملغى ❌</option>
-            </select>
-        </div>
-
-        <div class="table-container">
-            <table class="custom-table">
-                <thead>
-                    <tr><th>رقم الطلب</th><th>الزبون</th><th>الهاتف</th><th>الولاية</th><th>المنتج المطلوب</th><th>المجموع</th><th>الحالة</th><th>تعديل</th><th>حذف</th></tr>
-                </thead>
-                <tbody id="ordersTableBody"></tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<script>
-    const CONFIG = {
-        FIREBASE_BASE_URL: "https://fast-store-5cb17-default-rtdb.firebaseio.com",
-        ADMIN_PASSWORD: "Admin2026"
-    };
-
-    let allOrdersData = {}; 
-    let allProductsData = {};
-
-    function checkAdminPassword() {
-        if (document.getElementById('adminPassInput').value === CONFIG.ADMIN_PASSWORD) {
-            localStorage.setItem('isStoreAdmin', 'true');
-            unlockDashboard();
-        } else { document.getElementById('loginError').style.display = 'block'; }
-    }
-
-    function unlockDashboard() {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('dashContainer').style.display = 'block';
-        loadAllData();
-        setInterval(loadAllData, 30000);
-    }
-
-    window.onload = function() { if (localStorage.getItem('isStoreAdmin') === 'true') unlockDashboard(); };
-    document.getElementById('adminPassInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkAdminPassword(); });
-
-    function openModal() { document.getElementById('productModal').classList.add('show'); }
-    function closeModal(e) { if (!e || e.target === document.getElementById('productModal') || e.target.className === 'modal-close') document.getElementById('productModal').classList.remove('show'); }
-
-    // جلب موحد للبيانات لتسهيل الحسابات الفورية للأرباح
-    async function loadAllData() {
-        try {
-            const pRes = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`);
-            allProductsData = await pRes.json() || {};
-            const oRes = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`);
-            allOrdersData = await oRes.json() || {};
-            
-            renderProducts();
-            renderOrders();
-            calculateFinance();
-        } catch(e) { console.error("حدث خطأ أثناء جلب البيانات السحابية", e); }
-    }
-
-    // 1. رفع المنتج مع حفظ سعر رأس المال
-    async function uploadProduct() {
-        const id = document.getElementById('p_id').value.trim();
-        const category = document.getElementById('p_cat').value;
-        const name = document.getElementById('p_name').value.trim();
-        const price = parseInt(document.getElementById('p_price').value);
-        const cost = parseInt(document.getElementById('p_cost').value) || 0; // سعر الجملة
-        const colors = document.getElementById('p_colors').value.split(',').map(c => c.trim());
-        const sizes = document.getElementById('p_sizes').value.split(',').map(s => s.trim());
+        {activeTab === 'orders' && (
+          <OrdersTracker 
+            orders={orders} 
+            onUpdateStatus={updateOrderStatus} 
+            onDeleteOrder={deleteOrder} 
+            loading={loading} 
+          />
+        )}
         
-        const images = [];
-        for (let i = 1; i <= 8; i++) {
-            const imgVal = document.getElementById(`p_img${i}`).value.trim();
-            if (imgVal) images.push(imgVal);
-        }
-
-        if(!id || !name || !price || images.length === 0) {
-            alert("الرجاء ملء الحقول المطلوبة والصورة الأولى!"); return;
-        }
-
-        const productData = { id: parseInt(id), category, name, price, cost, colors, sizes, images };
-
-        try {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${id}.json`, {
-                method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(productData)
-            });
-            alert("🎯 تم نشر وتحديث حسابات المنتج بنجاح!");
-            document.getElementById('productForm').reset(); closeModal(); loadAllData();
-        } catch (error) { alert("❌ خطأ بالرفع السحابي."); }
-    }
-
-    function renderProducts() {
-        const tbody = document.getElementById('productsTableBody');
-        tbody.innerHTML = '';
-        const keys = Object.keys(allProductsData);
-        document.getElementById('totalProductsNum').innerText = keys.length;
-
-        keys.forEach(key => {
-            const prod = allProductsData[key]; if(!prod) return;
-            const thumb = (prod.images && prod.images.length > 0) ? prod.images[0] : 'https://placehold.co/40';
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong style="color:var(--accent-blue);">#${prod.id}</strong></td>
-                    <td><img src="${thumb}" class="product-thumb" onerror="this.src='https://placehold.co/40'"></td>
-                    <td><strong style="color:#fff;">${prod.name}</strong></td>
-                    <td><span style="color:var(--text-muted);">${prod.category}</span></td>
-                    <td><strong style="color:var(--accent-green);">${prod.price} DA</strong></td>
-                    <td><span style="color:var(--text-muted);">${prod.cost || 0} DA</span></td>
-                    <td><button class="btn-delete" onclick="deleteProduct('${key}')">🗑️</button></td>
-                </tr>`;
-        });
-    }
-
-    function renderOrders() {
-        // سيتم التمرير المباشر لفلترة العرض المتقدمة
-        filterOrdersTable();
-    }
-
-    // 2. الفلترة المتقدمة والبحث الحركي داخل جدول الطلبات
-    function filterOrdersTable() {
-        const tbody = document.getElementById('ordersTableBody');
-        tbody.innerHTML = '';
-        
-        const searchText = document.getElementById('orderSearchInput').value.toLowerCase().trim();
-        const selectedStatus = document.getElementById('statusFilterSelect').value;
-        const keys = Object.keys(allOrdersData);
-        document.getElementById('totalOrdersNum').innerText = keys.length;
-
-        let visibleCount = 0;
-
-        keys.forEach(key => {
-            const order = allOrdersData[key]; if(!order) return;
-            
-            // شروط الفلترة والبحث
-            const matchesSearch = order.name.toLowerCase().includes(searchText) || 
-                                  order.phone.includes(searchText) || 
-                                  (order.product && order.product.toLowerCase().includes(searchText));
-            
-            const currentStatus = order.status || 'قيد الانتظار';
-            const matchesStatus = (selectedStatus === 'كل الحالات') || (currentStatus === selectedStatus);
-
-            if (matchesSearch && matchesStatus) {
-                visibleCount++;
-                let badgeClass = 'status-pending';
-                if (currentStatus === 'تم التأكيد') badgeClass = 'status-confirmed';
-                if (currentStatus === 'تم الشحن') badgeClass = 'status-shipped';
-                if (currentStatus === 'ملغى') badgeClass = 'status-cancelled';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong style="color:var(--accent-red);">${order.orderId || 'قديم'}</strong></td>
-                        <td><strong style="color:#fff;">${order.name}</strong></td>
-                        <td><a href="tel:${order.phone}" style="color:var(--accent-blue); text-decoration:none; font-weight:700;">${order.phone}</a></td>
-                        <td>${order.wilaya}</td>
-                        <td><small style="color:var(--text-muted);">${order.product}</small></td>
-                        <td><strong style="color:var(--accent-gold);">${order.totalPrice || 0} DA</strong></td>
-                        <td><span class="status-badge ${badgeClass}">${currentStatus}</span></td>
-                        <td>
-                            <select class="status-select" onchange="updateOrderStatus('${key}', this.value)">
-                                <option value="">تعديل</option>
-                                <option value="قيد الانتظار">قيد الانتظار ⏳</option>
-                                <option value="تم التأكيد">تم التأكيد 📞</option>
-                                <option value="تم الشحن">تم الشحن 🚚</option>
-                                <option value="ملغى">ملغى ❌</option>
-                            </select>
-                        </td>
-                        <td><button class="btn-delete" onclick="deleteOrder('${key}')">🗑️</button></td>
-                    </tr>`;
-            }
-        });
-    }
-
-    // 3. حساب المبيعات الحقيقية وصافي الأرباح التلقائي
-    function calculateFinance() {
-        let totalSales = 0;
-        let totalNetProfit = 0;
-
-        Object.keys(allOrdersData).forEach(key => {
-            const order = allOrdersData[key]; if(!order) return;
-            const currentStatus = order.status || 'قيد الانتظار';
-
-            // نقوم باحتساب الأموال فقط للعمليات الحقيقية والمكتملة (مؤكدة أو مشحونة)
-            if (currentStatus === 'تم التأكيد' || currentStatus === 'تم الشحن') {
-                const price = order.totalPrice || 0;
-                totalSales += price;
-
-                // استخراج ربح المنتج عبر مطابقة رقم ID لخصم رأس المال تلقائياً
-                let productCost = 0;
-                if (order.productId && allProductsData[order.productId]) {
-                    productCost = allProductsData[order.productId].cost || 0;
-                }
-                
-                // إذا كان سعر الطلب الإجمالي متاحاً، نخصم الجملة المقدرة
-                totalNetProfit += (price - productCost);
-            }
-        });
-
-        document.getElementById('totalSalesNum').innerText = totalSales.toLocaleString('ar') + " DA";
-        document.getElementById('netProfitNum').innerText = totalNetProfit.toLocaleString('ar') + " DA";
-    }
-
-    async function updateOrderStatus(key, newStatus) {
-        if (!newStatus) return;
-        try {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, {
-                method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: newStatus })
-            }); loadAllData();
-        } catch (e) { alert("فشل التحديث."); }
-    }
-
-    async function deleteProduct(key) {
-        if (confirm("حذف المنتج نهائياً؟")) {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`, { method: 'DELETE' }); loadAllData();
-        }
-    }
-
-    async function deleteOrder(key) {
-        if (confirm("حذف الطلب نهائياً؟")) {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, { method: 'DELETE' }); loadAllData();
-        }
-    }
-</script>
-</body>
-</html>
+        {activeTab === 'products' && (
+          <ProductsManager 
+            products={products}
+            onAddProduct={addProduct}
+            onDeleteProduct={deleteProduct}
+          />
+        )}
+      </Layout>
+    </ThemeProvider>
+  );
+}

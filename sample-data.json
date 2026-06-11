@@ -1,0 +1,281 @@
+{
+  "products": {
+    "1001": {
+      "id": 1001,
+      "brand": "آبل",
+      "category": "flagship",
+      "name": "iPhone 15 Pro Max 256GB",
+      "price": 285000,
+      "oldPrice": 320000,
+      "cost": 230000,
+      "installment": 23750,
+      "stock": 15,
+      "rating": 4.9,
+      "reviews": 128,
+      "colors": ["تيتانيوم طبيعي", "تيتانيوم أزرق", "تيتانيوم أبيض", "تيتانيوم أسود"],
+      "storage": ["256GB", "512GB", "1TB"],
+      "specs": {
+        "الشاشة": "6.7 بوصة Super Retina XDR",
+        "البطارية": "4422 mAh",
+        "الكاميرا": "48MP+12MP+12MP",
+        "المعالج": "Apple A17 Pro",
+        "الرام": "8GB",
+        "النظام": "iOS 17"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-15-pro-max-1.jpg",
+        "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-15-pro-max-2.jpg",
+        "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-15-pro-max-3.jpg"
+      ],
+      "isNew": true,
+      "isHot": true
+    },
+    "1002": {
+      "id": 1002,
+      "brand": "آبل",
+      "category": "flagship",
+      "name": "iPhone 15 128GB",
+      "price": 195000,
+      "oldPrice": 215000,
+      "cost": 155000,
+      "installment": 16250,
+      "stock": 20,
+      "rating": 4.8,
+      "reviews": 95,
+      "colors": ["أسود", "أزرق", "أخضر", "وردي", "أصفر"],
+      "storage": ["128GB", "256GB", "512GB"],
+      "specs": {
+        "الشاشة": "6.1 بوصة Super Retina XDR",
+        "البطارية": "3349 mAh",
+        "الكاميرا": "48MP+12MP",
+        "المعالج": "Apple A16 Bionic",
+        "الرام": "6GB",
+        "النظام": "iOS 17"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-15-1.jpg"
+      ],
+      "isNew": true,
+      "isHot": false
+    },
+    "2001": {
+      "id": 2001,
+      "brand": "سامسونج",
+      "category": "flagship",
+      "name": "Samsung Galaxy S24 Ultra 256GB",
+      "price": 245000,
+      "oldPrice": 280000,
+      "cost": 195000,
+      "installment": 20416,
+      "stock": 12,
+      "rating": 4.8,
+      "reviews": 87,
+      "colors": ["تيتانيوم رمادي", "تيتانيوم أسود", "تيتانيوم بنفسجي", "تيتانيوم أصفر"],
+      "storage": ["256GB", "512GB", "1TB"],
+      "specs": {
+        "الشاشة": "6.8 بوصة Dynamic AMOLED 2X",
+        "البطارية": "5000 mAh",
+        "الكاميرا": "200MP+50MP+10MP+12MP",
+        "المعالج": "Snapdragon 8 Gen 3",
+        "الرام": "12GB",
+        "النظام": "Android 14"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-s24-ultra-5g-1.jpg"
+      ],
+      "isNew": true,
+      "isHot": true
+    },
+    "2002": {
+      "id": 2002,
+      "brand": "سامسونج",
+      "category": "gaming",
+      "name": "Samsung Galaxy A55 5G 128GB",
+      "price": 78000,
+      "oldPrice": 85000,
+      "cost": 62000,
+      "installment": 6500,
+      "stock": 25,
+      "rating": 4.5,
+      "reviews": 56,
+      "colors": ["كحلي", "أزرق فاتح", "أبيض", "بنفسجي"],
+      "storage": ["128GB", "256GB"],
+      "specs": {
+        "الشاشة": "6.6 بوصة Super AMOLED",
+        "البطارية": "5000 mAh",
+        "الكاميرا": "50MP+12MP+5MP",
+        "المعالج": "Exynos 1480",
+        "الرام": "8GB",
+        "النظام": "Android 14"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-a55-1.jpg"
+      ],
+      "isNew": false,
+      "isHot": true
+    },
+    "3001": {
+      "id": 3001,
+      "brand": "شاومي",
+      "category": "photography",
+      "name": "Xiaomi 14 Pro 256GB",
+      "price": 165000,
+      "oldPrice": 185000,
+      "cost": 130000,
+      "installment": 13750,
+      "stock": 18,
+      "rating": 4.7,
+      "reviews": 73,
+      "colors": ["أسود", "أبيض", "رمادي"],
+      "storage": ["256GB", "512GB"],
+      "specs": {
+        "الشاشة": "6.73 بوصة LTPO AMOLED",
+        "البطارية": "4880 mAh",
+        "الكاميرا": "50MP+50MP+50MP",
+        "المعالج": "Snapdragon 8 Gen 3",
+        "الرام": "12GB",
+        "النظام": "Android 14"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-14-pro-1.jpg"
+      ],
+      "isNew": true,
+      "isHot": false
+    },
+    "3002": {
+      "id": 3002,
+      "brand": "شاومي",
+      "category": "budget",
+      "name": "Xiaomi Redmi Note 13 Pro 128GB",
+      "price": 45000,
+      "oldPrice": 52000,
+      "cost": 35000,
+      "installment": 3750,
+      "stock": 30,
+      "rating": 4.4,
+      "reviews": 142,
+      "colors": ["أسود", "أزرق", "أخضر", "بنفسجي"],
+      "storage": ["128GB", "256GB"],
+      "specs": {
+        "الشاشة": "6.67 بوصة AMOLED",
+        "البطارية": "5100 mAh",
+        "الكاميرا": "200MP+8MP+2MP",
+        "المعالج": "MediaTek Helio G99-Ultra",
+        "الرام": "8GB",
+        "النظام": "Android 13"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-redmi-note-13-pro-4g-1.jpg"
+      ],
+      "isNew": false,
+      "isHot": true
+    },
+    "4001": {
+      "id": 4001,
+      "brand": "هواوي",
+      "category": "flagship",
+      "name": "Huawei P60 Pro 256GB",
+      "price": 155000,
+      "oldPrice": 175000,
+      "cost": 120000,
+      "installment": 12916,
+      "stock": 8,
+      "rating": 4.6,
+      "reviews": 41,
+      "colors": ["أسود", "أخضر", "بنفسجي", "ذهبي"],
+      "storage": ["256GB", "512GB"],
+      "specs": {
+        "الشاشة": "6.67 بوصة OLED",
+        "البطارية": "4815 mAh",
+        "الكاميرا": "48MP+48MP+13MP",
+        "المعالج": "Snapdragon 8+ Gen 1",
+        "الرام": "12GB",
+        "النظام": "HarmonyOS 4.0"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/huawei/huawei-p60-pro-1.jpg"
+      ],
+      "isNew": true,
+      "isHot": false
+    },
+    "5001": {
+      "id": 5001,
+      "brand": "ون بلس",
+      "category": "gaming",
+      "name": "OnePlus 12 256GB",
+      "price": 145000,
+      "oldPrice": 165000,
+      "cost": 115000,
+      "installment": 12083,
+      "stock": 10,
+      "rating": 4.7,
+      "reviews": 52,
+      "colors": ["أسود", "أخضر", "أبيض"],
+      "storage": ["256GB", "512GB"],
+      "specs": {
+        "الشاشة": "6.82 بوصة LTPO AMOLED",
+        "البطارية": "5400 mAh",
+        "الكاميرا": "50MP+64MP+48MP",
+        "المعالج": "Snapdragon 8 Gen 3",
+        "الرام": "12GB",
+        "النظام": "Android 14"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/oneplus/oneplus-12-1.jpg"
+      ],
+      "isNew": true,
+      "isHot": true
+    },
+    "6001": {
+      "id": 6001,
+      "brand": "سامسونج",
+      "category": "foldable",
+      "name": "Samsung Galaxy Z Fold 5 512GB",
+      "price": 320000,
+      "oldPrice": 360000,
+      "cost": 260000,
+      "installment": 26666,
+      "stock": 5,
+      "rating": 4.8,
+      "reviews": 34,
+      "colors": ["Phantom Black", "Cream", "Icy Blue"],
+      "storage": ["512GB", "1TB"],
+      "specs": {
+        "الشاشة": "7.6 بوصة Dynamic AMOLED 2X",
+        "البطارية": "4400 mAh",
+        "الكاميرا": "50MP+12MP+10MP",
+        "المعالج": "Snapdragon 8 Gen 2",
+        "الرام": "12GB",
+        "النظام": "Android 14"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-z-fold5-1.jpg"
+      ],
+      "isNew": true,
+      "isHot": true
+    },
+    "7001": {
+      "id": 7001,
+      "brand": "إكسسوارات",
+      "category": "accessories",
+      "name": "AirPods Pro 2 مع علبة شحن MagSafe",
+      "price": 32000,
+      "oldPrice": 38000,
+      "cost": 25000,
+      "stock": 40,
+      "rating": 4.8,
+      "reviews": 215,
+      "colors": ["أبيض"],
+      "storage": [],
+      "specs": {
+        "البطارية": "حتى 6 ساعات استماع",
+        "المعالج": "Apple H2"
+      },
+      "images": [
+        "https://fdn2.gsmarena.com/vv/pics/apple/apple-airpods-pro-2nd-gen-1.jpg"
+      ],
+      "isNew": false,
+      "isHot": true
+    }
+  }
+}

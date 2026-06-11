@@ -1,21 +1,16 @@
 {
-  "short_name": "LUXURY",
-  "name": "LUXURY STORE",
+  "short_name": "هواتف ماركت",
+  "name": "هواتف ماركت - أكبر متجر هواتف في الجزائر",
   "icons": [
     {
       "src": "https://i.postimg.cc/7PTxmG2g/1778987500781.png",
       "type": "image/png",
       "sizes": "192x192"
-    },
-    {
-      "src": "رابط_أيقونتك_هنا",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "start_url": "index.html",
-  "background_color": "#090d16",
-  "theme-color": "#090d16",
+  "background_color": "#0f1319",
+  "theme_color": "#e2a855",
   "display": "standalone",
   "orientation": "portrait"
 }

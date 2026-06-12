@@ -1,27 +1,13 @@
 {
-  "short_name": "هواتف ماركت",
-  "name": "هواتف ماركت - أكبر متجر هواتف في الجزائر",
-  "description": "متجر إلكتروني متخصص في بيع الهواتف الذكية بأفضل الأسعار في الجزائر",
   "icons": [
     {
-      "src": "https://i.postimg.cc/7PTxmG2g/1778987500781.png",
-      "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any maskable"
+      "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
+      "sizes": "192x192"
     },
     {
-      "src": "https://i.postimg.cc/7PTxmG2g/1778987500781.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any maskable"
+      "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
+      "sizes": "512x512"
     }
   ],
-  "start_url": "./index.html",
-  "scope": "./",
-  "background_color": "#0a0e16",
-  "theme_color": "#f5b041",
-  "display": "standalone",
-  "orientation": "portrait",
-  "lang": "ar",
-  "dir": "rtl"
+  "theme_color": "#f5b041"
 }

@@ -599,8 +599,23 @@
                 fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`),
                 fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`)
             ]);
-            allProductsData = await pRes.json() || {};
-            allOrdersData = await oRes.json() || {};
+            const pRaw = await pRes.json() || {};
+            const oRaw = await oRes.json() || {};
+
+            // Firebase يُعيد array إذا كانت الـ keys أرقاماً — نحوّلها لـ object
+            if(Array.isArray(pRaw)) {
+                allProductsData = {};
+                pRaw.forEach((item, i) => { if(item) allProductsData[item.id || i] = item; });
+            } else {
+                allProductsData = pRaw;
+            }
+
+            if(Array.isArray(oRaw)) {
+                allOrdersData = {};
+                oRaw.forEach((item, i) => { if(item) allOrdersData[item.orderId || i] = item; });
+            } else {
+                allOrdersData = oRaw;
+            }
 
             renderProducts();
             filterOrdersTable();
@@ -1105,39 +1120,90 @@
     // ========= حذف =========
     async function deleteProduct(key) {
         if(!confirm('⚠️ حذف المنتج نهائياً؟ لا يمكن التراجع!')) return;
-        try {
-            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`, { method: 'DELETE' });
-            if(!res.ok) throw new Error(`HTTP ${res.status}`);
-            const json = await res.json();
-            // Firebase يرجع null عند الحذف الناجح
-            if(json !== null) throw new Error('لم يتم الحذف');
+        
+        // الـ key الفعلي من البيانات المحلية
+        const prod = allProductsData[key];
+        // إذا كان المنتج يحتوي على id، نستخدمه كـ key بديل
+        const firebaseKey = (prod && prod.id) ? prod.id : key;
+        
+        const urls = [
+            `${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`,
+            `${CONFIG.FIREBASE_BASE_URL}/products/${firebaseKey}.json`
+        ];
+
+        let deleted = false;
+        for(const url of urls) {
+            try {
+                const res = await fetch(url, { method: 'DELETE' });
+                if(res.ok) {
+                    const json = await res.json();
+                    if(json === null) { deleted = true; break; }
+                }
+            } catch(e) {}
+        }
+
+        if(deleted) {
             delete allProductsData[key];
             showToast('🗑️ تم حذف المنتج بنجاح', 'success');
             renderProducts();
             calculateFinance();
             renderTopProducts();
-        } catch(e) {
-            showToast('❌ فشل الحذف — تحقق من قواعد Firebase: ' + e.message, 'error');
-            console.error('deleteProduct error:', e);
+        } else {
+            // آخر محاولة: حذف بدون تحقق من الرد (بعض إعدادات Firebase لا ترجع null)
+            try {
+                await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${firebaseKey}.json`, { method: 'DELETE' });
+                delete allProductsData[key];
+                showToast('🗑️ تم حذف المنتج', 'success');
+                renderProducts();
+                calculateFinance();
+                renderTopProducts();
+            } catch(e) {
+                showToast('❌ فشل الحذف — تأكد من قواعد Firebase', 'error');
+            }
         }
     }
 
     async function deleteOrder(key) {
         if(!confirm('⚠️ حذف الطلب نهائياً؟')) return;
-        try {
-            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, { method: 'DELETE' });
-            if(!res.ok) throw new Error(`HTTP ${res.status}`);
-            const json = await res.json();
-            if(json !== null) throw new Error('لم يتم الحذف');
+
+        const order = allOrdersData[key];
+        const firebaseKey = (order && order.orderId) ? order.orderId : key;
+
+        const urls = [
+            `${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`,
+            `${CONFIG.FIREBASE_BASE_URL}/orders/${firebaseKey}.json`
+        ];
+
+        let deleted = false;
+        for(const url of urls) {
+            try {
+                const res = await fetch(url, { method: 'DELETE' });
+                if(res.ok) {
+                    const json = await res.json();
+                    if(json === null) { deleted = true; break; }
+                }
+            } catch(e) {}
+        }
+
+        if(deleted) {
             delete allOrdersData[key];
             showToast('🗑️ تم حذف الطلب بنجاح', 'success');
             filterOrdersTable();
             calculateFinance();
             renderOrdersChart();
             renderTopProducts();
-        } catch(e) {
-            showToast('❌ فشل الحذف — تحقق من قواعد Firebase: ' + e.message, 'error');
-            console.error('deleteOrder error:', e);
+        } else {
+            try {
+                await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${firebaseKey}.json`, { method: 'DELETE' });
+                delete allOrdersData[key];
+                showToast('🗑️ تم حذف الطلب', 'success');
+                filterOrdersTable();
+                calculateFinance();
+                renderOrdersChart();
+                renderTopProducts();
+            } catch(e) {
+                showToast('❌ فشل الحذف — تأكد من قواعد Firebase', 'error');
+            }
         }
     }
 

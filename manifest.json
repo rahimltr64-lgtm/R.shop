@@ -1,13 +1,26 @@
 {
+  "name": "هواتف ماركت",
+  "short_name": "هواتف ماركت",
+  "description": "أكبر متجر هواتف في الجزائر - آبل، سامسونج، شاومي وأكثر",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0e16",
+  "theme_color": "#f5b041",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
   "icons": [
     {
       "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "theme_color": "#f5b041"
+  ]
 }

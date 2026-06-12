@@ -1180,92 +1180,78 @@
     }
 
     // ========= حذف =========
+    // ========= تشخيص الحذف =========
+    async function firebaseDelete(path) {
+        const url = `${CONFIG.FIREBASE_BASE_URL}/${path}.json`;
+        console.log('🗑️ محاولة حذف:', url);
+        const res = await fetch(url, { method: 'DELETE' });
+        const text = await res.text();
+        console.log(`📡 الرد [${res.status}]:`, text);
+        if(!res.ok) throw new Error(`HTTP ${res.status}: ${text}`);
+        return text === 'null' || text === '';
+    }
+
     async function deleteProduct(key) {
         if(!confirm('⚠️ حذف المنتج نهائياً؟ لا يمكن التراجع!')) return;
-        
-        // الـ key الفعلي من البيانات المحلية
         const prod = allProductsData[key];
-        // إذا كان المنتج يحتوي على id، نستخدمه كـ key بديل
-        const firebaseKey = (prod && prod.id) ? prod.id : key;
-        
-        const urls = [
-            `${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`,
-            `${CONFIG.FIREBASE_BASE_URL}/products/${firebaseKey}.json`
-        ];
+        if(!prod) { showToast('❌ المنتج غير موجود محلياً', 'error'); return; }
 
-        let deleted = false;
-        for(const url of urls) {
+        // جمع كل المسارات الممكنة
+        const paths = new Set();
+        paths.add(`products/${key}`);
+        if(prod.id !== undefined) paths.add(`products/${prod.id}`);
+
+        let success = false;
+        for(const path of paths) {
             try {
-                const res = await fetch(url, { method: 'DELETE' });
-                if(res.ok) {
-                    const json = await res.json();
-                    if(json === null) { deleted = true; break; }
-                }
-            } catch(e) {}
+                await firebaseDelete(path);
+                success = true;
+                break;
+            } catch(e) {
+                console.warn(`فشل المسار ${path}:`, e.message);
+            }
         }
 
-        if(deleted) {
+        if(success) {
             delete allProductsData[key];
-            showToast('🗑️ تم حذف المنتج بنجاح', 'success');
             renderProducts();
             calculateFinance();
             renderTopProducts();
+            showToast('🗑️ تم حذف المنتج من Firebase بنجاح', 'success');
         } else {
-            // آخر محاولة: حذف بدون تحقق من الرد (بعض إعدادات Firebase لا ترجع null)
-            try {
-                await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${firebaseKey}.json`, { method: 'DELETE' });
-                delete allProductsData[key];
-                showToast('🗑️ تم حذف المنتج', 'success');
-                renderProducts();
-                calculateFinance();
-                renderTopProducts();
-            } catch(e) {
-                showToast('❌ فشل الحذف — تأكد من قواعد Firebase', 'error');
-            }
+            showToast('❌ Firebase رفض الحذف — افتح Console (F12) لترى السبب', 'error');
         }
     }
 
     async function deleteOrder(key) {
         if(!confirm('⚠️ حذف الطلب نهائياً؟')) return;
-
         const order = allOrdersData[key];
-        const firebaseKey = (order && order.orderId) ? order.orderId : key;
+        if(!order) { showToast('❌ الطلب غير موجود محلياً', 'error'); return; }
 
-        const urls = [
-            `${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`,
-            `${CONFIG.FIREBASE_BASE_URL}/orders/${firebaseKey}.json`
-        ];
+        const paths = new Set();
+        paths.add(`orders/${key}`);
+        if(order.orderId !== undefined) paths.add(`orders/${order.orderId}`);
 
-        let deleted = false;
-        for(const url of urls) {
+        let success = false;
+        for(const path of paths) {
             try {
-                const res = await fetch(url, { method: 'DELETE' });
-                if(res.ok) {
-                    const json = await res.json();
-                    if(json === null) { deleted = true; break; }
-                }
-            } catch(e) {}
+                await firebaseDelete(path);
+                success = true;
+                break;
+            } catch(e) {
+                console.warn(`فشل المسار ${path}:`, e.message);
+            }
         }
 
-        if(deleted) {
+        if(success) {
             delete allOrdersData[key];
-            showToast('🗑️ تم حذف الطلب بنجاح', 'success');
             filterOrdersTable();
             calculateFinance();
             renderOrdersChart();
             renderTopProducts();
+            showToast('🗑️ تم حذف الطلب من Firebase بنجاح', 'success');
         } else {
-            try {
-                await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${firebaseKey}.json`, { method: 'DELETE' });
-                delete allOrdersData[key];
-                showToast('🗑️ تم حذف الطلب', 'success');
-                filterOrdersTable();
-                calculateFinance();
-                renderOrdersChart();
-                renderTopProducts();
-            } catch(e) {
-                showToast('❌ فشل الحذف — تأكد من قواعد Firebase', 'error');
-            }
+            showToast('❌ Firebase رفض الحذف — افتح Console (F12) لترى السبب', 'error');
         }
     }
 

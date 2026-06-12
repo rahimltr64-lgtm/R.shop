@@ -150,6 +150,121 @@
         .order-detail-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
         .order-detail-value { font-size: 13px; color: #fff; font-weight: 700; }
 
+        .btn-print {
+            background: linear-gradient(135deg, var(--accent-purple) 0%, #6d28d9 100%);
+            color: white; border: none; padding: 11px 22px; border-radius: 13px;
+            font-family: 'Cairo'; font-weight: 700; font-size: 13px; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; width: 100%; justify-content: center;
+            margin-top: 16px; box-shadow: 0 6px 16px rgba(139,92,246,0.3);
+        }
+        .btn-print:hover { transform: translateY(-2px); }
+
+        /* ===== صفحة الفاتورة للطباعة ===== */
+        @media print {
+            body > *:not(#invoicePrintArea) { display: none !important; }
+            #invoicePrintArea { display: block !important; }
+            @page { size: A4; margin: 15mm 20mm; }
+        }
+
+        #invoicePrintArea {
+            display: none;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+            background: #fff;
+            color: #111;
+            padding: 40px;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .inv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid #1e293b;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+        .inv-logo-block h1 { margin: 0; font-size: 26px; font-weight: 900; color: #1e293b; }
+        .inv-logo-block p { margin: 4px 0 0; font-size: 12px; color: #64748b; }
+
+        .inv-meta { text-align: left; }
+        .inv-meta h2 { margin: 0 0 6px; font-size: 20px; font-weight: 900; color: #1e293b; }
+        .inv-meta-row { font-size: 12px; color: #475569; margin-bottom: 3px; }
+        .inv-meta-row span { font-weight: 700; color: #1e293b; }
+
+        .inv-badge {
+            display: inline-block; padding: 4px 14px; border-radius: 20px;
+            font-size: 11px; font-weight: 900; margin-top: 6px;
+        }
+        .inv-badge.pending  { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .inv-badge.confirmed{ background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
+        .inv-badge.shipped  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+        .inv-badge.delivered{ background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .inv-badge.cancelled{ background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+        .inv-section-title {
+            font-size: 11px; font-weight: 700; color: #64748b;
+            text-transform: uppercase; letter-spacing: 1px;
+            margin: 20px 0 10px;
+        }
+
+        .inv-info-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-bottom: 20px;
+        }
+        .inv-info-cell {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 8px; padding: 10px 14px;
+        }
+        .inv-info-cell .lbl { font-size: 10px; color: #64748b; margin-bottom: 3px; }
+        .inv-info-cell .val { font-size: 13px; font-weight: 700; color: #1e293b; }
+
+        .inv-product-table {
+            width: 100%; border-collapse: collapse;
+            margin-bottom: 20px; font-size: 13px;
+        }
+        .inv-product-table th {
+            background: #1e293b; color: #fff;
+            padding: 10px 14px; text-align: right; font-weight: 700;
+        }
+        .inv-product-table td {
+            padding: 12px 14px; border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .inv-product-table tr:last-child td { border-bottom: none; }
+        .inv-product-table tr:nth-child(even) td { background: #f8fafc; }
+
+        .inv-totals {
+            width: 280px; margin-right: auto;
+            border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;
+            margin-bottom: 28px;
+        }
+        .inv-total-row {
+            display: flex; justify-content: space-between;
+            padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        .inv-total-row:last-child {
+            border-bottom: none; background: #1e293b;
+            color: #fff; font-weight: 900; font-size: 15px;
+        }
+        .inv-total-row:last-child span:last-child { color: #f5b041; }
+
+        .inv-notes {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-right: 4px solid #f5b041; border-radius: 8px;
+            padding: 14px 16px; font-size: 12px; color: #475569;
+            margin-bottom: 24px; line-height: 1.8;
+        }
+
+        .inv-footer {
+            border-top: 2px dashed #e2e8f0; padding-top: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px; color: #94a3b8;
+        }
+        .inv-footer strong { color: #334155; }
+
         /* إشعار (toast) */
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card-bg); border: 1px solid var(--border-color); color: #fff; padding: 12px 24px; border-radius: 14px; font-size: 13px; font-weight: 700; z-index: 9000; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -339,12 +454,16 @@
         </div>
     </div>
 
+    <!-- منطقة الطباعة المخفية -->
+    <div id="invoicePrintArea"></div>
+
     <!-- مودال تفاصيل الطلب -->
     <div class="modal-overlay" id="orderDetailModal" onclick="closeOrderDetailModal(event)">
         <div class="modal-box" style="max-width:520px;">
             <button class="modal-close" onclick="closeOrderDetailModalForce()">✕</button>
             <h2 style="border:none;">📋 تفاصيل الطلب</h2>
             <div id="orderDetailContent"></div>
+            <button class="btn-print" onclick="printInvoice()">🖨️ طباعة الفاتورة</button>
         </div>
     </div>
 
@@ -719,6 +838,7 @@
                 <td><small style="color:var(--text-muted);">${dateStr}</small></td>
                 <td>
                     <button class="btn-action-small green" onclick="viewOrderDetail('${key}')" title="عرض">👁️</button>
+                    <button class="btn-action-small" onclick="viewOrderDetail('${key}'); setTimeout(printInvoice,200);" title="طباعة" style="font-size:12px;">🖨️</button>
                     <button class="btn-action-small danger" onclick="deleteOrder('${key}')" title="حذف">🗑️</button>
                 </td>
             </tr>`;
@@ -733,7 +853,10 @@
     }
 
     // ========= تفاصيل الطلب (مودال) =========
+    let currentOrderKey = null;
+
     function viewOrderDetail(key) {
+        currentOrderKey = key;
         const order = allOrdersData[key]; if(!order) return;
         const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleString('ar-DZ') : '-';
         document.getElementById('orderDetailContent').innerHTML = `
@@ -750,6 +873,133 @@
                 <div class="order-detail-item" style="grid-column:span 2"><div class="order-detail-label">📅 تاريخ الطلب</div><div class="order-detail-value">${dateStr}</div></div>
             </div>`;
         document.getElementById('orderDetailModal').classList.add('show');
+    }
+
+    // ========= طباعة الفاتورة =========
+    function printInvoice() {
+        if(!currentOrderKey) return;
+        const order = allOrdersData[currentOrderKey];
+        if(!order) return;
+
+        const dateStr = order.createdAt
+            ? new Date(order.createdAt).toLocaleDateString('ar-DZ', { year:'numeric', month:'long', day:'numeric' })
+            : new Date().toLocaleDateString('ar-DZ', { year:'numeric', month:'long', day:'numeric' });
+
+        const timeStr = order.createdAt
+            ? new Date(order.createdAt).toLocaleTimeString('ar-DZ', { hour:'2-digit', minute:'2-digit' })
+            : '';
+
+        // حساب سعر المنتج وتكلفة الشحن
+        const totalPrice = order.totalPrice || 0;
+        const prod = Object.values(allProductsData).find(p => p.id === order.productId);
+        const productPrice = prod ? prod.price : totalPrice;
+        const shippingFee = totalPrice - productPrice;
+
+        // شارة الحالة
+        const statusMap = {
+            'قيد الانتظار': 'pending',
+            'تم التأكيد': 'confirmed',
+            'تم الشحن': 'shipped',
+            'تم التوصيل': 'delivered',
+            'ملغى': 'cancelled'
+        };
+        const statusClass = statusMap[order.status] || 'pending';
+
+        const invoiceHTML = `
+        <div class="inv-header">
+            <div class="inv-logo-block">
+                <h1>📱 هواتف ماركت</h1>
+                <p>أكبر متجر هواتف في الجزائر</p>
+                <p style="margin-top:4px; font-size:11px; color:#94a3b8;">📞 0555 00 00 00 &nbsp;|&nbsp; 📍 الجزائر العاصمة</p>
+            </div>
+            <div class="inv-meta">
+                <h2>فاتورة طلب</h2>
+                <div class="inv-meta-row">رقم الفاتورة: <span>#${order.orderId||'-'}</span></div>
+                <div class="inv-meta-row">التاريخ: <span>${dateStr}${timeStr ? ' — '+timeStr : ''}</span></div>
+                <div><span class="inv-badge ${statusClass}">${order.status||'قيد الانتظار'}</span></div>
+            </div>
+        </div>
+
+        <div class="inv-section-title">معلومات الزبون</div>
+        <div class="inv-info-grid">
+            <div class="inv-info-cell">
+                <div class="lbl">الاسم الكامل</div>
+                <div class="val">${order.name||'-'}</div>
+            </div>
+            <div class="inv-info-cell">
+                <div class="lbl">رقم الهاتف</div>
+                <div class="val" style="direction:ltr; text-align:right;">${order.phone||'-'}</div>
+            </div>
+            <div class="inv-info-cell">
+                <div class="lbl">الولاية</div>
+                <div class="val">${order.wilaya||'-'}</div>
+            </div>
+            <div class="inv-info-cell">
+                <div class="lbl">البلدية</div>
+                <div class="val">${order.baladia||'-'}</div>
+            </div>
+            <div class="inv-info-cell" style="grid-column:span 2;">
+                <div class="lbl">نوع التوصيل</div>
+                <div class="val">${order.deliveryType||'-'}</div>
+            </div>
+        </div>
+
+        <div class="inv-section-title">تفاصيل الطلب</div>
+        <table class="inv-product-table">
+            <thead>
+                <tr>
+                    <th style="width:50%;">المنتج</th>
+                    <th>الماركة</th>
+                    <th>المواصفات</th>
+                    <th style="text-align:left;">السعر</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>${prod ? prod.name : (order.product||'-')}</strong></td>
+                    <td>${order.productBrand||prod?.brand||'-'}</td>
+                    <td style="font-size:11px; color:#64748b;">
+                        ${order.storage ? '💾 ' + order.storage : ''}
+                        ${order.color ? ' &nbsp;🎨 ' + order.color : ''}
+                    </td>
+                    <td style="text-align:left; font-weight:700; color:#1e293b;">
+                        ${productPrice.toLocaleString('ar')} DA
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="inv-totals">
+            <div class="inv-total-row">
+                <span>سعر المنتج</span>
+                <span>${productPrice.toLocaleString('ar')} DA</span>
+            </div>
+            <div class="inv-total-row">
+                <span>تكلفة الشحن (${order.deliveryType||''})</span>
+                <span>${shippingFee > 0 ? shippingFee.toLocaleString('ar')+' DA' : 'مجاني'}</span>
+            </div>
+            <div class="inv-total-row">
+                <span>المبلغ الإجمالي المستحق</span>
+                <span>${totalPrice.toLocaleString('ar')} DA</span>
+            </div>
+        </div>
+
+        <div class="inv-notes">
+            <strong>ملاحظات هامة:</strong><br>
+            • الدفع يكون عند الاستلام نقداً<br>
+            • ضمان أصلي 12 شهراً على جميع المنتجات<br>
+            • في حال وجود عيب مصنعي يُستبدل المنتج خلال 7 أيام من تاريخ الاستلام<br>
+            • للاستفسار والمتابعة: 0555 00 00 00
+        </div>
+
+        <div class="inv-footer">
+            <div>شكراً لثقتكم في <strong>هواتف ماركت</strong> 🙏</div>
+            <div>طُبعت بتاريخ: <strong>${new Date().toLocaleDateString('ar-DZ')}</strong></div>
+        </div>`;
+
+        const printArea = document.getElementById('invoicePrintArea');
+        printArea.innerHTML = invoiceHTML;
+        window.print();
     }
     function closeOrderDetailModal(e) { if(e.target===document.getElementById('orderDetailModal')) closeOrderDetailModalForce(); }
     function closeOrderDetailModalForce() { document.getElementById('orderDetailModal').classList.remove('show'); }

@@ -6,75 +6,7 @@
     <title>هواتف ماركت | لوحة التحكم المتكاملة</title>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/mr3Txdqm/1781273630296.png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js">
-    // ========= إدارة أسعار التوصيل =========
-    const DEFAULT_SHIPPING = [
-        {code:"01",name:"أدرار",home:900,office:700},{code:"02",name:"الشلف",home:600,office:400},{code:"03",name:"الأغواط",home:600,office:400},
-        {code:"04",name:"أم البواقي",home:550,office:350},{code:"05",name:"باتنة",home:550,office:350},{code:"06",name:"بجاية",home:550,office:350},
-        {code:"07",name:"بسكرة",home:600,office:400},{code:"08",name:"بشار",home:800,office:600},{code:"09",name:"البليدة",home:450,office:250},
-        {code:"10",name:"البويرة",home:500,office:300},{code:"11",name:"تمنراست",home:1000,office:800},{code:"12",name:"تبسة",home:600,office:400},
-        {code:"13",name:"تلمسان",home:600,office:400},{code:"14",name:"تيارت",home:600,office:400},{code:"15",name:"تيزي وزو",home:500,office:300},
-        {code:"16",name:"الجزائر العاصمة",home:400,office:200},{code:"17",name:"الجلفة",home:600,office:400},{code:"18",name:"جيجل",home:550,office:350},
-        {code:"19",name:"سطيف",home:500,office:300},{code:"20",name:"سعيدة",home:600,office:400},{code:"21",name:"سكيكدة",home:550,office:350},
-        {code:"22",name:"سيدي بلعباس",home:600,office:400},{code:"23",name:"عنابة",home:550,office:350},{code:"24",name:"قالمة",home:550,office:350},
-        {code:"25",name:"قسنطينة",home:500,office:300},{code:"26",name:"المدية",home:550,office:350},{code:"27",name:"مستغانم",home:600,office:400},
-        {code:"28",name:"المسيلة",home:550,office:350},{code:"29",name:"معسكر",home:600,office:400},{code:"30",name:"ورقلة",home:700,office:500},
-        {code:"31",name:"وهران",home:550,office:350},{code:"32",name:"البيض",home:700,office:500},{code:"33",name:"إليزي",home:1000,office:800},
-        {code:"34",name:"برج بوعريريج",home:500,office:300},{code:"35",name:"بومرداس",home:450,office:250},{code:"36",name:"الطارف",home:600,office:400},
-        {code:"37",name:"تندوف",home:1000,office:800},{code:"38",name:"تسمسيلت",home:600,office:400},{code:"39",name:"الوادي",home:650,office:450},
-        {code:"40",name:"خنشلة",home:600,office:400},{code:"41",name:"سوق أهراس",home:600,office:400},{code:"42",name:"تيبازة",home:500,office:300},
-        {code:"43",name:"ميلة",home:550,office:350},{code:"44",name:"عين الدفلى",home:550,office:350},{code:"45",name:"النعامة",home:700,office:500},
-        {code:"46",name:"عين تموشنت",home:600,office:400},{code:"47",name:"غرداية",home:650,office:450},{code:"48",name:"غليزان",home:600,office:400},
-        {code:"49",name:"تيميمون",home:900,office:700},{code:"50",name:"برج باجي مختار",home:1100,office:900},{code:"51",name:"أولاد جلال",home:650,office:450},
-        {code:"52",name:"بني عباس",home:850,office:650},{code:"53",name:"عين صالح",home:950,office:750},{code:"54",name:"عين قزام",home:1100,office:900},
-        {code:"55",name:"تقرت",home:700,office:500},{code:"56",name:"جانت",home:1100,office:900},{code:"57",name:"المنيعة",home:750,office:550},
-        {code:"58",name:"إن قزام",home:1100,office:900}
-    ];
-
-    async function openShippingModal(){
-        document.getElementById('shippingModal').classList.add('show');
-        const tbody = document.getElementById('shippingTableBody');
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">جاري التحميل...</td></tr>';
-        try{
-            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/shippingRates.json`);
-            let data = await res.json();
-            if(!data) data = Object.fromEntries(DEFAULT_SHIPPING.map(w=>[w.code,w]));
-            const rates = Object.values(data).sort((a,b)=>parseInt(a.code)-parseInt(b.code));
-            tbody.innerHTML = rates.map(w=>`
-                <tr>
-                    <td><strong style="color:var(--accent-blue)">${w.code}</strong></td>
-                    <td>${w.name}</td>
-                    <td><input type="number" id="home-${w.code}" value="${w.home}" style="width:100px;margin:0;background:var(--card-elev);text-align:center;"></td>
-                    <td><input type="number" id="office-${w.code}" value="${w.office}" style="width:100px;margin:0;background:var(--card-elev);text-align:center;"></td>
-                </tr>
-            `).join('');
-        }catch(e){
-            showToast('❌ خطأ في تحميل الأسعار','error');
-        }
-    }
-    function closeShippingModal(e){ if(e.target.id==='shippingModal') closeShippingModalForce(); }
-    function closeShippingModalForce(){ document.getElementById('shippingModal').classList.remove('show'); }
-
-    async function saveShippingRates(){
-        const updates = {};
-        DEFAULT_SHIPPING.forEach(w=>{
-            const home = parseInt(document.getElementById(`home-${w.code}`)?.value||w.home);
-            const office = parseInt(document.getElementById(`office-${w.code}`)?.value||w.office);
-            updates[w.code] = {code:w.code, name:w.name, home, office};
-        });
-        try{
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/shippingRates.json`,{
-                method:'PUT',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(updates)
-            });
-            showToast('✅ تم حفظ أسعار التوصيل بنجاح','success');
-            closeShippingModalForce();
-        }catch(e){ showToast('❌ فشل الحفظ','error'); }
-    }
-
-
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
         :root {
             --main-dark: #0a0e16; --card-bg: #131a2a; --card-elev: #1a2335;
@@ -1057,7 +989,7 @@
             <div class="inv-logo-block">
                 <h1>📱 هواتف ماركت</h1>
                 <p>أكبر متجر هواتف في الجزائر</p>
-                <p style="margin-top:4px; font-size:11px; color:#94a3b8;">📞 0555 00 00 00 &nbsp;|&nbsp; 📍 الجزائر العاصمة</p>
+                <p style="margin-top:4px; font-size:11px; color:#94a3b8;">📞 0697 91 48 37 &nbsp;|&nbsp; 📍 الجزائر العاصمة</p>
             </div>
             <div class="inv-meta">
                 <h2>فاتورة طلب</h2>
@@ -1136,7 +1068,7 @@
             • الدفع يكون عند الاستلام نقداً<br>
             • ضمان أصلي 12 شهراً على جميع المنتجات<br>
             • في حال وجود عيب مصنعي يُستبدل المنتج خلال 7 أيام من تاريخ الاستلام<br>
-            • للاستفسار والمتابعة: 0555 00 00 00
+            • للاستفسار والمتابعة: 0697 91 48 37
         </div>
 
         <div class="inv-footer">

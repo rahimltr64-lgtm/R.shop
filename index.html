@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>هواتف ماركت | أكبر متجر هواتف في الجزائر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/7PTxmG2g/1778987500781.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://i.postimg.cc/7PTxmG2g/1778987500781.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/mr3Txdqm/1781273630296.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://i.postimg.cc/mr3Txdqm/1781273630296.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#e2a855">
+    <meta name="theme-color" content="#f5b041">
     <meta name="description" content="متجر هواتف ذكية - أحدث موديلات آبل، سامسونج، شاومي، هواوي بأفضل الأسعار في الجزائر مع الدفع عند الاستلام.">
     <style>
         :root {
@@ -29,17 +29,17 @@
             --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
         }
         body.light-mode {
-            --bg-dark: #f0f4f8;
-            --bg-darker: #e2e8f0;
+            --bg-dark: #f8fafc;
+            --bg-darker: #eef2f7;
             --card-bg: #ffffff;
-            --card-elev: #f8fafc;
-            --text-main: #1e293b;
+            --card-elev: #ffffff;
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --border-smooth: rgba(0, 0, 0, 0.08);
+            --border-smooth: rgba(15, 23, 42, 0.08);
         }
-        body.light-mode header { background: rgba(255,255,255,0.92); }
+        body.light-mode header { background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid #e2e8f0; }
         body.light-mode .brand-circle, body.light-mode .cat-btn { color: #334155; }
-        body.light-mode .product-card { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        body.light-mode .product-card { box-shadow: 0 4px 16px rgba(15,23,42,0.06); border-color: #e2e8f0; } body.light-mode .product-card:hover { box-shadow: 0 8px 24px rgba(15,23,42,0.10); }
         body.light-mode .product-title { color: #1e293b; }
         body.light-mode .chip { color: #334155; }
         body.light-mode input, body.light-mode select { color: #1e293b; }
@@ -447,7 +447,7 @@
 <div class="load-progress" id="loadProgress"></div>
 <header>
     <div class="logo-area">
-        <img src="https://i.postimg.cc/7PTxmG2g/1778987500781.png" alt="Logo" onerror="this.style.display='none'">
+        <img src="https://i.postimg.cc/mr3Txdqm/1781273630296.png" alt="Logo" onerror="this.style.display='none'">
         <div>
             <h1>هواتف ماركت</h1>
             <span class="logo-tag">📱 أكبر متجر هواتف في الجزائر</span>
@@ -658,28 +658,51 @@
         TELEGRAM_CHAT_ID: "5981194410"
     };
 
-    const yalidineShippingRates = [
-        { code:"01",name:"أدرار",fee:900 },{ code:"02",name:"الشلف",fee:600 },{ code:"03",name:"الأغواط",fee:600 },
-        { code:"04",name:"أم البواقي",fee:550 },{ code:"05",name:"باتنة",fee:550 },{ code:"06",name:"بجاية",fee:550 },
-        { code:"07",name:"بسكرة",fee:600 },{ code:"08",name:"بشار",fee:800 },{ code:"09",name:"البليدة",fee:450 },
-        { code:"10",name:"البويرة",fee:500 },{ code:"11",name:"تمنراست",fee:1000 },{ code:"12",name:"تبسة",fee:600 },
-        { code:"13",name:"تلمسان",fee:600 },{ code:"14",name:"تيارت",fee:600 },{ code:"15",name:"تيزي وزو",fee:500 },
-        { code:"16",name:"الجزائر العاصمة",fee:400 },{ code:"17",name:"الجلفة",fee:600 },{ code:"18",name:"جيجل",fee:550 },
-        { code:"19",name:"سطيف",fee:500 },{ code:"20",name:"سعيدة",fee:600 },{ code:"21",name:"سكيكدة",fee:550 },
-        { code:"22",name:"سيدي بلعباس",fee:600 },{ code:"23",name:"عنابة",fee:550 },{ code:"24",name:"قالمة",fee:550 },
-        { code:"25",name:"قسنطينة",fee:500 },{ code:"26",name:"المدية",fee:550 },{ code:"27",name:"مستغانم",fee:600 },
-        { code:"28",name:"المسيلة",fee:550 },{ code:"29",name:"معسكر",fee:600 },{ code:"30",name:"ورقلة",fee:700 },
-        { code:"31",name:"وهران",fee:550 },{ code:"32",name:"البيض",fee:700 },{ code:"33",name:"إليزي",fee:1000 },
-        { code:"34",name:"برج بوعريريج",fee:500 },{ code:"35",name:"بومرداس",fee:450 },{ code:"36",name:"الطارف",fee:600 },
-        { code:"37",name:"تندوف",fee:1000 },{ code:"38",name:"تسمسيلت",fee:600 },{ code:"39",name:"الوادي",fee:650 },
-        { code:"40",name:"خنشلة",fee:600 },{ code:"41",name:"سوق أهراس",fee:600 },{ code:"42",name:"تيبازة",fee:500 },
-        { code:"43",name:"ميلة",fee:550 },{ code:"44",name:"عين الدفلى",fee:550 },{ code:"45",name:"النعامة",fee:700 },
-        { code:"46",name:"عين تموشنت",fee:600 },{ code:"47",name:"غرداية",fee:650 },{ code:"48",name:"غليزان",fee:600 },
-        { code:"49",name:"تيميمون",fee:900 },{ code:"50",name:"برج باجي مختار",fee:1100 },{ code:"51",name:"أولاد جلال",fee:650 },
-        { code:"52",name:"بني عباس",fee:850 },{ code:"53",name:"عين صالح",fee:950 },{ code:"54",name:"عين قزام",fee:1100 },
-        { code:"55",name:"تقرت",fee:700 },{ code:"56",name:"جانت",fee:1100 },{ code:"57",name:"المنيعة",fee:750 },
-        { code:"58",name:"إن قزام",fee:1100 }
+    let yalidineShippingRates = [];
+
+    const DEFAULT_SHIPPING = [
+        {code:"01",name:"أدرار",home:900,office:700},{code:"02",name:"الشلف",home:600,office:400},{code:"03",name:"الأغواط",home:600,office:400},
+        {code:"04",name:"أم البواقي",home:550,office:350},{code:"05",name:"باتنة",home:550,office:350},{code:"06",name:"بجاية",home:550,office:350},
+        {code:"07",name:"بسكرة",home:600,office:400},{code:"08",name:"بشار",home:800,office:600},{code:"09",name:"البليدة",home:450,office:250},
+        {code:"10",name:"البويرة",home:500,office:300},{code:"11",name:"تمنراست",home:1000,office:800},{code:"12",name:"تبسة",home:600,office:400},
+        {code:"13",name:"تلمسان",home:600,office:400},{code:"14",name:"تيارت",home:600,office:400},{code:"15",name:"تيزي وزو",home:500,office:300},
+        {code:"16",name:"الجزائر العاصمة",home:400,office:200},{code:"17",name:"الجلفة",home:600,office:400},{code:"18",name:"جيجل",home:550,office:350},
+        {code:"19",name:"سطيف",home:500,office:300},{code:"20",name:"سعيدة",home:600,office:400},{code:"21",name:"سكيكدة",home:550,office:350},
+        {code:"22",name:"سيدي بلعباس",home:600,office:400},{code:"23",name:"عنابة",home:550,office:350},{code:"24",name:"قالمة",home:550,office:350},
+        {code:"25",name:"قسنطينة",home:500,office:300},{code:"26",name:"المدية",home:550,office:350},{code:"27",name:"مستغانم",home:600,office:400},
+        {code:"28",name:"المسيلة",home:550,office:350},{code:"29",name:"معسكر",home:600,office:400},{code:"30",name:"ورقلة",home:700,office:500},
+        {code:"31",name:"وهران",home:550,office:350},{code:"32",name:"البيض",home:700,office:500},{code:"33",name:"إليزي",home:1000,office:800},
+        {code:"34",name:"برج بوعريريج",home:500,office:300},{code:"35",name:"بومرداس",home:450,office:250},{code:"36",name:"الطارف",home:600,office:400},
+        {code:"37",name:"تندوف",home:1000,office:800},{code:"38",name:"تسمسيلت",home:600,office:400},{code:"39",name:"الوادي",home:650,office:450},
+        {code:"40",name:"خنشلة",home:600,office:400},{code:"41",name:"سوق أهراس",home:600,office:400},{code:"42",name:"تيبازة",home:500,office:300},
+        {code:"43",name:"ميلة",home:550,office:350},{code:"44",name:"عين الدفلى",home:550,office:350},{code:"45",name:"النعامة",home:700,office:500},
+        {code:"46",name:"عين تموشنت",home:600,office:400},{code:"47",name:"غرداية",home:650,office:450},{code:"48",name:"غليزان",home:600,office:400},
+        {code:"49",name:"تيميمون",home:900,office:700},{code:"50",name:"برج باجي مختار",home:1100,office:900},{code:"51",name:"أولاد جلال",home:650,office:450},
+        {code:"52",name:"بني عباس",home:850,office:650},{code:"53",name:"عين صالح",home:950,office:750},{code:"54",name:"عين قزام",home:1100,office:900},
+        {code:"55",name:"تقرت",home:700,office:500},{code:"56",name:"جانت",home:1100,office:900},{code:"57",name:"المنيعة",home:750,office:550},
+        {code:"58",name:"إن قزام",home:1100,office:900}
     ];
+
+    async function loadShippingRates(){
+        try{
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/shippingRates.json`);
+            const data = await res.json();
+            if(data && Object.keys(data).length){
+                yalidineShippingRates = Object.values(data).sort((a,b)=>parseInt(a.code)-parseInt(b.code));
+            }else{
+                yalidineShippingRates = DEFAULT_SHIPPING;
+                // حفظ القيم الافتراضية مرة واحدة
+                await fetch(`${CONFIG.FIREBASE_BASE_URL}/shippingRates.json`,{
+                    method:'PUT',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify(Object.fromEntries(DEFAULT_SHIPPING.map(w=>[w.code,w])))
+                });
+            }
+        }catch(e){
+            console.error('shipping load error',e);
+            yalidineShippingRates = DEFAULT_SHIPPING;
+        }
+    }
 
     const COLOR_HEX_MAP = {
         "أسود":"#1a1a1a","أبيض":"#f5f5f5","أزرق":"#3b82f6","أحمر":"#ef4444",
@@ -711,10 +734,12 @@
 
     function populateWilayas() {
         const select = document.getElementById('custWilaya');
+        select.innerHTML = '<option value="">-- اختر ولاية الإقامة --</option>';
         yalidineShippingRates.forEach(w => {
             let opt = document.createElement('option');
             opt.value = `${w.code}-${w.name}`;
-            opt.dataset.fee = w.fee;
+            opt.dataset.home = w.home;
+            opt.dataset.office = w.office;
             opt.innerText = `${w.code} - ${w.name}`;
             select.appendChild(opt);
         });
@@ -1035,8 +1060,9 @@
         if(!selectedActiveProduct) return;
         const select = document.getElementById('custWilaya');
         const opt = select.options[select.selectedIndex];
-        let fee = (opt && opt.value) ? parseInt(opt.dataset.fee) : 0;
-        if(selectedDeliveryType === 'office' && fee > 0) fee = Math.max(0, fee - 200);
+        let home = opt && opt.value ? parseInt(opt.dataset.home||0) : 0;
+        let office = opt && opt.value ? parseInt(opt.dataset.office||0) : 0;
+        let fee = selectedDeliveryType === 'office' ? office : home;
         document.getElementById('summaryProductPrice').innerText = `${selectedActiveProduct.price.toLocaleString('ar')} DA`;
         document.getElementById('summaryShippingFee').innerText = `${fee.toLocaleString('ar')} DA`;
         document.getElementById('summaryGrandTotal').innerText = `${(selectedActiveProduct.price + fee).toLocaleString('ar')} DA`;
@@ -1083,8 +1109,10 @@
 
         const orderId = Math.floor(100000 + Math.random() * 900000).toString();
         const select = document.getElementById('custWilaya');
-        const baseFee = parseInt(select.options[select.selectedIndex].dataset.fee);
-        const finalFee = selectedDeliveryType === 'office' ? Math.max(0, baseFee - 200) : baseFee;
+        const opt = select.options[select.selectedIndex];
+        const home = parseInt(opt.dataset.home||0);
+        const office = parseInt(opt.dataset.office||0);
+        const finalFee = selectedDeliveryType === 'office' ? office : home;
         const finalTotal = selectedActiveProduct.price + finalFee;
 
         let productDesc = selectedActiveProduct.name;
@@ -1224,8 +1252,11 @@
         }
     })();
 
-    populateWilayas();
-    fetchStoreProducts();
+    (async ()=>{
+        await loadShippingRates();
+        populateWilayas();
+        fetchStoreProducts();
+    })();
 </script>
 </body>
 </html>

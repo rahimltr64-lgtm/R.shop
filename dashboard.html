@@ -25,7 +25,7 @@
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;
             border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        .header-info h1 { margin: 0; font-size: 22px; font-weight: 900; color: #fff; }
+        .header-info h1 { margin: 0; font-size: 22px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
         .header-info p { margin: 5px 0 0 0; color: var(--text-muted); font-size: 12px; }
         .header-info .last-updated { color: var(--accent-green); font-size: 11px; margin-top: 3px; }
         .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -45,6 +45,7 @@
         .login-overlay { position: fixed; inset: 0; background: var(--main-dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 45px; border-radius: 28px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
         .login-logo { font-size: 52px; margin-bottom: 14px; }
+        .login-logo img { width: 64px; height: 64px; border-radius: 16px; }
         .login-box h2 { border: none; margin-bottom: 6px; color: #fff; font-size: 22px; }
         .login-box p { color: var(--text-muted); font-size: 12px; margin-bottom: 22px; }
 
@@ -155,7 +156,7 @@
             color: white; border: none; padding: 11px 22px; border-radius: 13px;
             font-family: 'Cairo'; font-weight: 700; font-size: 13px; cursor: pointer;
             display: flex; align-items: center; gap: 8px; width: 100%; justify-content: center;
-            margin-top: 16px; box-shadow: 0 6px 16px rgba(139,92,246,0.3);
+            margin-top: 166px; box-shadow: 0 6px 16px rgba(139,92,246,0.3);
         }
         .btn-print:hover { transform: translateY(-2px); }
 
@@ -313,6 +314,10 @@
         .toast.success { border-color: var(--accent-green); }
         .toast.error { border-color: var(--accent-red); }
 
+        /* مدخلات الشحن */
+        .shipping-fee-input { width: 80px; padding: 6px; background: var(--card-elev); color: #fff; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Cairo'; font-size: 12px; text-align: center; }
+        .shipping-fee-input:focus { border-color: var(--accent-blue); outline: none; }
+
         @media (max-width: 900px) {
             .charts-grid { grid-template-columns: 1fr; }
         }
@@ -331,7 +336,7 @@
 
 <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
-        <div class="login-logo">📱</div>
+        <div class="login-logo"><img src="image_0.png" alt="Logo"></div>
         <h2>لوحة إدارة هواتف ماركت</h2>
         <p>أدخل كلمة المرور للوصول إلى لوحة التحكم</p>
         <input type="password" id="adminPassInput" placeholder="كلمة المرور..." style="text-align: center; font-size: 16px; letter-spacing: 4px;">
@@ -343,7 +348,7 @@
 <div class="dash-container" id="dashContainer">
     <header>
         <div class="header-info">
-            <h1>📱 هواتف ماركت - لوحة التحكم</h1>
+            <h1><img src="image_0.png" style="width:28px;height:28px;border-radius:6px;object-fit:cover;" alt="Logo"> هواتف ماركت - لوحة التحكم</h1>
             <p>إدارة المنتجات، الطلبات، وتتبع المبيعات والأرباح</p>
             <div class="last-updated"><span class="refresh-indicator"><span class="refresh-dot"></span>مباشر</span> آخر تحديث: <span id="lastUpdatedTime">-</span></div>
         </div>
@@ -355,7 +360,6 @@
         </div>
     </header>
 
-    <!-- إحصائيات KPI -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-info">
@@ -398,7 +402,6 @@
         </div>
     </div>
 
-    <!-- الرسوم البيانية -->
     <div class="charts-grid">
         <div class="chart-card">
             <h2 style="border:none; padding:0; margin-bottom:16px; font-size:15px;">📊 توزيع حالات الطلبات</h2>
@@ -412,7 +415,6 @@
         </div>
     </div>
 
-    <!-- مودال إضافة/تعديل منتج -->
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕</button>
@@ -496,10 +498,8 @@
         </div>
     </div>
 
-    <!-- منطقة الطباعة المخفية -->
     <div id="invoicePrintArea"></div>
 
-    <!-- مودال تفاصيل الطلب -->
     <div class="modal-overlay" id="orderDetailModal" onclick="closeOrderDetailModal(event)">
         <div class="modal-box" style="max-width:520px;">
             <button class="modal-close" onclick="closeOrderDetailModalForce()">✕</button>
@@ -509,7 +509,6 @@
         </div>
     </div>
 
-    <!-- شريط التحديث الجماعي -->
     <div class="bulk-action-bar" id="bulkActionBar">
         <div class="bulk-count-badge">☑️ <span id="bulkCount">0</span> طلب محدد</div>
         <select class="bulk-status-select" id="bulkStatusSelect">
@@ -527,7 +526,6 @@
         <button class="bulk-cancel-btn" onclick="clearBulkSelection()">✕ إلغاء التحديد</button>
     </div>
 
-    <!-- جدول المنتجات -->
     <div class="card">
         <h2>🛍️ إدارة المنتجات</h2>
         <div class="filter-bar">
@@ -560,7 +558,6 @@
         </div>
     </div>
 
-    <!-- جدول الطلبات -->
     <div class="card">
         <h2 style="justify-content:space-between;">
             <span>📦 إدارة طلبات الزبائن</span>
@@ -597,6 +594,24 @@
         </div>
         <p id="ordersCount" style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:12px;"></p>
     </div>
+
+    <div class="card">
+        <h2>🛍️ إدارة أسعار الشحن لكافة الولايات</h2>
+        <div class="table-container">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>الرمز</th>
+                        <th>الولاية</th>
+                        <th>سعر المنزل (DA)</th>
+                        <th>سعر المكتب (DA)</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="shippingRatesTableBody"></tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -607,6 +622,7 @@
 
     let allOrdersData = {};
     let allProductsData = {};
+    let allShippingRatesData = {};
     let ordersChart = null;
 
     // ========= تسجيل الدخول =========
@@ -656,12 +672,14 @@
     // ========= جلب البيانات =========
     async function loadAllData() {
         try {
-            const [pRes, oRes] = await Promise.all([
+            const [pRes, oRes, sRes] = await Promise.all([
                 fetch(`${CONFIG.FIREBASE_BASE_URL}/products.json`),
-                fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`)
+                fetch(`${CONFIG.FIREBASE_BASE_URL}/orders.json`),
+                fetch(`${CONFIG.FIREBASE_BASE_URL}/shippingRates.json`)
             ]);
             const pRaw = await pRes.json() || {};
             const oRaw = await oRes.json() || {};
+            const sRaw = await sRes.json() || {};
 
             // Firebase يُعيد array إذا كانت الـ keys أرقاماً — نحوّلها لـ object
             if(Array.isArray(pRaw)) {
@@ -678,11 +696,14 @@
                 allOrdersData = oRaw;
             }
 
+            allShippingRatesData = sRaw; // أسعار الشحن دائماً كائن
+
             renderProducts();
             filterOrdersTable();
             calculateFinance();
             renderOrdersChart();
             renderTopProducts();
+            renderShippingRates();
 
             const now = new Date();
             document.getElementById('lastUpdatedTime').innerText = now.toLocaleTimeString('ar-DZ');
@@ -929,6 +950,49 @@
         }
     }
 
+    // ========= عرض أسعار الشحن =========
+    function renderShippingRates() {
+        const tbody = document.getElementById('shippingRatesTableBody');
+        tbody.innerHTML = '';
+        const keys = Object.keys(allShippingRatesData);
+
+        if(keys.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--text-muted);">جاري تحميل أسعار الشحن...</td></tr>';
+            return;
+        }
+
+        keys.forEach(code => {
+            const w = allShippingRatesData[code]; if(!w) return;
+            tbody.innerHTML += `<tr id="shipping-row-${code}">
+                <td style="color:var(--text-muted);font-family:monospace;">${code}</td>
+                <td><strong style="color:#fff;">${w.name}</strong></td>
+                <td><input type="number" class="shipping-fee-input home" value="${w.homeFee || 0}" step="50" min="0"> DA</td>
+                <td><input type="number" class="shipping-fee-input office" value="${w.officeFee || 0}" step="50" min="0"> DA</td>
+                <td>
+                    <button class="btn-action-small green" onclick="saveShippingRate('${code}')" title="حفظ">💾</button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    // ========= حفظ سعر الشحن =========
+    async function saveShippingRate(code) {
+        const row = document.getElementById(`shipping-row-${code}`);
+        const homeFee = parseInt(row.querySelector('.shipping-fee-input.home').value) || 0;
+        const officeFee = parseInt(row.querySelector('.shipping-fee-input.office').value) || 0;
+
+        try {
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/shippingRates/${code}.json`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ homeFee, officeFee, updatedAt: new Date().toISOString() })
+            });
+            showToast(`✅ تم تحديث أسعار الشحن لولاية: ${allShippingRatesData[code].name}`, 'success');
+            allShippingRatesData[code].homeFee = homeFee;
+            allShippingRatesData[code].officeFee = officeFee;
+        } catch(e) { showToast('❌ فشل تحديث أسعار الشحن', 'error'); }
+    }
+
     // ========= تفاصيل الطلب (مودال) =========
     let currentOrderKey = null;
 
@@ -1168,91 +1232,61 @@
     // ========= تحديث حالة الطلب =========
     async function updateOrderStatus(key, newStatus) {
         if(!newStatus) return;
+        const order = allOrdersData[key];
+        // ✅ إصلاح: استخدام معرف Firebase الصحيح
+        const firebaseKey = (order && order.orderId) ? order.orderId : key;
         try {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, {
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${firebaseKey}.json`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus, updatedAt: new Date().toISOString() })
             });
             showToast(`✅ تم تحديث الحالة إلى: ${newStatus}`, 'success');
-            loadAllData();
+            if(allOrdersData[key]) allOrdersData[key].status = newStatus;
+            filterOrdersTable(); // تحديث الجدول محلياً أسرع
+            calculateFinance();
+            renderOrdersChart();
         } catch(e) { showToast('❌ فشل التحديث', 'error'); }
     }
 
     // ========= حذف =========
-    // ========= تشخيص الحذف =========
-    async function firebaseDelete(path) {
-        const url = `${CONFIG.FIREBASE_BASE_URL}/${path}.json`;
-        console.log('🗑️ محاولة حذف:', url);
-        const res = await fetch(url, { method: 'DELETE' });
-        const text = await res.text();
-        console.log(`📡 الرد [${res.status}]:`, text);
-        if(!res.ok) throw new Error(`HTTP ${res.status}: ${text}`);
-        return text === 'null' || text === '';
-    }
-
     async function deleteProduct(key) {
         if(!confirm('⚠️ حذف المنتج نهائياً؟ لا يمكن التراجع!')) return;
         const prod = allProductsData[key];
-        if(!prod) { showToast('❌ المنتج غير موجود محلياً', 'error'); return; }
+        if(!prod) return;
+        // ✅ إصلاح: استخدام معرف Firebase الصحيح (المفتاح هو id)
+        const productId = prod.id;
 
-        // جمع كل المسارات الممكنة
-        const paths = new Set();
-        paths.add(`products/${key}`);
-        if(prod.id !== undefined) paths.add(`products/${prod.id}`);
-
-        let success = false;
-        for(const path of paths) {
-            try {
-                await firebaseDelete(path);
-                success = true;
-                break;
-            } catch(e) {
-                console.warn(`فشل المسار ${path}:`, e.message);
-            }
-        }
-
-        if(success) {
-            delete allProductsData[key];
-            renderProducts();
-            calculateFinance();
-            renderTopProducts();
-            showToast('🗑️ تم حذف المنتج من Firebase بنجاح', 'success');
-        } else {
-            showToast('❌ Firebase رفض الحذف — افتح Console (F12) لترى السبب', 'error');
-        }
+        try {
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${productId}.json`, { method: 'DELETE' });
+            if(res.ok) {
+                delete allProductsData[key];
+                renderProducts();
+                calculateFinance();
+                renderTopProducts();
+                showToast('🗑️ تم حذف المنتج بنجاح', 'success');
+            } else { throw new Error(); }
+        } catch(e) { showToast('❌ فشل الحذف من السيرفر', 'error'); }
     }
 
     async function deleteOrder(key) {
         if(!confirm('⚠️ حذف الطلب نهائياً؟')) return;
         const order = allOrdersData[key];
-        if(!order) { showToast('❌ الطلب غير موجود محلياً', 'error'); return; }
+        if(!order) return;
+        // ✅ إصلاح: استخدام معرف Firebase الصحيح (المفتاح هو orderId)
+        const orderId = order.orderId;
 
-        const paths = new Set();
-        paths.add(`orders/${key}`);
-        if(order.orderId !== undefined) paths.add(`orders/${order.orderId}`);
-
-        let success = false;
-        for(const path of paths) {
-            try {
-                await firebaseDelete(path);
-                success = true;
-                break;
-            } catch(e) {
-                console.warn(`فشل المسار ${path}:`, e.message);
-            }
-        }
-
-        if(success) {
-            delete allOrdersData[key];
-            filterOrdersTable();
-            calculateFinance();
-            renderOrdersChart();
-            renderTopProducts();
-            showToast('🗑️ تم حذف الطلب من Firebase بنجاح', 'success');
-        } else {
-            showToast('❌ Firebase رفض الحذف — افتح Console (F12) لترى السبب', 'error');
-        }
+        try {
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${orderId}.json`, { method: 'DELETE' });
+            if(res.ok) {
+                delete allOrdersData[key];
+                filterOrdersTable();
+                calculateFinance();
+                renderOrdersChart();
+                renderTopProducts();
+                showToast('🗑️ تم حذف الطلب بنجاح', 'success');
+            } else { throw new Error(); }
+        } catch(e) { showToast('❌ فشل الحذف من السيرفر', 'error'); }
     }
 
     // ========= التحديث الجماعي =========
@@ -1333,6 +1367,7 @@
         const updatedAt = new Date().toISOString();
         const promises = keys.map(async key => {
             const order = allOrdersData[key];
+            // ✅ إصلاح: استخدام معرف Firebase الصحيح
             const firebaseKey = (order && order.orderId) ? order.orderId : key;
             try {
                 const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${firebaseKey}.json`, {

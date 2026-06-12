@@ -1104,17 +1104,40 @@
 
     // ========= حذف =========
     async function deleteProduct(key) {
-        if(confirm('⚠️ حذف المنتج نهائياً؟ لا يمكن التراجع!')) {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`, { method: 'DELETE' });
-            showToast('🗑️ تم حذف المنتج', 'success');
-            loadAllData();
+        if(!confirm('⚠️ حذف المنتج نهائياً؟ لا يمكن التراجع!')) return;
+        try {
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${key}.json`, { method: 'DELETE' });
+            if(!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            // Firebase يرجع null عند الحذف الناجح
+            if(json !== null) throw new Error('لم يتم الحذف');
+            delete allProductsData[key];
+            showToast('🗑️ تم حذف المنتج بنجاح', 'success');
+            renderProducts();
+            calculateFinance();
+            renderTopProducts();
+        } catch(e) {
+            showToast('❌ فشل الحذف — تحقق من قواعد Firebase: ' + e.message, 'error');
+            console.error('deleteProduct error:', e);
         }
     }
+
     async function deleteOrder(key) {
-        if(confirm('⚠️ حذف الطلب نهائياً؟')) {
-            await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, { method: 'DELETE' });
-            showToast('🗑️ تم حذف الطلب', 'success');
-            loadAllData();
+        if(!confirm('⚠️ حذف الطلب نهائياً؟')) return;
+        try {
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${key}.json`, { method: 'DELETE' });
+            if(!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            if(json !== null) throw new Error('لم يتم الحذف');
+            delete allOrdersData[key];
+            showToast('🗑️ تم حذف الطلب بنجاح', 'success');
+            filterOrdersTable();
+            calculateFinance();
+            renderOrdersChart();
+            renderTopProducts();
+        } catch(e) {
+            showToast('❌ فشل الحذف — تحقق من قواعد Firebase: ' + e.message, 'error');
+            console.error('deleteOrder error:', e);
         }
     }
 

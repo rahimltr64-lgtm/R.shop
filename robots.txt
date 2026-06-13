@@ -1,0 +1,19 @@
+# هواتف ماركت - ملف robots.txt
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin
+Disallow: /api/
+Sitemap: https://phonesmarket.dz/sitemap.xml
+
+# منع الزحف إلى صفحات الإدارة
+User-agent: *
+Disallow: /*?action=*
+Disallow: /*#*
+
+# السماح لمحركات البحث بالزحف إلى المنتجات
+Allow: /?product=*
+Allow: /category/*
+
+# الوقت المستغرق بين الطلبات
+Crawl-delay: 1

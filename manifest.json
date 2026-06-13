@@ -1,26 +1,66 @@
 {
   "name": "هواتف ماركت",
   "short_name": "هواتف ماركت",
-  "description": "أكبر متجر هواتف في الجزائر - آبل، سامسونج، شاومي وأكثر",
-  "start_url": "./index.html",
+  "description": "أكبر متجر هواتف في الجزائر - أحدث الموديلات بأفضل الأسعار مع التوصيل لجميع الولايات",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0e16",
   "theme_color": "#f5b041",
+  "background_color": "#0a0e16",
   "orientation": "portrait-primary",
+  "scope": "/",
   "lang": "ar",
   "dir": "rtl",
   "icons": [
     {
       "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "شاشة المتجر الرئيسية"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "تتبع الطلب",
+      "short_name": "تتبع",
+      "description": "تتبع حالة طلبك",
+      "url": "/?action=track",
+      "icons": [{ "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "المفضلة",
+      "short_name": "المفضلة",
+      "description": "منتجاتك المفضلة",
+      "url": "/?action=favorites",
+      "icons": [{ "src": "https://i.postimg.cc/mr3Txdqm/1781273630296.png", "sizes": "96x96" }]
+    }
+  ],
+  "categories": ["shopping", "electronics", "business"],
+  "prefer_related_applications": false
 }

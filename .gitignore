@@ -1,0 +1,45 @@
+# 🔐 Environment Variables
+.env
+.env.local
+.env.*.local
+
+# 🤖 Dependency directories
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 📦 Build outputs
+dist/
+build/
+.next/
+
+# 💾 IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 🧪 Testing
+coverage/
+.nyc_output/
+
+# 📋 Logs
+logs/
+*.log
+
+# 🔒 Credentials (أبداً لا تشارك!)
+config.local.js
+credentials.json
+serviceAccountKey.json
+
+# 📱 Mobile
+.expo/
+dist/
+node_modules/
+
+# 🗂️ Temporary files
+temp/
+tmp/
+.cache/

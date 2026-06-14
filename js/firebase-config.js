@@ -2,15 +2,15 @@
 // هواتف ماركت - إعدادات Firebase
 // ============================================================
 
-// استبدل هذه البيانات ببيانات مشروعك من Firebase Console
 const FIREBASE_CONFIG = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCyZ5mBrgTyGcGtOxkCd9X9ehMhPZ4vwwM",
+    authDomain: "phones-market.firebaseapp.com",
+    databaseURL: "https://phones-market-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "phones-market",
+    storageBucket: "phones-market.firebasestorage.app",
+    messagingSenderId: "1059312114207",
+    appId: "1:1059312114207:web:df55121ec1e716e038532a",
+    measurementId: "G-SJSS09QPWT"
 };
 
 // تهيئة Firebase
@@ -30,7 +30,10 @@ const DB_REF = {
     stats: 'stats'
 };
 
-// دوال مساعدة
+// ============================================================
+// دوال مساعدة عامة
+// ============================================================
+
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
@@ -55,7 +58,6 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// التحقق من صلاحيات الأدمن
 async function isAdmin() {
     const user = auth.currentUser;
     if (!user) return false;
@@ -63,7 +65,10 @@ async function isAdmin() {
     return token.claims.admin === true || user.email === 'admin@phonesmarket.dz';
 }
 
+// ============================================================
 // قائمة الولايات (58 ولاية)
+// ============================================================
+
 const WILAYAS = [
     {code:"01",name:"أدرار",home:900,office:700},{code:"02",name:"الشلف",home:600,office:400},
     {code:"03",name:"الأغواط",home:600,office:400},{code:"04",name:"أم البواقي",home:550,office:350},
@@ -96,7 +101,10 @@ const WILAYAS = [
     {code:"57",name:"المنيعة",home:750,office:550},{code:"58",name:"إن قزام",home:1100,office:900}
 ];
 
+// ============================================================
 // خريطة الألوان
+// ============================================================
+
 const COLOR_HEX_MAP = {
     "أسود":"#1a1a1a","أبيض":"#f5f5f5","أزرق":"#3b82f6","أحمر":"#ef4444",
     "أخضر":"#10b981","ذهبي":"#f5b041","فضي":"#c0c0c0","رمادي":"#6b7280",
@@ -108,8 +116,7 @@ const COLOR_HEX_MAP = {
     "Phantom Black":"#1a1a1a","Phantom White":"#f5f5f5","Graphite":"#4a4a4a",
     "Cream":"#fffdd0","Lavender":"#b19cd9","Mint":"#98ff98","Sage":"#9caf88",
     "Sky Blue":"#87ceeb","Cobalt":"#0047ab","Titanium Gray":"#878681",
-    "تيتانيوم رمادي":"#878681","تيتانيوم بنفسجي":"#6b4e7d","تيتانيوم أصفر":"#c8a824",
-    "وردي":"#f472b6"
+    "تيتانيوم رمادي":"#878681","تيتانيوم بنفسجي":"#6b4e7d","تيتانيوم أصفر":"#c8a824","وردي":"#f472b6"
 };
 
 // تصدير للاستخدام العام

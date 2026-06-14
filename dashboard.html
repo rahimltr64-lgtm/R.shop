@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>هواتف ماركت | لوحة التحكم</title>
+    <title>هواتف ماركت | لوحة التحكم المتكاملة</title>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/mr3Txdqm/1781273630296.png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -34,50 +34,124 @@
 
         /* شاشة تسجيل الدخول */
         .login-container {
-            position: fixed; inset: 0; background: linear-gradient(135deg, #0a0e16 0%, #1a2335 100%);
-            z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0a0e16 0%, #1a2335 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
         .login-card {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 32px; padding: 40px; width: 100%; max-width: 420px; text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 32px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
         .login-icon {
-            width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-gold) 0%, #d4933a 100%);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px; font-size: 40px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #d4933a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
         }
-        .login-card h2 { font-size: 24px; margin-bottom: 8px; color: #fff; }
-        .login-card p { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; }
+        .login-card h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .login-card p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
         .login-input {
-            width: 100%; padding: 14px 16px; background: var(--main-dark);
-            border: 1px solid var(--border-color); border-radius: 14px;
-            color: #fff; font-family: 'Cairo'; font-size: 14px; margin-bottom: 14px; text-align: right;
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--main-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: #fff;
+            font-family: 'Cairo';
+            font-size: 14px;
+            margin-bottom: 14px;
+            text-align: right;
         }
-        .login-input:focus { border-color: var(--accent-blue); outline: none; }
+        .login-input:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+        }
         .login-btn {
-            width: 100%; background: linear-gradient(135deg, var(--accent-blue) 0%, #1d4ed8 100%);
-            color: white; border: none; padding: 14px; border-radius: 14px;
-            font-family: 'Cairo'; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-family: 'Cairo';
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
         }
         .login-btn:hover { transform: translateY(-2px); }
-        .login-error { color: var(--accent-red); font-size: 12px; margin-top: 12px; display: none; }
+        .login-error {
+            color: var(--accent-red);
+            font-size: 12px;
+            margin-top: 12px;
+            display: none;
+        }
         .logout-btn {
-            background: rgba(239,68,68,0.12); color: var(--accent-red);
-            border: 1px solid var(--accent-red); padding: 9px 16px;
-            border-radius: 12px; font-family: 'Cairo'; font-weight: 700;
-            font-size: 12px; cursor: pointer;
+            background: rgba(239,68,68,0.12);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-family: 'Cairo';
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
         }
         .user-info {
-            display: flex; align-items: center; gap: 8px;
-            background: var(--card-elev); padding: 5px 12px 5px 5px;
-            border-radius: 40px; font-size: 12px; color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-elev);
+            padding: 5px 12px 5px 5px;
+            border-radius: 40px;
+            font-size: 12px;
+            color: var(--text-muted);
         }
-        .user-avatar { width: 32px; height: 32px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
         header {
             background: linear-gradient(135deg, var(--card-bg) 0%, var(--main-dark) 100%);
-            padding: 22px 30px; border-radius: 24px; display: flex;
-            justify-content: space-between; align-items: center; margin-bottom: 28px;
-            border: 1px solid var(--border-color); flex-wrap: wrap; gap: 15px;
+            padding: 22px 30px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .header-info h1 { margin: 0; font-size: 22px; font-weight: 900; }
         .header-info p { margin: 5px 0 0; color: var(--text-muted); font-size: 12px; }
@@ -134,17 +208,16 @@
         .top-products-list { display: flex; flex-direction: column; gap: 10px; }
         .top-product-item { display: flex; align-items: center; gap: 12px; background: var(--main-dark); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border-color); }
         .export-btn { background: rgba(16,185,129,0.12); color: var(--accent-green); border: 1px solid var(--accent-green); padding: 8px 16px; border-radius: 10px; font-family: 'Cairo'; font-weight: 700; font-size: 12px; cursor: pointer; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .section-label { display: block; font-size: 11px; color: var(--accent-gold); font-weight: 700; margin: 14px 0 7px 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
         @media (max-width: 768px) {
             body { padding: 12px; }
             .charts-grid { grid-template-columns: 1fr; }
             header { flex-direction: column; align-items: stretch; }
             .modal-box { padding: 22px 16px; }
-            .grid-3 { grid-template-columns: 1fr; }
-            .grid-inputs { grid-template-columns: 1fr; }
         }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .section-label { display: block; font-size: 11px; color: var(--accent-gold); font-weight: 700; margin: 14px 0 7px 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -180,7 +253,6 @@
             </div>
             <button class="btn-trigger-modal" onclick="openModal()">➕ إضافة هاتف</button>
             <button class="btn-trigger-modal" style="background:linear-gradient(135deg, var(--accent-purple) 0%, #6d28d9 100%);" onclick="openShippingModal()">🚚 أسعار التوصيل</button>
-            <button class="btn-trigger-modal gold" onclick="openIconModal()">🖼️ تغيير الأيقونة</button>
             <button class="btn-trigger-modal green" onclick="exportOrdersCSV()">📥 تصدير الطلبات</button>
             <button class="btn-trigger-modal green" onclick="loadAllData()">🔄 تحديث</button>
             <button class="logout-btn" onclick="logout()">🚪 خروج</button>
@@ -257,9 +329,9 @@
                     <input type="text" id="p_ram" placeholder="الرام">
                     <input type="text" id="p_os" placeholder="نظام التشغيل">
                 </div>
-                <span class="section-label">🖼️ صور المنتج (روابط)</span>
+                <span class="section-label">🖼️ صور المنتج (الصورة الأولى مطلوبة)</span>
                 <input type="url" id="p_img1" placeholder="رابط الصورة 1 (الرئيسية)" required>
-                <div class="grid-inputs">
+                <div class="images-grid">
                     <input type="url" id="p_img2" placeholder="رابط الصورة 2">
                     <input type="url" id="p_img3" placeholder="رابط الصورة 3">
                     <input type="url" id="p_img4" placeholder="رابط الصورة 4">
@@ -269,27 +341,6 @@
                 </div>
                 <button type="button" class="btn-trigger-modal green" onclick="saveProduct()" style="width:100%; margin-top:10px;">🚀 حفظ المنتج</button>
             </form>
-        </div>
-    </div>
-
-    <!-- مودال تغيير الأيقونة -->
-    <div class="modal-overlay" id="iconModal" onclick="closeIconModal(event)">
-        <div class="modal-box" style="max-width:500px;">
-            <button class="modal-close" onclick="closeIconModalForce()">✕</button>
-            <h2 style="border:none;">🖼️ تغيير أيقونة المتجر</h2>
-            <p style="color:var(--text-muted); font-size:12px;">الأيقونة تظهر في تبويب المتصفح وعند تثبيت التطبيق</p>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img id="currentIconPreview" src="https://i.postimg.cc/mr3Txdqm/1781273630296.png" 
-                     style="width: 80px; height: 80px; border-radius: 16px; border: 2px solid var(--accent-gold); background: #fff; padding: 5px;">
-                <p style="font-size:11px; margin-top:5px;">الأيقونة الحالية</p>
-            </div>
-            <label style="font-size:13px; font-weight:700;">رابط الأيقونة الجديدة:</label>
-            <input type="url" id="newIconUrl" placeholder="https://example.com/icon.png" style="margin-top:5px;">
-            <p style="font-size:10px; color:var(--text-muted);">✓ استخدم رابط صورة بصيغة PNG أو ICO<br>✓ يفضل حجم 64x64 أو 512x512 بكسل</p>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="btn-trigger-modal green" onclick="saveIconUrl()" style="flex:1;">💾 حفظ الأيقونة</button>
-                <button class="logout-btn" onclick="closeIconModalForce()" style="flex:1;">إلغاء</button>
-            </div>
         </div>
     </div>
 
@@ -394,6 +445,7 @@
         measurementId: "G-SJSS09QPWT"
     };
 
+    // تهيئة Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
@@ -413,7 +465,6 @@
                 const firstChar = user.email.charAt(0).toUpperCase();
                 document.getElementById('userAvatar').innerText = firstChar;
                 loadAllData();
-                loadCurrentIcon();
                 setInterval(loadAllData, 30000);
             } else {
                 document.getElementById('loginContainer').style.display = 'flex';
@@ -426,20 +477,26 @@
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         const errorDiv = document.getElementById('loginErrorMsg');
+        
         if (!email || !password) {
             errorDiv.style.display = 'block';
             errorDiv.innerText = '❌ الرجاء إدخال البريد الإلكتروني وكلمة المرور';
             return;
         }
+        
         try {
             await auth.signInWithEmailAndPassword(email, password);
             errorDiv.style.display = 'none';
             document.getElementById('loginPassword').value = '';
         } catch (error) {
             errorDiv.style.display = 'block';
-            if (error.code === 'auth/user-not-found') errorDiv.innerText = '❌ لا يوجد حساب بهذا البريد الإلكتروني';
-            else if (error.code === 'auth/wrong-password') errorDiv.innerText = '❌ كلمة المرور غير صحيحة';
-            else errorDiv.innerText = '❌ خطأ: ' + error.message;
+            if (error.code === 'auth/user-not-found') {
+                errorDiv.innerText = '❌ لا يوجد حساب بهذا البريد الإلكتروني';
+            } else if (error.code === 'auth/wrong-password') {
+                errorDiv.innerText = '❌ كلمة المرور غير صحيحة';
+            } else {
+                errorDiv.innerText = '❌ خطأ: ' + error.message;
+            }
         }
     }
 
@@ -450,56 +507,6 @@
         }
     }
 
-    // ==================== إدارة الأيقونة ====================
-    async function loadCurrentIcon() {
-        const snapshot = await db.ref('settings/iconUrl').once('value');
-        const iconUrl = snapshot.val();
-        if (iconUrl) {
-            updateFavicon(iconUrl);
-        }
-    }
-
-    function updateFavicon(url) {
-        let link = document.querySelector("link[rel*='icon']");
-        if (!link) {
-            link = document.createElement('link');
-            link.rel = 'icon';
-            document.head.appendChild(link);
-        }
-        link.href = url;
-    }
-
-    async function openIconModal() {
-        document.getElementById('iconModal').classList.add('show');
-        const snapshot = await db.ref('settings/iconUrl').once('value');
-        const currentIcon = snapshot.val() || 'https://i.postimg.cc/mr3Txdqm/1781273630296.png';
-        document.getElementById('currentIconPreview').src = currentIcon;
-        document.getElementById('newIconUrl').value = '';
-    }
-
-    function closeIconModal(e) {
-        if (e.target === document.getElementById('iconModal')) closeIconModalForce();
-    }
-    function closeIconModalForce() {
-        document.getElementById('iconModal').classList.remove('show');
-    }
-
-    async function saveIconUrl() {
-        const newIcon = document.getElementById('newIconUrl').value.trim();
-        if (!newIcon) {
-            showToast('⚠️ الرجاء إدخال رابط الأيقونة', 'error');
-            return;
-        }
-        try {
-            await db.ref('settings/iconUrl').set(newIcon);
-            showToast('✅ تم تغيير أيقونة المتجر بنجاح', 'success');
-            closeIconModalForce();
-            updateFavicon(newIcon);
-        } catch(e) {
-            showToast('❌ فشل الحفظ: ' + e.message, 'error');
-        }
-    }
-
     // ==================== جلب البيانات ====================
     async function loadAllData() {
         try {
@@ -507,13 +514,16 @@
                 db.ref('products').once('value'),
                 db.ref('orders').once('value')
             ]);
+            
             allProductsData = pSnapshot.val() || {};
             allOrdersData = oSnapshot.val() || {};
+            
             renderProducts();
             filterOrdersTable();
             calculateFinance();
             renderOrdersChart();
             renderTopProducts();
+            
             document.getElementById('lastUpdatedTime').innerText = new Date().toLocaleTimeString('ar-DZ');
         } catch(e) {
             console.error(e);
@@ -527,9 +537,11 @@
         tbody.innerHTML = '';
         const keys = Object.keys(allProductsData);
         document.getElementById('totalProductsNum').innerText = keys.length;
+        
         const search = (document.getElementById('productSearchInput')?.value || '').toLowerCase();
         const brand = document.getElementById('productFilterBrand')?.value || 'الكل';
         const stockFilter = document.getElementById('productFilterStock')?.value || 'الكل';
+        
         keys.forEach(key => {
             const prod = allProductsData[key];
             if (!prod) return;
@@ -537,7 +549,11 @@
             if (brand !== 'الكل' && prod.brand !== brand) return;
             if (stockFilter === 'low' && (prod.stock >= 5 || prod.stock === 0)) return;
             if (stockFilter === 'out' && prod.stock !== 0) return;
+            
             const img = (prod.images && prod.images[0]) || 'https://placehold.co/50';
+            const profit = (prod.price || 0) - (prod.cost || 0);
+            const profitColor = profit >= 0 ? '#10b981' : '#ef4444';
+            
             tbody.innerHTML += `<tr>
                 <td><strong style="color:var(--accent-blue)">#${prod.id}</strong></td>
                 <td><img src="${img}" class="product-thumb" onerror="this.src='https://placehold.co/50'"></td>
@@ -568,15 +584,18 @@
         const rating = parseFloat(document.getElementById('p_rating').value) || 0;
         const colors = document.getElementById('p_colors').value.split(',').map(c => c.trim()).filter(c => c);
         const storage = document.getElementById('p_storage').value.split(',').map(s => s.trim()).filter(s => s);
+        
         const images = [];
         for(let i = 1; i <= 7; i++) {
             const img = document.getElementById(`p_img${i}`).value.trim();
             if(img) images.push(img);
         }
+        
         if (!id || !brand || !category || !name || !price || images.length === 0 || colors.length === 0) {
-            showToast('⚠️ يرجى ملء جميع الحقول المطلوبة', 'error');
+            showToast('⚠️ يرجى ملء جميع الحقول المطلوبة (الاسم، السعر، الصورة، الألوان)', 'error');
             return;
         }
+        
         const specs = {};
         const screen = document.getElementById('p_screen').value.trim();
         const battery = document.getElementById('p_battery').value.trim();
@@ -590,16 +609,28 @@
         if(processor) specs['المعالج'] = processor;
         if(ram) specs['الرام'] = ram;
         if(os) specs['النظام'] = os;
-        const productData = { id: parseInt(id), brand, category, name, price, oldPrice, cost, installment, stock, rating, colors, storage, specs, images, updatedAt: new Date().toISOString() };
+        
+        const productData = {
+            id: parseInt(id), brand, category, name,
+            price, oldPrice, cost, installment, stock, rating,
+            colors, storage, specs, images,
+            updatedAt: new Date().toISOString()
+        };
+        
         const editKey = document.getElementById('editProductKey').value;
+        
         try {
             await db.ref(`products/${id}`).set(productData);
-            if (editKey && editKey !== id.toString()) await db.ref(`products/${editKey}`).remove();
+            if (editKey && editKey !== id.toString()) {
+                await db.ref(`products/${editKey}`).remove();
+            }
             showToast(editKey ? '✅ تم تحديث المنتج!' : '✅ تم نشر المنتج!', 'success');
             document.getElementById('productForm').reset();
             closeModal();
             loadAllData();
-        } catch(e) { showToast('❌ فشل الحفظ: ' + e.message, 'error'); }
+        } catch(e) {
+            showToast('❌ فشل الحفظ: ' + e.message, 'error');
+        }
     }
 
     function editProduct(key) {
@@ -627,7 +658,9 @@
         document.getElementById('p_ram').value = specs['الرام'] || '';
         document.getElementById('p_os').value = specs['النظام'] || '';
         const imgs = prod.images || [];
-        for(let i = 1; i <= 7; i++) document.getElementById(`p_img${i}`).value = imgs[i-1] || '';
+        for(let i = 1; i <= 7; i++) {
+            document.getElementById(`p_img${i}`).value = imgs[i-1] || '';
+        }
         openModal();
     }
 
@@ -637,7 +670,9 @@
             await db.ref(`products/${key}`).remove();
             showToast('🗑️ تم حذف المنتج', 'success');
             loadAllData();
-        } catch(e) { showToast('❌ فشل الحذف', 'error'); }
+        } catch(e) {
+            showToast('❌ فشل الحذف', 'error');
+        }
     }
 
     // ==================== إدارة الطلبات ====================
@@ -646,21 +681,29 @@
         tbody.innerHTML = '';
         const keys = Object.keys(allOrdersData);
         document.getElementById('totalOrdersNum').innerText = keys.length;
+        
         const search = document.getElementById('orderSearchInput').value.toLowerCase();
         const status = document.getElementById('statusFilterSelect').value;
-        let pending = 0, visible = 0;
+        let pending = 0;
+        let visible = 0;
+        
         keys.forEach(key => {
             const order = allOrdersData[key];
             if (!order) return;
             if (order.status === 'قيد الانتظار') pending++;
             if (status !== 'الكل' && order.status !== status) return;
-            if (search && !order.name?.toLowerCase().includes(search) && !order.phone?.includes(search) && !order.orderId?.includes(search)) return;
+            if (search && !order.name?.toLowerCase().includes(search) && 
+                !order.phone?.includes(search) && 
+                !order.orderId?.includes(search)) return;
+            
             visible++;
             let statusClass = 'status-pending';
             if (order.status === 'تم التأكيد') statusClass = 'status-confirmed';
             else if (order.status === 'تم الشحن') statusClass = 'status-shipped';
             else if (order.status === 'تم التوصيل') statusClass = 'status-delivered';
+            
             const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ar-DZ') : '-';
+            
             tbody.innerHTML += `<tr>
                 <td><input type="checkbox" class="row-checkbox" data-key="${key}" onchange="onRowCheckChange()"></td>
                 <td><strong style="color:var(--accent-gold)">${order.orderId || '-'}</strong></td>
@@ -679,9 +722,12 @@
                     <span class="status-badge ${statusClass}" style="display:block; margin-top:5px">${order.status || 'قيد الانتظار'}</span>
                 </td>
                 <td><small>${date}</small></td>
-                <td><button class="btn-action-small" onclick="deleteOrder('${key}')" title="حذف">🗑️</button></td>
+                <td>
+                    <button class="btn-action-small" onclick="deleteOrder('${key}')" title="حذف">🗑️</button>
+                </td>
             </tr>`;
         });
+        
         document.getElementById('pendingOrdersNum').innerText = pending;
         document.getElementById('ordersCount').innerHTML = visible > 0 ? `عرض ${visible} من ${keys.length} طلب` : 'لا توجد نتائج مطابقة';
     }
@@ -689,10 +735,15 @@
     async function updateOrderStatus(key, newStatus) {
         if (!newStatus) return;
         try {
-            await db.ref(`orders/${key}`).update({ status: newStatus, updatedAt: new Date().toISOString() });
+            await db.ref(`orders/${key}`).update({
+                status: newStatus,
+                updatedAt: new Date().toISOString()
+            });
             showToast(`✅ تم تحديث الحالة إلى: ${newStatus}`, 'success');
             loadAllData();
-        } catch(e) { showToast('❌ فشل التحديث', 'error'); }
+        } catch(e) {
+            showToast('❌ فشل التحديث', 'error');
+        }
     }
 
     async function deleteOrder(key) {
@@ -701,13 +752,17 @@
             await db.ref(`orders/${key}`).remove();
             showToast('🗑️ تم حذف الطلب', 'success');
             loadAllData();
-        } catch(e) { showToast('❌ فشل الحذف', 'error'); }
+        } catch(e) {
+            showToast('❌ فشل الحذف', 'error');
+        }
     }
 
     // ==================== التحديث الجماعي ====================
     function onRowCheckChange() {
         selectedOrderKeys.clear();
-        document.querySelectorAll('.row-checkbox:checked').forEach(cb => selectedOrderKeys.add(cb.dataset.key));
+        document.querySelectorAll('.row-checkbox:checked').forEach(cb => {
+            selectedOrderKeys.add(cb.dataset.key);
+        });
         const all = document.querySelectorAll('.row-checkbox');
         const checked = document.querySelectorAll('.row-checkbox:checked');
         const selectAll = document.getElementById('selectAllCheckbox');
@@ -742,17 +797,21 @@
         const newStatus = document.getElementById('bulkStatusSelect').value;
         if (!newStatus) { showToast('⚠️ اختر الحالة الجديدة أولاً', 'error'); return; }
         if (selectedOrderKeys.size === 0) return;
+        
         const updates = {};
         Array.from(selectedOrderKeys).forEach(key => {
             updates[`${key}/status`] = newStatus;
             updates[`${key}/updatedAt`] = new Date().toISOString();
         });
+        
         try {
             await db.ref('orders').update(updates);
             showToast(`✅ تم تحديث ${selectedOrderKeys.size} طلب`, 'success');
             clearBulkSelection();
             loadAllData();
-        } catch(e) { showToast('❌ فشل التحديث الجماعي', 'error'); }
+        } catch(e) {
+            showToast('❌ فشل التحديث الجماعي', 'error');
+        }
     }
 
     // ==================== الإحصائيات ====================
@@ -774,7 +833,9 @@
 
     function renderOrdersChart() {
         const counts = { 'قيد الانتظار': 0, 'تم التأكيد': 0, 'تم الشحن': 0, 'تم التوصيل': 0, 'ملغى': 0 };
-        Object.values(allOrdersData).forEach(o => { if (o?.status && counts[o.status] !== undefined) counts[o.status]++; });
+        Object.values(allOrdersData).forEach(o => {
+            if (o?.status && counts[o.status] !== undefined) counts[o.status]++;
+        });
         const ctx = document.getElementById('ordersStatusChart');
         if (!ctx) return;
         if (ordersChart) ordersChart.destroy();
@@ -782,7 +843,11 @@
             type: 'doughnut',
             data: {
                 labels: ['قيد الانتظار', 'تم التأكيد', 'تم الشحن', 'تم التوصيل', 'ملغى'],
-                datasets: [{ data: [counts['قيد الانتظار'], counts['تم التأكيد'], counts['تم الشحن'], counts['تم التوصيل'], counts['ملغى']], backgroundColor: ['#f59e0b', '#8b5cf6', '#3b82f6', '#10b981', '#94a3b8'], borderWidth: 0 }]
+                datasets: [{
+                    data: [counts['قيد الانتظار'], counts['تم التأكيد'], counts['تم الشحن'], counts['تم التوصيل'], counts['ملغى']],
+                    backgroundColor: ['#f59e0b', '#8b5cf6', '#3b82f6', '#10b981', '#94a3b8'],
+                    borderWidth: 0
+                }]
             },
             options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } } }
         });
@@ -790,10 +855,15 @@
 
     function renderTopProducts() {
         const productCounts = {};
-        Object.values(allOrdersData).forEach(o => { if (o?.productId) productCounts[o.productId] = (productCounts[o.productId] || 0) + 1; });
+        Object.values(allOrdersData).forEach(o => {
+            if (o?.productId) productCounts[o.productId] = (productCounts[o.productId] || 0) + 1;
+        });
         const sorted = Object.entries(productCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
         const container = document.getElementById('topProductsList');
-        if (sorted.length === 0) { container.innerHTML = '<p style="color:var(--text-muted);text-align:center">لا توجد طلبات بعد</p>'; return; }
+        if (sorted.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted);text-align:center">لا توجد طلبات بعد</p>';
+            return;
+        }
         container.innerHTML = sorted.map(([id, count], i) => {
             const prod = allProductsData[id];
             const name = prod ? prod.name : `منتج #${id}`;
@@ -851,17 +921,25 @@
                 await db.ref('shippingRates').set(data);
             }
             const rates = Object.values(data).sort((a, b) => parseInt(a.code) - parseInt(b.code));
-            tbody.innerHTML = rates.map(w => `<tr>
-                <td><strong style="color:var(--accent-blue)">${w.code}</strong></td>
-                <td>${w.name}</td>
-                <td><input type="number" id="home-${w.code}" value="${w.home}" style="width:100px; background:var(--card-elev); text-align:center;"></td>
-                <td><input type="number" id="office-${w.code}" value="${w.office}" style="width:100px; background:var(--card-elev); text-align:center;"></td>
-            </tr>`).join('');
-        } catch(e) { showToast('❌ خطأ في تحميل الأسعار', 'error'); }
+            tbody.innerHTML = rates.map(w => `
+                <tr>
+                    <td><strong style="color:var(--accent-blue)">${w.code}</strong></td>
+                    <td>${w.name}</td>
+                    <td><input type="number" id="home-${w.code}" value="${w.home}" style="width:100px; background:var(--card-elev); text-align:center;"></td>
+                    <td><input type="number" id="office-${w.code}" value="${w.office}" style="width:100px; background:var(--card-elev); text-align:center;"></td>
+                </tr>
+            `).join('');
+        } catch(e) {
+            showToast('❌ خطأ في تحميل الأسعار', 'error');
+        }
     }
 
-    function closeShippingModal(e) { if (e.target === document.getElementById('shippingModal')) closeShippingModalForce(); }
-    function closeShippingModalForce() { document.getElementById('shippingModal').classList.remove('show'); }
+    function closeShippingModal(e) {
+        if (e.target === document.getElementById('shippingModal')) closeShippingModalForce();
+    }
+    function closeShippingModalForce() {
+        document.getElementById('shippingModal').classList.remove('show');
+    }
 
     async function saveShippingRates() {
         const updates = {};
@@ -874,7 +952,9 @@
             await db.ref('shippingRates').set(updates);
             showToast('✅ تم حفظ أسعار التوصيل بنجاح', 'success');
             closeShippingModalForce();
-        } catch(e) { showToast('❌ فشل الحفظ', 'error'); }
+        } catch(e) {
+            showToast('❌ فشل الحفظ', 'error');
+        }
     }
 
     // ==================== دوال مساعدة ====================
@@ -884,18 +964,31 @@
         document.getElementById('editProductKey').value = '';
         document.getElementById('productModal').classList.add('show');
     }
-    function closeModal(e) { if (!e || e.target === document.getElementById('productModal')) document.getElementById('productModal').classList.remove('show'); }
+    
+    function closeModal(e) {
+        if (!e || e.target === document.getElementById('productModal')) {
+            document.getElementById('productModal').classList.remove('show');
+        }
+    }
 
     function exportOrdersCSV() {
         const orders = Object.values(allOrdersData);
         if (orders.length === 0) { showToast('لا توجد طلبات للتصدير', 'error'); return; }
         const headers = ['رقم الطلب', 'الاسم', 'الهاتف', 'الولاية', 'البلدية', 'المنتج', 'الإجمالي', 'الحالة', 'التاريخ'];
-        const rows = orders.map(o => [o.orderId || '', o.name || '', o.phone || '', o.wilaya || '', o.baladia || '', o.product || '', o.totalPrice || 0, o.status || '', o.createdAt ? new Date(o.createdAt).toLocaleDateString('ar-DZ') : ''].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+        const rows = orders.map(o => [
+            o.orderId || '', o.name || '', o.phone || '',
+            o.wilaya || '', o.baladia || '', o.product || '',
+            o.totalPrice || 0, o.status || '',
+            o.createdAt ? new Date(o.createdAt).toLocaleDateString('ar-DZ') : ''
+        ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
         const bom = '\uFEFF';
         const csv = bom + [headers.join(','), ...rows].join('\n');
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `orders_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orders_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
         URL.revokeObjectURL(url);
         showToast(`📥 تم تصدير ${orders.length} طلب`, 'success');
     }
@@ -907,6 +1000,7 @@
         setTimeout(() => { el.className = 'toast'; }, 3000);
     }
 
+    // بدء التطبيق
     checkAuthState();
 </script>
 </body>

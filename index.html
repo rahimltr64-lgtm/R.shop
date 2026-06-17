@@ -705,19 +705,82 @@
     }
 
     const COLOR_HEX_MAP = {
+        // ألوان أساسية
         "أسود":"#1a1a1a","أبيض":"#f5f5f5","أزرق":"#3b82f6","أحمر":"#ef4444",
         "أخضر":"#10b981","ذهبي":"#f5b041","فضي":"#c0c0c0","رمادي":"#6b7280",
-        "بنفسجي":"#8b5cf6","وردي ذهبي":"#e8b4b8","تيتانيوم":"#878681",
-        "تيتانيوم أسود":"#2c2c2c","تيتانيوم أزرق":"#394867","تيتانيوم أبيض":"#e0e0e0",
-        "كحلي":"#1e3a5f","أزرق فاتح":"#7dd3fc","أصفر":"#fbbf24","برتقالي":"#fb923c",
-        "أزرق داكن":"#1e40af","Midnight":"#0a0e1a","Starlight":"#e8e4d8",
+        "بنفسجي":"#8b5cf6","وردي":"#f472b6","برتقالي":"#fb923c","أصفر":"#fbbf24",
+        "كحلي":"#1e3a5f","بني":"#92400e","زيتي":"#4d7c0f","تركوازي":"#06b6d4",
+        "نيلي":"#312e81","قرمزي":"#be123c","خمري":"#7f1d1d","بيج":"#d4b483",
+        // تدرجات
+        "أزرق فاتح":"#7dd3fc","أزرق داكن":"#1e40af","أزرق سماوي":"#0ea5e9",
+        "أخضر فاتح":"#86efac","أخضر داكن":"#166534","أخضر زيتي":"#4d7c0f",
+        "وردي فاتح":"#fbcfe8","وردي داكن":"#be185d","وردي ذهبي":"#e8b4b8",
+        "رمادي فاتح":"#d1d5db","رمادي داكن":"#374151","رمادي غامق":"#374151",
+        "أصفر فاتح":"#fef08a","ذهبي فاتح":"#fde68a","ذهبي داكن":"#b45309",
+        "بنفسجي فاتح":"#c4b5fd","بنفسجي داكن":"#5b21b6",
+        "برتقالي فاتح":"#fed7aa","برتقالي داكن":"#c2410c",
+        // تيتانيوم
+        "تيتانيوم":"#878681","تيتانيوم طبيعي":"#878681","تيتانيوم أسود":"#2c2c2c",
+        "تيتانيوم أزرق":"#394867","تيتانيوم أبيض":"#e0e0e0","تيتانيوم رمادي":"#878681",
+        "تيتانيوم بنفسجي":"#6b4e7d","تيتانيوم أصفر":"#c8a824",
+        // إنجليزي Apple
+        "Midnight":"#0a0e1a","Starlight":"#e8e4d8","Product Red":"#ef4444",
         "Natural Titanium":"#878681","Blue Titanium":"#394867","Desert Titanium":"#c8a882",
-        "Phantom Black":"#1a1a1a","Phantom White":"#f5f5f5","Graphite":"#4a4a4a",
-        "Cream":"#fffdd0","Lavender":"#b19cd9","Mint":"#98ff98","Sage":"#9caf88",
+        "White Titanium":"#e0e0e0","Black Titanium":"#2c2c2c",
+        "Deep Purple":"#4c1d95","Space Black":"#1c1c1e","Space Gray":"#6b6b6b",
+        "Silver":"#e8e8e8","Gold":"#f5b041","Rose Gold":"#e8b4b8",
+        // إنجليزي Samsung
+        "Phantom Black":"#1a1a1a","Phantom White":"#f5f5f5","Phantom Gray":"#6b7280",
+        "Phantom Silver":"#c0c0c0","Cream":"#fffdd0","Lavender":"#b19cd9",
+        "Graphite":"#4a4a4a","Violet":"#7c3aed","Green":"#16a34a",
+        "Icy Blue":"#bfdbfe","Cobalt Violet":"#6d28d9","Lime":"#84cc16",
+        // إنجليزي عام
         "Sky Blue":"#87ceeb","Cobalt":"#0047ab","Titanium Gray":"#878681",
-        "تيتانيوم رمادي":"#878681","تيتانيوم بنفسجي":"#6b4e7d","تيتانيوم أصفر":"#c8a824",
-        "وردي":"#f472b6"
+        "Mint":"#98ff98","Sage":"#9caf88","Coral":"#ff6b6b","Peach":"#ffcba4",
+        "Indigo":"#4338ca","Teal":"#0d9488","Cyan":"#06b6d4","Olive":"#65a30d",
+        "Maroon":"#7f1d1d","Navy":"#1e3a5f","Burgundy":"#7f1d1d",
+        "Champagne":"#f7e7ce","Ceramic White":"#f8f8f8","Matte Black":"#1a1a1a",
+        "Glossy Black":"#0a0a0a","Pearl White":"#f8f8f0","Arctic White":"#f0f8ff",
+        "Midnight Black":"#0a0a0a","Midnight Blue":"#191970","Forest Green":"#228b22",
+        "Ocean Blue":"#1ca9c9","Electric Blue":"#0000ff","Neon Green":"#39ff14",
+        "Sunset Orange":"#fd5e53","Cherry Red":"#dc143c","Slate":"#64748b",
+        "Sand":"#c2b280","Khaki":"#c3b091","Mocha":"#967969",
+        // ألوان Xiaomi / Huawei الشائعة
+        "Ceramic Black":"#1a1a1a","Ceramic White":"#f8f8f8","Mountain Blue":"#1e40af",
+        "Sunny Yellow":"#fbbf24","Magic Night Black":"#0a0a0a","Breathing Crystal":"#e0f2fe",
+        "Pearl White":"#f8f8f0","Emerald Green":"#059669","Sakura Pink":"#f9a8d4",
+        "Aurora Purple":"#7c3aed","Stardust White":"#f0f4f8","Carbon Black":"#1a1a1a"
     };
+
+    // دالة ذكية لاستخراج اللون — تبحث عن أقرب تطابق إذا لم يجد مطابقة مباشرة
+    function resolveColor(colorName) {
+        if (!colorName) return '#888888';
+        const trimmed = colorName.trim();
+        // بحث مباشر
+        if (COLOR_HEX_MAP[trimmed]) return COLOR_HEX_MAP[trimmed];
+        // بحث بدون حساسية للحروف
+        const lower = trimmed.toLowerCase();
+        for (const [key, val] of Object.entries(COLOR_HEX_MAP)) {
+            if (key.toLowerCase() === lower) return val;
+        }
+        // بحث جزئي — إذا احتوى الاسم على كلمة معروفة
+        const keywords = [
+            ['أسود','#1a1a1a'],['أبيض','#f5f5f5'],['أحمر','#ef4444'],['أزرق','#3b82f6'],
+            ['أخضر','#10b981'],['ذهبي','#f5b041'],['فضي','#c0c0c0'],['رمادي','#6b7280'],
+            ['بنفسجي','#8b5cf6'],['وردي','#f472b6'],['برتقالي','#fb923c'],['أصفر','#fbbf24'],
+            ['تيتانيوم','#878681'],['كحلي','#1e3a5f'],['بني','#92400e'],['تركوازي','#06b6d4'],
+            ['black','#1a1a1a'],['white','#f5f5f5'],['blue','#3b82f6'],['red','#ef4444'],
+            ['green','#10b981'],['gold','#f5b041'],['silver','#c0c0c0'],['gray','#6b7280'],
+            ['grey','#6b7280'],['purple','#8b5cf6'],['pink','#f472b6'],['orange','#fb923c'],
+            ['yellow','#fbbf24'],['titanium','#878681'],['violet','#7c3aed'],
+            ['cream','#fffdd0'],['lavender','#b19cd9'],['mint','#98ff98'],['coral','#ff6b6b'],
+            ['midnight','#0a0e1a'],['phantom','#1a1a1a'],['graphite','#4a4a4a'],
+        ];
+        for (const [keyword, hex] of keywords) {
+            if (trimmed.includes(keyword) || lower.includes(keyword.toLowerCase())) return hex;
+        }
+        return '#888888';
+    }
 
     let allProducts = {};
     let favoriteIds = JSON.parse(localStorage.getItem('storeFavorites')) || [];
@@ -1030,7 +1093,7 @@
             prod.colors.forEach(c => {
                 const chip = document.createElement('div');
                 chip.className = 'color-chip';
-                chip.style.setProperty('--color', COLOR_HEX_MAP[c] || '#888888');
+                chip.style.setProperty('--color', resolveColor(c));
                 chip.title = c;
                 chip.onclick = function() {
                     selectedColor = c;

@@ -7,16 +7,12 @@ const OFFLINE_URL = '/offline.html';
 
 // الملفات المطلوب تخزينها مؤقتاً
 const STATIC_CACHE_URLS = [
-  '/',
-  '/index.html',
-  '/dashboard.html',
-  '/offline.html',
-  '/css/style.css',
-  '/css/dashboard.css',
-  '/js/firebase-config.js',
-  '/js/app.js',
-  '/js/dashboard.js',
-  '/manifest.json',
+  './',
+  './index.html',
+  './dashboard.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
   'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js',
@@ -25,10 +21,7 @@ const STATIC_CACHE_URLS = [
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js'
 ];
 
-// URLs الصورية التي سيتم تخزينها
-const IMAGE_CACHE_URLS = [
-  'https://i.postimg.cc/mr3Txdqm/1781273630296.png'
-];
+const IMAGE_CACHE_URLS = [];
 
 // ========== تثبيت Service Worker ==========
 self.addEventListener('install', (event) => {
@@ -39,7 +32,14 @@ self.addEventListener('install', (event) => {
       const cache = await caches.open(CACHE_NAME);
       
       // تخزين الملفات الثابتة
-      await cache.addAll(STATIC_CACHE_URLS);
+      // تخزين كل ملف منفرداً لتجنب فشل الكل بسبب ملف واحد
+      for (const url of STATIC_CACHE_URLS) {
+        try {
+          await cache.add(url);
+        } catch (e) {
+          console.warn('[SW] تجاوز:', url, e.message);
+        }
+      }
       
       // تخزين الصور الثابتة
       for (const url of IMAGE_CACHE_URLS) {

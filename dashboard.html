@@ -621,6 +621,7 @@
         
         try {
             await db.ref(`products/${id}`).set(productData);
+            // حذف المفتاح القديم فقط بعد نجاح الكتابة لتجنب فقدان البيانات
             if (editKey && editKey !== id.toString()) {
                 await db.ref(`products/${editKey}`).remove();
             }
@@ -661,7 +662,8 @@
         for(let i = 1; i <= 7; i++) {
             document.getElementById(`p_img${i}`).value = imgs[i-1] || '';
         }
-        openModal();
+        // فتح النافذة مباشرة دون استدعاء openModal() لتجنب إعادة تعيين العنوان والمفتاح
+        document.getElementById('productModal').classList.add('show');
     }
 
     async function deleteProduct(key) {
@@ -823,7 +825,11 @@
                 totalSales += order.totalPrice || 0;
                 if (order.productId) {
                     const prod = allProductsData[order.productId];
-                    if (prod) totalProfit += Math.max(0, (order.totalPrice || 0) - (prod.cost || 0));
+                    if (prod) {
+                        // الربح = سعر البيع - التكلفة (بدون رسوم التوصيل)
+                        const salePrice = prod.price || 0;
+                        totalProfit += Math.max(0, salePrice - (prod.cost || 0));
+                    }
                 }
             }
         });

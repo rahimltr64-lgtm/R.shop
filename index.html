@@ -910,7 +910,7 @@
     function clearCompare() {
         compareList = [];
         updateCompareBar();
-        renderStoreProducts();
+        renderStoreProducts(); // يُعيد رسم البطاقات لإزالة active من أزرار المقارنة
     }
 
     function openCompareModal() {
@@ -963,7 +963,10 @@
 
     function openProductQuickView(key) {
         const prod = allProducts[key]; if(!prod) return;
-        if(prod.stock === 0) return;
+        if(prod.stock === 0) {
+            alert('❌ هذا المنتج نفذ من المخزون حالياً.');
+            return;
+        }
         selectedActiveProduct = prod;
         selectedStorage = null;
         selectedColor = null;
@@ -1076,8 +1079,8 @@
             const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${idInput}.json`);
             const order = await res.json();
             if(order) {
-                document.getElementById('resProdName').innerText = order.product;
-                document.getElementById('resTotalPrice').innerText = `${order.totalPrice.toLocaleString('ar')} DA`;
+                document.getElementById('resProdName').innerText = order.product || '-';
+                document.getElementById('resTotalPrice').innerText = `${(order.totalPrice || 0).toLocaleString('ar')} DA`;
                 const badge = document.getElementById('resStatus');
                 badge.className = 'status-badge';
                 badge.innerText = order.status || 'قيد الانتظار';
@@ -1140,6 +1143,16 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             });
+            // ✅ إصلاح: إنقاص المخزون بعد إتمام الطلب
+            const newStock = Math.max(0, (selectedActiveProduct.stock || 1) - 1);
+            await fetch(`${CONFIG.FIREBASE_BASE_URL}/products/${selectedActiveProduct.id}.json`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stock: newStock })
+            });
+            // تحديث محلي فوري
+            selectedActiveProduct.stock = newStock;
+            allProducts[String(selectedActiveProduct.id)] && (allProducts[String(selectedActiveProduct.id)].stock = newStock);
             const tgMsg = `🔔 طلبية جديدة رقم: ${orderId}\n👤 ${name}\n📞 ${phone}\n📍 ${wilaya} - ${baladia}\n🚚 ${orderData.deliveryType}\n🛍️ ${productDesc}\n💰 ${finalTotal.toLocaleString('ar')} DA`;
             await fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
                 method: 'POST',

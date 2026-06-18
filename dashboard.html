@@ -217,6 +217,18 @@
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px; margin-top: 10px; }
+        .home-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 28px 18px; text-align: center; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+        .home-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); box-shadow: 0 15px 35px rgba(59,130,246,0.15); }
+        .home-card .icon { font-size: 38px; margin-bottom: 10px; }
+        .home-card .title { font-weight: 900; font-size: 15px; }
+        .home-card .desc { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+        .view-page { display: none; animation: fadeIn 0.3s ease; }
+        .back-btn { background: var(--card-elev); border: 1px solid var(--border-color); color: var(--text-main); padding: 9px 16px; border-radius: 12px; font-family: 'Cairo'; font-weight: 700; font-size: 12px; cursor: pointer; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; }
+        .back-btn:hover { border-color: var(--accent-blue); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
         .section-label { display: block; font-size: 11px; color: var(--accent-gold); font-weight: 700; margin: 14px 0 7px 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
     </style>
 </head>
@@ -243,7 +255,7 @@
     <header>
         <div class="header-info">
             <h1>📱 هواتف ماركت - لوحة التحكم</h1>
-            <p>إدارة المنتجات، الطلبات، وتتبع المبيعات والأرباح</p>
+            <p>اختر الوظيفة التي تريد إدارتها من القائمة</p>
             <div class="last-updated">آخر تحديث: <span id="lastUpdatedTime">-</span></div>
         </div>
         <div class="header-actions">
@@ -251,27 +263,133 @@
                 <span class="user-avatar" id="userAvatar">👤</span>
                 <span id="userEmail">admin@phones-market.com</span>
             </div>
-            <button class="btn-trigger-modal" onclick="openModal()">➕ إضافة هاتف</button>
-            <button class="btn-trigger-modal" style="background:linear-gradient(135deg, var(--accent-purple) 0%, #6d28d9 100%);" onclick="openShippingModal()">🚚 أسعار التوصيل</button>
-            <button class="btn-trigger-modal green" onclick="exportOrdersCSV()">📥 تصدير الطلبات</button>
-            <button class="btn-trigger-modal green" onclick="loadAllData()">🔄 تحديث</button>
+            <button class="btn-trigger-modal" onclick="showHome()">🏠 الرئيسية</button>
             <button class="logout-btn" onclick="logout()">🚪 خروج</button>
         </div>
     </header>
 
-    <!-- الإحصائيات -->
-    <div class="stats-grid">
-        <div class="stat-card"><div class="stat-info"><h3>إجمالي الهواتف</h3><span class="stat-num" id="totalProductsNum">0</span></div><div style="font-size:28px;">📱</div></div>
-        <div class="stat-card"><div class="stat-info"><h3>إجمالي الطلبات</h3><span class="stat-num" id="totalOrdersNum">0</span></div><div style="font-size:28px;">📦</div></div>
-        <div class="stat-card"><div class="stat-info"><h3>المبيعات المؤكدة</h3><span class="stat-num" id="totalSalesNum">0 DA</span></div><div style="font-size:28px;">💰</div></div>
-        <div class="stat-card"><div class="stat-info"><h3>صافي الربح</h3><span class="stat-num" id="netProfitNum">0 DA</span></div><div style="font-size:28px;">📈</div></div>
-        <div class="stat-card"><div class="stat-info"><h3>طلبات معلقة</h3><span class="stat-num" id="pendingOrdersNum">0</span></div><div style="font-size:28px;">⏳</div></div>
+    <!-- القائمة الرئيسية بالأيقونات -->
+    <div id="homeMenu" class="home-grid">
+        <div class="home-card" onclick="showView('view-stats')">
+            <div class="icon">📊</div>
+            <div class="title">الإحصائيات</div>
+            <div class="desc">نظرة سريعة على الأرقام</div>
+        </div>
+        <div class="home-card" onclick="showView('view-charts')">
+            <div class="icon">📈</div>
+            <div class="title">الرسوم البيانية</div>
+            <div class="desc">توزيع الطلبات والأكثر مبيعاً</div>
+        </div>
+        <div class="home-card" onclick="showView('view-products')">
+            <div class="icon">🛍️</div>
+            <div class="title">إدارة المنتجات</div>
+            <div class="desc">عرض وتعديل الهواتف</div>
+        </div>
+        <div class="home-card" onclick="showView('view-orders')">
+            <div class="icon">📦</div>
+            <div class="title">إدارة الطلبات</div>
+            <div class="desc">متابعة وتحديث الحالات</div>
+        </div>
+        <div class="home-card" onclick="openModal()">
+            <div class="icon">➕</div>
+            <div class="title">إضافة هاتف</div>
+            <div class="desc">منتج جديد بسرعة</div>
+        </div>
+        <div class="home-card" onclick="openShippingModal()">
+            <div class="icon">🚚</div>
+            <div class="title">أسعار التوصيل</div>
+            <div class="desc">تعديل أسعار الولايات</div>
+        </div>
+        <div class="home-card" onclick="exportOrdersCSV()">
+            <div class="icon">📥</div>
+            <div class="title">تصدير الطلبات</div>
+            <div class="desc">تحميل ملف CSV</div>
+        </div>
+        <div class="home-card" onclick="loadAllData(); showToast('🔄 تم التحديث','success')">
+            <div class="icon">🔄</div>
+            <div class="title">تحديث البيانات</div>
+            <div class="desc">جلب آخر التغييرات</div>
+        </div>
     </div>
 
-    <!-- الرسوم البيانية -->
-    <div class="charts-grid">
-        <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">📊 توزيع حالات الطلبات</h2><canvas id="ordersStatusChart"></canvas></div>
-        <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">🏆 أعلى المنتجات طلباً</h2><div class="top-products-list" id="topProductsList">جاري التحميل...</div></div>
+    <!-- صفحات الوظائف -->
+    <div id="view-stats" class="view-page">
+        <button class="back-btn" onclick="showHome()">⬅️ رجوع للقائمة</button>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-info"><h3>إجمالي الهواتف</h3><span class="stat-num" id="totalProductsNum">0</span></div><div style="font-size:28px;">📱</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>إجمالي الطلبات</h3><span class="stat-num" id="totalOrdersNum">0</span></div><div style="font-size:28px;">📦</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>المبيعات المؤكدة</h3><span class="stat-num" id="totalSalesNum">0 DA</span></div><div style="font-size:28px;">💰</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>صافي الربح</h3><span class="stat-num" id="netProfitNum">0 DA</span></div><div style="font-size:28px;">📈</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>طلبات معلقة</h3><span class="stat-num" id="pendingOrdersNum">0</span></div><div style="font-size:28px;">⏳</div></div>
+        </div>
+    </div>
+
+    <div id="view-charts" class="view-page">
+        <button class="back-btn" onclick="showHome()">⬅️ رجوع للقائمة</button>
+        <div class="charts-grid">
+            <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">📊 توزيع حالات الطلبات</h2><canvas id="ordersStatusChart"></canvas></div>
+            <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">🏆 أعلى المنتجات طلباً</h2><div class="top-products-list" id="topProductsList">جاري التحميل...</div></div>
+        </div>
+    </div>
+
+    <div id="view-products" class="view-page">
+        <button class="back-btn" onclick="showHome()">⬅️ رجوع للقائمة</button>
+        <div class="card">
+            <h2>🛍️ إدارة المنتجات</h2>
+            <div class="filter-bar">
+                <input type="text" id="productSearchInput" class="search-input" placeholder="🔍 ابحث في المنتجات..." oninput="renderProducts()">
+                <select id="productFilterBrand" class="filter-select" onchange="renderProducts()">
+                    <option value="الكل">كل الماركات</option>
+                    <option value="آبل">🍎 آبل</option>
+                    <option value="سامسونج">⭐ سامسونج</option>
+                    <option value="شاومي">🔴 شاومي</option>
+                    <option value="هواوي">🟢 هواوي</option>
+                    <option value="ون بلس">🔵 ون بلس</option>
+                </select>
+                <select id="productFilterStock" class="filter-select" onchange="renderProducts()">
+                    <option value="الكل">كل المخزون</option>
+                    <option value="low">⚠️ مخزون منخفض</option>
+                    <option value="out">❌ نفذ المخزون</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table class="custom-table">
+                    <thead><tr><th>ID</th><th>الصورة</th><th>الاسم</th><th>الماركة</th><th>سعر البيع</th><th>سعر الجملة</th><th>المخزون</th><th>التقييم</th><th>إجراءات</th></tr></thead>
+                    <tbody id="productsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-orders" class="view-page">
+        <button class="back-btn" onclick="showHome()">⬅️ رجوع للقائمة</button>
+        <div class="card">
+            <h2>📦 إدارة الطلبات <button class="export-btn" onclick="exportOrdersCSV()">📥 تصدير CSV</button></h2>
+            <div class="filter-bar">
+                <input type="text" id="orderSearchInput" class="search-input" placeholder="🔍 ابحث بالاسم، الهاتف، أو رقم الطلب..." oninput="filterOrdersTable()">
+                <select id="statusFilterSelect" class="filter-select" onchange="filterOrdersTable()">
+                    <option value="الكل">كل الحالات 🌍</option>
+                    <option value="قيد الانتظار">⏳ قيد الانتظار</option>
+                    <option value="تم التأكيد">📞 تم التأكيد</option>
+                    <option value="تم الشحن">🚚 تم الشحن</option>
+                    <option value="تم التوصيل">✅ تم التوصيل</option>
+                    <option value="ملغى">❌ ملغى</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
+                            <th>رقم الطلب</th><th>الزبون</th><th>الولاية</th>
+                            <th>المنتج</th><th>المجموع</th><th>الحالة</th><th>التاريخ</th><th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+            <p id="ordersCount" style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:12px;"></p>
+        </div>
     </div>
 
     <!-- مودال المنتج -->
@@ -374,64 +492,7 @@
         <button class="btn-trigger-modal" onclick="applyBulkStatus()">⚡ تطبيق على الكل</button>
         <button class="logout-btn" onclick="clearBulkSelection()">✕ إلغاء التحديد</button>
     </div>
-
-    <!-- جدول المنتجات -->
-    <div class="card">
-        <h2>🛍️ إدارة المنتجات</h2>
-        <div class="filter-bar">
-            <input type="text" id="productSearchInput" class="search-input" placeholder="🔍 ابحث في المنتجات..." oninput="renderProducts()">
-            <select id="productFilterBrand" class="filter-select" onchange="renderProducts()">
-                <option value="الكل">كل الماركات</option>
-                <option value="آبل">🍎 آبل</option>
-                <option value="سامسونج">⭐ سامسونج</option>
-                <option value="شاومي">🔴 شاومي</option>
-                <option value="هواوي">🟢 هواوي</option>
-                <option value="ون بلس">🔵 ون بلس</option>
-            </select>
-            <select id="productFilterStock" class="filter-select" onchange="renderProducts()">
-                <option value="الكل">كل المخزون</option>
-                <option value="low">⚠️ مخزون منخفض</option>
-                <option value="out">❌ نفذ المخزون</option>
-            </select>
-        </div>
-        <div class="table-container">
-            <table class="custom-table">
-                <thead><tr><th>ID</th><th>الصورة</th><th>الاسم</th><th>الماركة</th><th>سعر البيع</th><th>سعر الجملة</th><th>المخزون</th><th>التقييم</th><th>إجراءات</th></tr></thead>
-                <tbody id="productsTableBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- جدول الطلبات -->
-    <div class="card">
-        <h2>📦 إدارة الطلبات <button class="export-btn" onclick="exportOrdersCSV()">📥 تصدير CSV</button></h2>
-        <div class="filter-bar">
-            <input type="text" id="orderSearchInput" class="search-input" placeholder="🔍 ابحث بالاسم، الهاتف، أو رقم الطلب..." oninput="filterOrdersTable()">
-            <select id="statusFilterSelect" class="filter-select" onchange="filterOrdersTable()">
-                <option value="الكل">كل الحالات 🌍</option>
-                <option value="قيد الانتظار">⏳ قيد الانتظار</option>
-                <option value="تم التأكيد">📞 تم التأكيد</option>
-                <option value="تم الشحن">🚚 تم الشحن</option>
-                <option value="تم التوصيل">✅ تم التوصيل</option>
-                <option value="ملغى">❌ ملغى</option>
-            </select>
-        </div>
-        <div class="table-container">
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
-                        <th>رقم الطلب</th><th>الزبون</th><th>الولاية</th>
-                        <th>المنتج</th><th>المجموع</th><th>الحالة</th><th>التاريخ</th><th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersTableBody"></tbody>
-            </table>
-        </div>
-        <p id="ordersCount" style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:12px;"></p>
-    </div>
 </div>
-
 <script>
     // ==================== إعداد Firebase ====================
     const firebaseConfig = {
@@ -455,6 +516,24 @@
     let ordersChart = null;
     let selectedOrderKeys = new Set();
 
+
+    // ==================== التنقل بالأيقونات ====================
+    function showHome() {
+        document.querySelectorAll('.view-page').forEach(v => v.style.display = 'none');
+        const home = document.getElementById('homeMenu');
+        if (home) home.style.display = 'grid';
+    }
+    function showView(id) {
+        const home = document.getElementById('homeMenu');
+        if (home) home.style.display = 'none';
+        document.querySelectorAll('.view-page').forEach(v => v.style.display = 'none');
+        const view = document.getElementById(id);
+        if (view) view.style.display = 'block';
+        if (id === 'view-charts' && typeof renderOrdersChart === 'function') {
+            setTimeout(renderOrdersChart, 150);
+        }
+    }
+
     // ==================== المصادقة ====================
     function checkAuthState() {
         auth.onAuthStateChanged(user => {
@@ -465,6 +544,7 @@
                 const firstChar = user.email.charAt(0).toUpperCase();
                 document.getElementById('userAvatar').innerText = firstChar;
                 loadAllData();
+                showHome();
                 setInterval(loadAllData, 30000);
             } else {
                 document.getElementById('loginContainer').style.display = 'flex';
@@ -1009,5 +1089,5 @@
     // بدء التطبيق
     checkAuthState();
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;var a=target.closest?target.closest("a[href]"):null;if(!a||!a.href||!/^https?:\/\//.test(a.href))return;if(a.href.replace(/#.*$/,"")===loc)return;var productId=extractProductId(target)||extractProductId(a);if(!productId)return;e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*")},true)})();</script></body>
 </html>

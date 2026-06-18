@@ -305,6 +305,11 @@
             <div class="title">تصدير الطلبات</div>
             <div class="desc">تحميل ملف CSV</div>
         </div>
+        <div class="home-card" onclick="showView('view-analytics')">
+            <div class="icon">🧠</div>
+            <div class="title">تحليلات متقدمة</div>
+            <div class="desc">ذكاء أعمال ومؤشرات</div>
+        </div>
         <div class="home-card" onclick="loadAllData(); showToast('🔄 تم التحديث','success')">
             <div class="icon">🔄</div>
             <div class="title">تحديث البيانات</div>
@@ -389,6 +394,32 @@
                 </table>
             </div>
             <p id="ordersCount" style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:12px;"></p>
+        </div>
+    </div>
+
+    <div id="view-analytics" class="view-page">
+        <button class="back-btn" onclick="showHome()">⬅️ رجوع للقائمة</button>
+        
+        <div class="stats-grid" style="margin-bottom:20px;">
+            <div class="stat-card"><div class="stat-info"><h3>متوسط قيمة الطلب</h3><span class="stat-num" id="avgOrderValue">0 DA</span></div><div style="font-size:28px;">🧾</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>معدل التسليم</h3><span class="stat-num" id="deliveryRate">0%</span></div><div style="font-size:28px;">✅</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>معدل الإلغاء</h3><span class="stat-num" id="cancelRate">0%</span></div><div style="font-size:28px;">❌</div></div>
+            <div class="stat-card"><div class="stat-info"><h3>عملاء نشطون</h3><span class="stat-num" id="activeCustomers">0</span></div><div style="font-size:28px;">👥</div></div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">📈 مبيعات آخر 30 يوم</h2><canvas id="salesTrendChart"></canvas></div>
+            <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">💰 الأرباح حسب المنتج (Top 5)</h2><canvas id="profitByProductChart"></canvas></div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">🗺️ الطلبات حسب الولاية</h2><canvas id="wilayaChart"></canvas></div>
+            <div class="chart-card">
+                <h2 style="border:none; padding:0; margin-bottom:16px;">🏅 أفضل 5 عملاء</h2>
+                <div id="topCustomersList" class="top-products-list">جاري التحميل...</div>
+                <h2 style="border:none; padding:0; margin:20px 0 10px;">⚠️ تنبيهات المخزون</h2>
+                <div id="stockAlerts" class="top-products-list">جاري التحميل...</div>
+            </div>
         </div>
     </div>
 
@@ -514,6 +545,9 @@
     let allOrdersData = {};
     let allProductsData = {};
     let ordersChart = null;
+    let salesTrendChart = null;
+    let profitByProductChart = null;
+    let wilayaChart = null;
     let selectedOrderKeys = new Set();
 
 
@@ -531,6 +565,9 @@
         if (view) view.style.display = 'block';
         if (id === 'view-charts' && typeof renderOrdersChart === 'function') {
             setTimeout(renderOrdersChart, 150);
+        }
+        if (id === 'view-analytics' && typeof renderAdvancedAnalytics === 'function') {
+            setTimeout(renderAdvancedAnalytics, 150);
         }
     }
 
@@ -603,6 +640,7 @@
             calculateFinance();
             renderOrdersChart();
             renderTopProducts();
+            renderAdvancedAnalytics();
             
             document.getElementById('lastUpdatedTime').innerText = new Date().toLocaleTimeString('ar-DZ');
         } catch(e) {
@@ -897,6 +935,143 @@
     }
 
     // ==================== الإحصائيات ====================
+    
+    // ==================== التحليلات المتقدمة ====================
+    function renderAdvancedAnalytics() {
+        const orders = Object.values(allOrdersData);
+        const products = Object.values(allProductsData);
+        
+        if (orders.length === 0) return;
+        
+        // 1. مؤشرات سريعة
+        const validOrders = orders.filter(o => o.status !== 'ملغى');
+        const delivered = orders.filter(o => o.status === 'تم التوصيل');
+        const cancelled = orders.filter(o => o.status === 'ملغى');
+        const totalSales = validOrders.reduce((sum, o) => sum + (parseInt(o.totalPrice) || 0), 0);
+        const avgOrder = validOrders.length ? Math.round(totalSales / validOrders.length) : 0;
+        const deliveryRate = orders.length ? Math.round((delivered.length / orders.length) * 100) : 0;
+        const cancelRate = orders.length ? Math.round((cancelled.length / orders.length) * 100) : 0;
+        const uniqueCustomers = new Set(orders.map(o => o.phone)).size;
+        
+        document.getElementById('avgOrderValue').innerText = avgOrder.toLocaleString('ar') + ' DA';
+        document.getElementById('deliveryRate').innerText = deliveryRate + '%';
+        document.getElementById('cancelRate').innerText = cancelRate + '%';
+        document.getElementById('activeCustomers').innerText = uniqueCustomers;
+        
+        // 2. مبيعات آخر 30 يوم
+        const last30 = {};
+        const today = new Date();
+        for (let i = 29; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            const key = d.toISOString().slice(0,10);
+            last30[key] = 0;
+        }
+        validOrders.forEach(o => {
+            if (!o.createdAt) return;
+            const date = new Date(o.createdAt).toISOString().slice(0,10);
+            if (last30.hasOwnProperty(date)) {
+                last30[date] += parseInt(o.totalPrice) || 0;
+            }
+        });
+        const salesCtx = document.getElementById('salesTrendChart');
+        if (salesCtx) {
+            if (salesTrendChart) salesTrendChart.destroy();
+            salesTrendChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(last30).map(d => d.slice(5)),
+                    datasets: [{
+                        label: 'المبيعات (DA)',
+                        data: Object.values(last30),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59,130,246,0.15)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+        }
+        
+        // 3. الأرباح حسب المنتج
+        const profitMap = {};
+        validOrders.forEach(o => {
+            const prodName = o.product || '';
+            const product = products.find(p => p.name === prodName);
+            const cost = product ? (product.cost || 0) : 0;
+            const price = parseInt(o.totalPrice) || 0;
+            const profit = price - cost;
+            profitMap[prodName] = (profitMap[prodName] || 0) + profit;
+        });
+        const topProfit = Object.entries(profitMap).sort((a,b) => b[1]-a[1]).slice(0,5);
+        const profitCtx = document.getElementById('profitByProductChart');
+        if (profitCtx) {
+            if (profitByProductChart) profitByProductChart.destroy();
+            profitByProductChart = new Chart(profitCtx, {
+                type: 'bar',
+                data: {
+                    labels: topProfit.map(p => p[0].slice(0,15)),
+                    datasets: [{ label: 'ربح', data: topProfit.map(p => p[1]), backgroundColor: '#10b981' }]
+                },
+                options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } }
+            });
+        }
+        
+        // 4. الطلبات حسب الولاية
+        const wilayaMap = {};
+        orders.forEach(o => {
+            const w = o.wilaya || 'غير محدد';
+            wilayaMap[w] = (wilayaMap[w] || 0) + 1;
+        });
+        const topWilayas = Object.entries(wilayaMap).sort((a,b) => b[1]-a[1]).slice(0,8);
+        const wilayaCtx = document.getElementById('wilayaChart');
+        if (wilayaCtx) {
+            if (wilayaChart) wilayaChart.destroy();
+            wilayaChart = new Chart(wilayaCtx, {
+                type: 'bar',
+                data: {
+                    labels: topWilayas.map(w => w[0]),
+                    datasets: [{ label: 'طلبات', data: topWilayas.map(w => w[1]), backgroundColor: '#f5b041' }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+        }
+        
+        // 5. أفضل العملاء
+        const customerMap = {};
+        validOrders.forEach(o => {
+            const phone = o.phone || 'unknown';
+            if (!customerMap[phone]) customerMap[phone] = { name: o.name, total: 0, count: 0 };
+            customerMap[phone].total += parseInt(o.totalPrice) || 0;
+            customerMap[phone].count += 1;
+        });
+        const topCustomers = Object.values(customerMap).sort((a,b) => b.total - a.total).slice(0,5);
+        document.getElementById('topCustomersList').innerHTML = topCustomers.map((c,i) => `
+            <div class="top-product-item">
+                <span style="font-weight:900; color:var(--accent-gold)">#${i+1}</span>
+                <div style="flex:1">
+                    <strong>${c.name}</strong>
+                    <small style="display:block; color:var(--text-muted)">${c.count} طلبات</small>
+                </div>
+                <strong style="color:var(--accent-green)">${c.total.toLocaleString('ar')} DA</strong>
+            </div>
+        `).join('');
+        
+        // 6. تنبيهات المخزون
+        const lowStock = products.filter(p => (p.stock || 0) <= 3).sort((a,b) => a.stock - b.stock).slice(0,5);
+        document.getElementById('stockAlerts').innerHTML = lowStock.length ? lowStock.map(p => `
+            <div class="top-product-item" style="border-color:${p.stock===0?'var(--accent-red)':'var(--accent-orange)'}">
+                <span style="font-size:20px">${p.stock===0?'❌':'⚠️'}</span>
+                <div style="flex:1">
+                    <strong>${p.name}</strong>
+                    <small style="display:block; color:var(--text-muted)">${p.brand}</small>
+                </div>
+                <strong style="color:${p.stock===0?'var(--accent-red)':'var(--accent-orange)'}">${p.stock} متبقي</strong>
+            </div>
+        `).join('') : '<p style="color:var(--text-muted); text-align:center">✅ المخزون جيد</p>';
+    }
+
     function calculateFinance() {
         let totalSales = 0, totalProfit = 0;
         Object.values(allOrdersData).forEach(order => {

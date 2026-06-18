@@ -417,6 +417,89 @@
             position: fixed; top: 0; left: 0; z-index: 9999;
             width: 0%; transition: width 0.3s ease;
         }
+        /* ===== نظام النوافذ المنبثقة المخصصة ===== */
+        #customAlertOverlay {
+            position: fixed; inset: 0; z-index: 99999;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        #customAlertOverlay.show {
+            opacity: 1; pointer-events: all;
+        }
+        #customAlertBox {
+            background: linear-gradient(145deg, #141824, #1a2035);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 36px 30px 28px;
+            max-width: 360px; width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,176,65,0.1);
+            transform: scale(0.85) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        #customAlertOverlay.show #customAlertBox {
+            transform: scale(1) translateY(0);
+        }
+        #customAlertBox::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--gradient-gold);
+            border-radius: 24px 24px 0 0;
+        }
+        #customAlertIcon {
+            font-size: 52px; line-height: 1;
+            margin-bottom: 14px;
+            display: block;
+            animation: iconBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+        }
+        @keyframes iconBounce {
+            from { transform: scale(0) rotate(-15deg); opacity:0; }
+            to   { transform: scale(1) rotate(0deg);   opacity:1; }
+        }
+        #customAlertMessage {
+            font-size: 15px; color: #e2e8f0;
+            line-height: 1.7; margin-bottom: 24px;
+            font-family: 'Cairo', sans-serif; font-weight: 600;
+        }
+        #customAlertBtn {
+            background: var(--gradient-gold);
+            color: #0a0e16; border: none;
+            padding: 12px 40px; border-radius: 50px;
+            font-size: 14px; font-weight: 900;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer; letter-spacing: 0.3px;
+            box-shadow: 0 4px 20px rgba(245,176,65,0.35);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        #customAlertBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(245,176,65,0.5); }
+        #customAlertBtn:active { transform: translateY(0); }
+        /* Toast */
+        #toastContainer {
+            position: fixed; bottom: 30px; right: 20px;
+            z-index: 99998; display: flex; flex-direction: column; gap: 10px;
+            pointer-events: none;
+        }
+        .toast-item {
+            background: linear-gradient(145deg, #141824, #1a2035);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 13px 18px;
+            color: #e2e8f0; font-size: 13px; font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            min-width: 220px; max-width: 300px;
+            transform: translateX(120%);
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+            opacity: 0; pointer-events: all;
+            border-right: 3px solid var(--accent-gold);
+        }
+        .toast-item.show { transform: translateX(0); opacity: 1; }
+        .toast-item.hide { transform: translateX(120%); opacity: 0; }
         @media (max-width: 768px) {
             .footer-content { grid-template-columns: 1fr; gap: 20px; }
             .hero-content { max-width: 100%; }
@@ -952,7 +1035,7 @@
             compareList = compareList.filter(k => k !== key);
             btn.classList.remove('in-compare');
         } else {
-            if(compareList.length >= 2) { alert('يمكنك مقارنة منتجين كحد أقصى. أزل أحدهما أولاً.'); return; }
+            if(compareList.length >= 2) { showAlert('يمكنك مقارنة منتجين كحد أقصى. أزل أحدهما أولاً.', '⚠️'); return; }
             compareList.push(key);
             btn.classList.add('in-compare');
         }
@@ -977,7 +1060,7 @@
     }
 
     function openCompareModal() {
-        if(compareList.length < 2) { alert('اختر منتجين على الأقل للمقارنة.'); return; }
+        if(compareList.length < 2) { showAlert('اختر منتجين على الأقل للمقارنة.', '📊'); return; }
         const [k1, k2] = compareList;
         const p1 = allProducts[k1], p2 = allProducts[k2];
         if(!p1 || !p2) return;
@@ -1027,7 +1110,7 @@
     function openProductQuickView(key) {
         const prod = allProducts[key]; if(!prod) return;
         if(prod.stock === 0) {
-            alert('❌ هذا المنتج نفذ من المخزون حالياً.');
+            showAlert('هذا المنتج نفذ من المخزون حالياً.', '❌');
             return;
         }
         selectedActiveProduct = prod;
@@ -1137,7 +1220,7 @@
     async function trackOrderLive() {
         const idInput = document.getElementById('trackOrderIdInput').value.trim();
         const resultBox = document.getElementById('trackResult');
-        if(!idInput) { alert('يرجى إدخال رقم الطلب!'); return; }
+        if(!idInput) { showAlert('يرجى إدخال رقم الطلب!', '🔍'); return; }
         try {
             const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/orders/${idInput}.json`);
             const order = await res.json();
@@ -1153,10 +1236,10 @@
                 else badge.classList.add('status-pending');
                 resultBox.style.display = 'block';
             } else {
-                alert('❌ لم يتم العثور على طلب بهذا الرقم.');
+                showAlert('لم يتم العثور على طلب بهذا الرقم.', '❌');
                 resultBox.style.display = 'none';
             }
-        } catch(e) { alert('حدث خطأ أثناء الاستعلام.'); }
+        } catch(e) { showAlert('حدث خطأ أثناء الاستعلام.', '⚠️'); }
     }
 
     async function submitDirectOrder() {
@@ -1166,9 +1249,9 @@
         const wilaya = document.getElementById('custWilaya').value;
         const baladia = document.getElementById('custBaladia').value.trim();
 
-        if(!name || !phone || !wilaya || !baladia) { alert('⚠️ يرجى استكمال جميع البيانات!'); return; }
-        if(selectedActiveProduct.storage?.length > 0 && !selectedStorage) { alert('⚠️ يرجى اختيار سعة التخزين!'); return; }
-        if(selectedActiveProduct.colors?.length > 0 && !selectedColor) { alert('⚠️ يرجى اختيار اللون!'); return; }
+        if(!name || !phone || !wilaya || !baladia) { showAlert('يرجى استكمال جميع البيانات!', '⚠️'); return; }
+        if(selectedActiveProduct.storage?.length > 0 && !selectedStorage) { showAlert('يرجى اختيار سعة التخزين!', '⚠️'); return; }
+        if(selectedActiveProduct.colors?.length > 0 && !selectedColor) { showAlert('يرجى اختيار اللون!', '⚠️'); return; }
 
         const btn = document.getElementById('submitOrderBtn');
         btn.disabled = true; btn.innerText = '⏳ جاري الإرسال...';
@@ -1226,14 +1309,14 @@
             forceCloseDrawer('productViewDrawer');
             document.getElementById('thankYouOrderId').innerText = orderId;
             document.getElementById('thankYouModal').classList.add('show');
-        } catch(e) { alert('خطأ مؤقت بالشبكة. حاول مجدداً.'); }
+        } catch(e) { showAlert('خطأ مؤقت بالشبكة. حاول مجدداً.', '📡'); }
         finally { btn.disabled = false; btn.innerHTML = '⚡ تأكيد طلب الشراء الآن'; }
     }
 
     // ========= تقييم المنتج (مُصلَح: استخدام prod.id مباشرة) =========
     async function submitRating() {
         const ratingVal = document.querySelector('input[name="rating"]:checked')?.value;
-        if(!ratingVal) { alert('يرجى اختيار تقييم!'); return; }
+        if(!ratingVal) { showAlert('يرجى اختيار تقييم!', '⭐'); return; }
         if(!lastOrderProductId) return;
 
         const prod = Object.values(allProducts).find(p => p.id === lastOrderProductId);
@@ -1333,7 +1416,51 @@
         populateWilayas();
         fetchStoreProducts();
     })();
+
+    /* ===== نظام النوافذ المخصص ===== */
+    const customAlertOverlay = document.getElementById('customAlertOverlay');
+    const customAlertIcon    = document.getElementById('customAlertIcon');
+    const customAlertMessage = document.getElementById('customAlertMessage');
+    const customAlertBtn     = document.getElementById('customAlertBtn');
+
+    function showAlert(message, icon = '💬', btnText = 'حسناً') {
+        customAlertIcon.textContent    = icon;
+        customAlertMessage.textContent = message;
+        customAlertBtn.textContent     = btnText;
+        customAlertOverlay.classList.add('show');
+    }
+    function closeCustomAlert() {
+        customAlertOverlay.classList.remove('show');
+    }
+    customAlertBtn.addEventListener('click', closeCustomAlert);
+    customAlertOverlay.addEventListener('click', (e) => {
+        if (e.target === customAlertOverlay) closeCustomAlert();
+    });
+
+    function showToast(message, icon = '✅') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast-item';
+        toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+        container.appendChild(toast);
+        requestAnimationFrame(() => { toast.classList.add('show'); });
+        setTimeout(() => {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
+    }
 </script>
+
+<!-- نافذة منبثقة مخصصة -->
+<div id="customAlertOverlay">
+    <div id="customAlertBox">
+        <span id="customAlertIcon">💬</span>
+        <p id="customAlertMessage"></p>
+        <button id="customAlertBtn">حسناً</button>
+    </div>
+</div>
+<!-- حاوية التوست -->
+<div id="toastContainer"></div>
 
 </body>
 </html>

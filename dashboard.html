@@ -218,6 +218,40 @@
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .section-label { display: block; font-size: 11px; color: var(--accent-gold); font-weight: 700; margin: 14px 0 7px 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
+
+        /* ===== المشغّل الرئيسي (الأيقونات) ===== */
+        .welcome-bar { margin-bottom: 26px; }
+        .welcome-bar h2 { border: none; padding: 0; margin: 0; font-size: 24px; font-weight: 900; }
+        .welcome-bar p { margin: 6px 0 0; color: var(--text-muted); font-size: 13px; }
+        .launcher-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 18px; }
+        .app-tile {
+            position: relative; background: linear-gradient(160deg, var(--card-bg) 0%, var(--card-elev) 100%);
+            border: 1px solid var(--border-color); border-radius: 24px; padding: 28px 18px;
+            display: flex; flex-direction: column; align-items: center; gap: 14px; cursor: pointer;
+            text-align: center; overflow: hidden;
+        }
+        .app-tile::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% -10%, var(--tile-color, var(--accent-blue)) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; }
+        .app-tile:hover { transform: translateY(-6px); border-color: var(--tile-color, var(--accent-blue)); box-shadow: 0 18px 42px rgba(0,0,0,0.45); }
+        .app-tile:hover::after { opacity: 0.16; }
+        .app-tile:active { transform: translateY(-2px) scale(0.98); }
+        .tile-icon { width: 66px; height: 66px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 30px; background: var(--tile-bg, rgba(59,130,246,0.14)); position: relative; z-index: 1; }
+        .tile-title { font-size: 15px; font-weight: 800; color: var(--text-main); position: relative; z-index: 1; }
+        .tile-desc { font-size: 11px; color: var(--text-muted); position: relative; z-index: 1; line-height: 1.5; }
+        .tile-badge { position: absolute; top: 14px; left: 14px; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 12px; background: var(--accent-red); color: #fff; font-size: 11px; font-weight: 800; display: none; align-items: center; justify-content: center; z-index: 2; box-shadow: 0 4px 12px rgba(239,68,68,0.4); }
+        .tile-badge.show { display: flex; }
+
+        /* ===== نظام العرض (Views) ===== */
+        .view { display: none; }
+        .view.active { display: block; animation: viewIn 0.35s ease; }
+        @keyframes viewIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .view-head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+        .back-btn { background: var(--card-elev); border: 1px solid var(--border-color); color: var(--text-main); width: 44px; height: 44px; border-radius: 14px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .back-btn:hover { border-color: var(--accent-blue); transform: translateX(4px); }
+        .view-head .vh-text h2 { border: none; padding: 0; margin: 0; font-size: 20px; }
+        .view-head .vh-text p { color: var(--text-muted); font-size: 12px; margin: 3px 0 0; }
+        .view-head .vh-spacer { flex: 1; }
+        .home-btn { background: var(--card-elev); color: var(--text-main); border: 1px solid var(--border-color); padding: 9px 16px; border-radius: 12px; font-family: 'Cairo'; font-weight: 700; font-size: 12px; cursor: pointer; }
+        .home-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
     </style>
 </head>
 <body>
@@ -247,17 +281,68 @@
             <div class="last-updated">آخر تحديث: <span id="lastUpdatedTime">-</span></div>
         </div>
         <div class="header-actions">
+            <button class="home-btn" id="homeBtn" onclick="goHome()" style="display:none;">🏠 القائمة الرئيسية</button>
             <div class="user-info" id="userInfo">
                 <span class="user-avatar" id="userAvatar">👤</span>
                 <span id="userEmail">admin@phones-market.com</span>
             </div>
-            <button class="btn-trigger-modal" onclick="openModal()">➕ إضافة هاتف</button>
-            <button class="btn-trigger-modal" style="background:linear-gradient(135deg, var(--accent-purple) 0%, #6d28d9 100%);" onclick="openShippingModal()">🚚 أسعار التوصيل</button>
-            <button class="btn-trigger-modal green" onclick="exportOrdersCSV()">📥 تصدير الطلبات</button>
-            <button class="btn-trigger-modal green" onclick="loadAllData()">🔄 تحديث</button>
             <button class="logout-btn" onclick="logout()">🚪 خروج</button>
         </div>
     </header>
+
+    <!-- ====== المشغّل الرئيسي (الأيقونات) ====== -->
+    <div id="launcherView" class="view active">
+        <div class="welcome-bar">
+            <h2>👋 أهلاً بك في لوحة التحكم</h2>
+            <p>اختر الوظيفة التي تريد إدارتها من الأيقونات التالية</p>
+        </div>
+        <div class="launcher-grid">
+            <div class="app-tile" style="--tile-color:var(--accent-blue); --tile-bg:rgba(59,130,246,0.14);" onclick="showView('overview')">
+                <div class="tile-icon">📊</div>
+                <div class="tile-title">نظرة عامة</div>
+                <div class="tile-desc">الإحصائيات والرسوم البيانية</div>
+            </div>
+            <div class="app-tile" style="--tile-color:var(--accent-green); --tile-bg:rgba(16,185,129,0.14);" onclick="showView('products')">
+                <span class="tile-badge" id="tileProductsBadge">0</span>
+                <div class="tile-icon">🛍️</div>
+                <div class="tile-title">المنتجات</div>
+                <div class="tile-desc">عرض وتعديل الهواتف</div>
+            </div>
+            <div class="app-tile" style="--tile-color:var(--accent-orange); --tile-bg:rgba(249,115,22,0.14);" onclick="showView('orders')">
+                <span class="tile-badge" id="tileOrdersBadge">0</span>
+                <div class="tile-icon">📦</div>
+                <div class="tile-title">الطلبات</div>
+                <div class="tile-desc">متابعة وإدارة الطلبات</div>
+            </div>
+            <div class="app-tile" style="--tile-color:var(--accent-purple); --tile-bg:rgba(139,92,246,0.14);" onclick="openModal()">
+                <div class="tile-icon">➕</div>
+                <div class="tile-title">إضافة هاتف</div>
+                <div class="tile-desc">إضافة منتج جديد</div>
+            </div>
+            <div class="app-tile" style="--tile-color:var(--accent-gold); --tile-bg:rgba(245,176,65,0.14);" onclick="openShippingModal()">
+                <div class="tile-icon">🚚</div>
+                <div class="tile-title">أسعار التوصيل</div>
+                <div class="tile-desc">تعديل أسعار الولايات</div>
+            </div>
+            <div class="app-tile" style="--tile-color:var(--accent-green); --tile-bg:rgba(16,185,129,0.14);" onclick="exportOrdersCSV()">
+                <div class="tile-icon">📥</div>
+                <div class="tile-title">تصدير الطلبات</div>
+                <div class="tile-desc">تنزيل ملف CSV</div>
+            </div>
+            <div class="app-tile" style="--tile-color:var(--accent-blue); --tile-bg:rgba(59,130,246,0.14);" onclick="loadAllData(); showToast('🔄 تم تحديث البيانات','success')">
+                <div class="tile-icon">🔄</div>
+                <div class="tile-title">تحديث البيانات</div>
+                <div class="tile-desc">إعادة تحميل من القاعدة</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== نظرة عامة ====== -->
+    <div id="overviewView" class="view">
+        <div class="view-head">
+            <button class="back-btn" onclick="goHome()" title="رجوع">→</button>
+            <div class="vh-text"><h2>📊 نظرة عامة</h2><p>ملخص الأداء والإحصائيات</p></div>
+        </div>
 
     <!-- الإحصائيات -->
     <div class="stats-grid">
@@ -273,6 +358,7 @@
         <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">📊 توزيع حالات الطلبات</h2><canvas id="ordersStatusChart"></canvas></div>
         <div class="chart-card"><h2 style="border:none; padding:0; margin-bottom:16px;">🏆 أعلى المنتجات طلباً</h2><div class="top-products-list" id="topProductsList">جاري التحميل...</div></div>
     </div>
+    </div><!-- end overviewView -->
 
     <!-- مودال المنتج -->
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
@@ -375,9 +461,17 @@
         <button class="logout-btn" onclick="clearBulkSelection()">✕ إلغاء التحديد</button>
     </div>
 
+    <!-- ====== المنتجات ====== -->
+    <div id="productsView" class="view">
+        <div class="view-head">
+            <button class="back-btn" onclick="goHome()" title="رجوع">→</button>
+            <div class="vh-text"><h2>🛍️ إدارة المنتجات</h2><p>عرض وتعديل وحذف الهواتف</p></div>
+            <div class="vh-spacer"></div>
+            <button class="btn-trigger-modal" onclick="openModal()">➕ إضافة هاتف</button>
+        </div>
     <!-- جدول المنتجات -->
     <div class="card">
-        <h2>🛍️ إدارة المنتجات</h2>
+        <h2>🛍️ قائمة المنتجات</h2>
         <div class="filter-bar">
             <input type="text" id="productSearchInput" class="search-input" placeholder="🔍 ابحث في المنتجات..." oninput="renderProducts()">
             <select id="productFilterBrand" class="filter-select" onchange="renderProducts()">
@@ -401,10 +495,17 @@
             </table>
         </div>
     </div>
+    </div><!-- end productsView -->
 
+    <!-- ====== الطلبات ====== -->
+    <div id="ordersView" class="view">
+        <div class="view-head">
+            <button class="back-btn" onclick="goHome()" title="رجوع">→</button>
+            <div class="vh-text"><h2>📦 إدارة الطلبات</h2><p>متابعة الطلبات وتحديث حالاتها</p></div>
+        </div>
     <!-- جدول الطلبات -->
     <div class="card">
-        <h2>📦 إدارة الطلبات <button class="export-btn" onclick="exportOrdersCSV()">📥 تصدير CSV</button></h2>
+        <h2>📦 قائمة الطلبات <button class="export-btn" onclick="exportOrdersCSV()">📥 تصدير CSV</button></h2>
         <div class="filter-bar">
             <input type="text" id="orderSearchInput" class="search-input" placeholder="🔍 ابحث بالاسم، الهاتف، أو رقم الطلب..." oninput="filterOrdersTable()">
             <select id="statusFilterSelect" class="filter-select" onchange="filterOrdersTable()">
@@ -430,6 +531,7 @@
         </div>
         <p id="ordersCount" style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:12px;"></p>
     </div>
+    </div><!-- end ordersView -->
 </div>
 
 <script>
@@ -464,6 +566,7 @@
                 document.getElementById('userEmail').innerText = user.email;
                 const firstChar = user.email.charAt(0).toUpperCase();
                 document.getElementById('userAvatar').innerText = firstChar;
+                goHome();
                 loadAllData();
                 setInterval(loadAllData, 30000);
             } else {
@@ -507,6 +610,34 @@
         }
     }
 
+    // ==================== التنقل بين الشاشات ====================
+    function showView(name) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        const target = document.getElementById(name + 'View');
+        if (target) target.classList.add('active');
+        // إظهار/إخفاء زر القائمة الرئيسية
+        document.getElementById('homeBtn').style.display = (name === 'launcher') ? 'none' : 'inline-block';
+        // عند فتح النظرة العامة، أعد ضبط حجم الرسم البياني المخفي
+        if (name === 'overview' && ordersChart) { setTimeout(() => ordersChart.resize(), 60); }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goHome() {
+        showView('launcher');
+    }
+
+    function updateLauncherBadges() {
+        const productsCount = Object.keys(allProductsData).length;
+        let pending = 0;
+        Object.values(allOrdersData).forEach(o => {
+            if ((o?.status || 'قيد الانتظار') === 'قيد الانتظار') pending++;
+        });
+        const pBadge = document.getElementById('tileProductsBadge');
+        const oBadge = document.getElementById('tileOrdersBadge');
+        if (pBadge) { pBadge.innerText = productsCount; pBadge.classList.toggle('show', productsCount > 0); }
+        if (oBadge) { oBadge.innerText = pending; oBadge.classList.toggle('show', pending > 0); }
+    }
+
     // ==================== جلب البيانات ====================
     async function loadAllData() {
         try {
@@ -523,6 +654,7 @@
             calculateFinance();
             renderOrdersChart();
             renderTopProducts();
+            updateLauncherBadges();
             
             document.getElementById('lastUpdatedTime').innerText = new Date().toLocaleTimeString('ar-DZ');
         } catch(e) {

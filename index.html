@@ -686,6 +686,13 @@ body { padding-bottom: 64px; }
 
 <script src="config.js"></script>
 <script>
+    // ⚠️ تنبيه أمني هام: التوكن الموجود هنا مرئي في "عرض المصدر" لأي زائر.
+    // لتأمين المتجر في المستقبل، يرجى نقل هذه الإعدادات إلى خادم وسيط (Cloud Function)
+    // واستخدام متغيرات البيئة (Environment Variables) للحفاظ على سرية التوكن.
+    // ⚠️ Telegram Bot Token الخاص بك (تم إدخاله بناءً على طلبك)
+    const TELEGRAM_BOT_TOKEN = "8447738345:AAGdtDIxzBlRW7bJ1tx_7-KgLSmyyvVS6hE";
+    const TELEGRAM_CHAT_ID = "8447738345"; // هذا هو معرف المستخدم الخاص بك
+
     function showAlert(message, icon = '💬', btnText = 'حسناً') {
         const overlay = document.getElementById('customAlertOverlay');
         const iconEl  = document.getElementById('customAlertIcon');
@@ -698,7 +705,6 @@ body { padding-bottom: 64px; }
         overlay.classList.add('show');
     }
 
-    // ⚠️ بيانات Firebase/Telegram تُقرأ الآن من config.js (لا توجد توكنات مكتوبة هنا مباشرة)
     let yalidineShippingRates = [];
 
     const DEFAULT_SHIPPING = [
@@ -865,7 +871,6 @@ body { padding-bottom: 64px; }
         renderStoreProducts();
     }
 
-    // ===== ترتيب (Bottom sheet بدل select لتجربة أفضل على الموبايل) =====
     function openSortSheet() { document.getElementById('sortSheet').classList.add('show'); }
     function closeSortSheet(e) { if(e.target.id === 'sortSheet') document.getElementById('sortSheet').classList.remove('show'); }
     function setSortOption(value) {
@@ -1181,6 +1186,48 @@ body { padding-bottom: 64px; }
         } catch(e) { showAlert('حدث خطأ أثناء الاستعلام.', '⚠️'); }
     }
 
+    // ================================================================
+    // 🚀 دالة إرسال إشعار تيليجرام (جديدة)
+    // ================================================================
+    async function notifyTelegram(orderData) {
+        // قمنا ببناء الرسالة بشكل جميل ومنسق
+        const message = `
+🔔 **طلب جديد في R.Shop!**
+
+🆔 **رقم الطلب:** ${orderData.orderId}
+👤 **الزبون:** ${orderData.name}
+📞 **الهاتف:** ${orderData.phone}
+📍 **الولاية:** ${orderData.wilaya} / ${orderData.baladia}
+🚚 **نوع التوصيل:** ${orderData.deliveryType}
+
+📱 **المنتج:** ${orderData.product}
+💰 **السعر الإجمالي:** ${orderData.totalPrice.toLocaleString('ar')} DA
+📅 **تاريخ الطلب:** ${new Date().toLocaleString('ar-DZ')}
+
+🔹 *الحالة: قيد الانتظار*
+        `;
+
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            });
+
+            if (!response.ok) {
+                console.error('فشل إرسال رسالة تيليجرام:', await response.text());
+            } else {
+                console.log('✅ تم إرسال الإشعار إلى تيليجرام بنجاح');
+            }
+        } catch (e) {
+            console.error('خطأ في إرسال رسالة تيليجرام:', e);
+        }
+    }
+
     async function submitDirectOrder() {
         if(!selectedActiveProduct) return;
         const name = document.getElementById('custName').value.trim();
@@ -1233,11 +1280,10 @@ body { padding-bottom: 64px; }
             selectedActiveProduct.stock = newStock;
             allProducts[String(selectedActiveProduct.id)] && (allProducts[String(selectedActiveProduct.id)].stock = newStock);
 
-            // الإشعار عبر Telegram يتم الآن من جهة الخادم (Cloud Function) وليس من المتصفح،
-            // حماية لتوكن البوت من التسريب. راجع FIREBASE_SETUP.md لإعداد الدالة.
-            if (typeof notifyTelegramServerSide === 'function') {
-                notifyTelegramServerSide(orderData);
-            }
+            // =====================================================================
+            // 🔥 إرسال رسالة تيليجرام هنا مباشرة بعد نجاح الطلب
+            // =====================================================================
+            await notifyTelegram(orderData);
 
             document.getElementById('drawerOrderForm').querySelector('form')?.reset();
             forceCloseDrawer('productViewDrawer');

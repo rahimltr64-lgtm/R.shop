@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>R.Shop • أفضل متجر هواتف في الجزائر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap');
+        
+        :root {
+            --primary: #0f172a;
+            --accent: #f97316;
+        }
+        
+        body {
+            font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+        }
+        
+        .glass {
+            background: rgba(255,255,255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255, 0.1);
+        }
+        
+        .premium-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+        
+        .premium-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.15),
+                transparent
+            );
+            transition: 0.6s;
+        }
+        
+        .premium-card:hover::after {
+            left: 250%;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+        
+        .product-img {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .premium-card:hover .product-img {
+            transform: scale(1.08);
+        }
+        
+        .nav-active {
+            color: #f97316;
+            position: relative;
+        }
+        
+        .nav-active:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            border-radius: 2px;
+        }
+        
+        .modern-badge {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .price {
+            font-feature-settings: "tnum";
+        }
+        
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .smooth-shadow {
+            box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.1), 
+                       0 4px 6px -4px rgb(15 23 42 / 0.1);
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1135 100%);
+        }
+        
+        .phone-shadow {
+            filter: drop-shadow(0 25px 25px rgb(15 23 42 / 0.25));
+        }
+        
+        .filter-chip {
+            transition: all 0.2s ease;
+        }
+        
+        .filter-chip.active {
+            background-color: #f97316;
+            color: white;
+            border-color: #f97316;
+        }
+        
+        .modern-table {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 10px rgb(15 23 42 / 0.06);
+        }
+        
+        .metric-card {
+            transition: transform 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-link {
+            transition: color 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            color: #f97316;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1.25rem;
+        }
+        
+        @media (min-width: 640px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        .luxury-gradient {
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+    <!-- Top Navigation -->
+    <nav class="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-6 py-5 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-x-3">
+                    <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+                        <i class="fa-solid fa-mobile-screen-button text-white text-3xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-3xl tracking-tighter">R.Shop</span>
+                        <span class="text-[10px] font-bold text-orange-400 tracking-[3px] block -mt-1">PREMIUM</span>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-xl mx-8">
+                    <div class="relative w-full group">
+                        <input 
+                            id="searchInput"
+                            type="text" 
+                            placeholder="ابحث عن هاتف، ماركة، أو مواصفات..." 
+                            class="w-full bg-slate-900 border border-slate-700 focus:border-orange-500 transition-all pl-12 pr-5 py-3.5 rounded-3xl text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500/30"
+                            onkeyup="filterProducts()"
+                        >
+                        <i class="fa-solid fa-search absolute right-5 top-4 text-slate-400 group-focus-within:text-orange-400 transition-colors"></i>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-x-2">
+                    <!-- Favorites -->
+                    <button onclick="showFavorites()" 
+                            class="flex items-center gap-x-2 px-4 py-2.5 rounded-3xl bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all active:scale-[0.985]">
+                        <i class="fa-solid fa-heart text-orange-400"></i>
+                        <span class="hidden sm:inline text-sm font-semibold">المفضلة</span>
+                        <span id="favCount" class="text-[10px] font-mono bg-orange-500 text-white px-1.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Compare -->
+                    <button onclick="showCompareModal()" 
+                            class="flex items-center gap-x-2 px-4 py-2.5 rounded-3xl bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all active:scale-[0.985]">
+                        <i class="fa-solid fa-balance-scale text-sky-400"></i>
+                        <span class="hidden sm:inline text-sm font-semibold">مقارنة</span>
+                        <span id="compareCount" class="text-[10px] font-mono bg-sky-500 text-white px-1.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" 
+                            class="w-11 h-11 flex items-center justify-center rounded-3xl bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all">
+                        <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
+                    </button>
+
+                    <!-- Account -->
+                    <div class="flex items-center gap-x-2 pl-3 border-l border-slate-700">
+                        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center text-white text-sm font-bold ring-2 ring-orange-400/30">
+                            ن
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-screen-2xl mx-auto px-6 pt-10 pb-8">
+        <div class="hero-bg rounded-[3rem] p-10 md:p-16 relative overflow-hidden border border-slate-700/60">
+            <div class="grid md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7">
+                    <div class="inline-flex items-center gap-x-2 bg-white/10 text-white px-4 py-1 rounded-full text-xs tracking-widest font-bold mb-6">
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <span>أحدث إصدارات 2026</span>
+                    </div>
+                    
+                    <h1 class="text-6xl md:text-7xl font-extrabold tracking-tighter leading-none mb-4">
+                        اختر هاتفك<br>
+                        <span class="luxury-gradient">بذكاء</span>
+                    </h1>
+                    
+                    <p class="max-w-md text-xl text-slate-300 mb-8">
+                        أفضل الهواتف الذكية بأسعار منافسة وتوصيل سريع في كل الجزائر.
+                    </p>
+                    
+                    <div class="flex items-center gap-x-4">
+                        <button onclick="document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' })" 
+                                class="px-9 py-4 bg-white text-slate-900 font-extrabold rounded-3xl flex items-center gap-x-3 hover:bg-orange-50 active:scale-[0.985] transition-all shadow-xl shadow-orange-500/10">
+                            <span>استكشف المنتجات</span>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        
+                        <button onclick="showTrackModal()" 
+                                class="px-7 py-4 border border-white/30 hover:bg-white/10 rounded-3xl font-semibold flex items-center gap-x-2 transition-all">
+                            <i class="fa-solid fa-truck"></i>
+                            <span>تتبع طلبك</span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center gap-x-8 mt-10">
+                        <div>
+                            <div class="text-3xl font-extrabold">+124k</div>
+                            <div class="text-xs text-slate-400 tracking-wider">عميل سعيد</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-extrabold">4.9</div>
+                            <div class="flex items-center gap-x-1 text-xs text-emerald-400">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="font-semibold">تقييم المتجر</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-5 relative hidden md:block">
+                    <div class="relative">
+                        <img src="https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-16-pro-max-1.jpg" 
+                             class="w-full max-w-[320px] mx-auto phone-shadow rounded-[3rem] border border-white/10" alt="iPhone 16 Pro Max">
+                        <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-xs px-4 py-1.5 rounded-2xl font-bold flex items-center gap-x-2 shadow-xl">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span>الأكثر مبيعاً</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust Bar -->
+    <div class="max-w-screen-2xl mx-auto px-6">
+        <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 py-6 border-y border-slate-800 text-sm">
+            <div class="flex items-center gap-x-2 text-slate-300">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span class="font-semibold">ضمان سنة كاملة</span>
+            </div>
+            <div class="flex items-center gap-x-2 text-slate-300">
+                <i class="fa-solid fa-truck-fast text-sky-400"></i>
+                <span class="font-semibold">توصيل خلال 24-48 ساعة</span>
+            </div>
+            <div class="flex items-center gap-x-2 text-slate-300">
+                <i class="fa-solid fa-undo text-amber-400"></i>
+                <span class="font-semibold">إرجاع مجاني خلال 7 أيام</span>
+            </div>
+            <div class="flex items-center gap-x-2 text-slate-300">
+                <i class="fa-solid fa-headset text-violet-400"></i>
+                <span class="font-semibold">دعم فني 24/7</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters & Categories -->
+    <div class="max-w-screen-2xl mx-auto px-6 pt-10" id="products-section">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-y-4 mb-6">
+            <div>
+                <h2 class="section-title">اكتشف أحدث الهواتف</h2>
+                <p class="text-slate-400 mt-1">أكثر من <span class="font-semibold text-white">320</span> منتج متاح</p>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="flex flex-wrap gap-2" id="categoryFilters">
+                <button onclick="filterByCategory('all', this)" class="filter-chip active px-5 py-2 text-sm font-semibold rounded-3xl border border-orange-500 bg-orange-500 text-white">الكل</button>
+                <button onclick="filterByCategory('flagship', this)" class="filter-chip px-5 py-2 text-sm font-semibold rounded-3xl border border-slate-700 hover:border-slate-400">Flagship</button>
+                <button onclick="filterByCategory('gaming', this)" class="filter-chip px-5 py-2 text-sm font-semibold rounded-3xl border border-slate-700 hover:border-slate-400">Gaming</button>
+                <button onclick="filterByCategory('budget', this)" class="filter-chip px-5 py-2 text-sm font-semibold rounded-3xl border border-slate-700 hover:border-slate-400">اقتصادي</button>
+                <button onclick="filterByCategory('foldable', this)" class="filter-chip px-5 py-2 text-sm font-semibold rounded-3xl border border-slate-700 hover:border-slate-400">قابل للطي</button>
+            </div>
+        </div>
+
+        <!-- Brand Filter -->
+        <div class="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide" id="brandFilters">
+            <button onclick="filterByBrand('all', this)" class="filter-chip active whitespace-nowrap px-6 py-2 text-sm font-semibold rounded-3xl bg-slate-800 border border-slate-600">الكل</button>
+            <button onclick="filterByBrand('آبل', this)" class="filter-chip whitespace-nowrap px-6 py-2 text-sm font-semibold rounded-3xl bg-slate-800 border border-slate-600 hover:border-orange-400">آبل</button>
+            <button onclick="filterByBrand('سامسونج', this)" class="filter-chip whitespace-nowrap px-6 py-2 text-sm font-semibold rounded-3xl bg-slate-800 border border-slate-600 hover:border-orange-400">سامسونج</button>
+            <button onclick="filterByBrand('شاومي', this)" class="filter-chip whitespace-nowrap px-6 py-2 text-sm font-semibold rounded-3xl bg-slate-800 border border-slate-600 hover:border-orange-400">شاومي</button>
+            <button onclick="filterByBrand('هواوي', this)" class="filter-chip whitespace-nowrap px-6 py-2 text-sm font-semibold rounded-3xl bg-slate-800 border border-slate-600 hover:border-orange-400">هواوي</button>
+            <button onclick="filterByBrand('ون بلس', this)" class="filter-chip whitespace-nowrap px-6 py-2 text-sm font-semibold rounded-3xl bg-slate-800 border border-slate-600 hover:border-orange-400">ون بلس</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productsGrid" class="product-grid">
+            <!-- Populated dynamically by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Why Us Section -->
+    <div class="max-w-screen-2xl mx-auto px-6 pt-16 pb-10">
+        <div class="grid md:grid-cols-3 gap-5">
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <div class="text-orange-400 mb-4"><i class="fa-solid fa-medal text-4xl"></i></div>
+                <h4 class="font-extrabold text-2xl mb-2">جودة مضمونة</h4>
+                <p class="text-slate-300">جميع هواتفنا أصلية 100% مع ضمان رسمي من الوكيل.</p>
+            </div>
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <div class="text-sky-400 mb-4"><i class="fa-solid fa-headset text-4xl"></i></div>
+                <h4 class="font-extrabold text-2xl mb-2">دعم فني ممتاز</h4>
+                <p class="text-slate-300">فريق دعم متخصص جاهز لمساعدتك في أي وقت عبر الواتساب أو الهاتف.</p>
+            </div>
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <div class="text-emerald-400 mb-4"><i class="fa-solid fa-percent text-4xl"></i></div>
+                <h4 class="font-extrabold text-2xl mb-2">أفضل الأسعار</h4>
+                <p class="text-slate-300">نضمن لك أفضل سعر في السوق مع إمكانية التقسيط المريح.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-700 py-10">
+        <div class="max-w-screen-2xl mx-auto px-6 text-center text-sm text-slate-400">
+            <p>© 2026 R.Shop — جميع الحقوق محفوظة. متجر هواتف ماركت الجزائر</p>
+            <div class="mt-3 flex justify-center gap-x-6 text-xs">
+                <a href="#" class="hover:text-white transition-colors">سياسة الخصوصية</a>
+                <a href="#" class="hover:text-white transition-colors">شروط الاستخدام</a>
+                <a href="#" class="hover:text-white transition-colors">تواصل معنا</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Quick View Modal -->
+    <div id="productModal" onclick="if (event.target.id === 'productModal') closeProductModal()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xl z-[100] flex items-center justify-center p-4">
+        <div onclick="event.stopImmediatePropagation()" class="bg-slate-900 w-full max-w-4xl rounded-3xl overflow-hidden border border-slate-700 shadow-2xl">
+            <!-- Modal content populated by JS -->
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div id="successModal" onclick="if (event.target.id === 'successModal') closeSuccessModal()" class="hidden fixed inset-0 bg-black/70 z-[110] flex items-center justify-center p-4">
+        <div onclick="event.stopImmediatePropagation()" class="bg-slate-900 max-w-md w-full rounded-3xl p-8 text-center border border-emerald-600/30">
+            <div class="mx-auto w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
+                <i class="fa-solid fa-check-circle text-emerald-400 text-6xl"></i>
+            </div>
+            <h3 class="text-3xl font-extrabold mb-2">تم تسجيل طلبك بنجاح!</h3>
+            <p class="text-emerald-300 mb-1">رقم الطلب: <span id="orderIdDisplay" class="font-mono font-bold"></span></p>
+            <p class="text-sm text-slate-400 mb-6">سنتواصل معك قريباً لتأكيد الطلب</p>
+            
+            <button onclick="closeSuccessModal()" 
+                    class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition-colors font-extrabold rounded-3xl">
+                حسناً، شكراً
+            </button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <script>
+        // ==================== TAILWIND CONFIG ====================
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#f97316');
+            
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            'cairo': ['Cairo', 'system-ui', 'sans-serif']
+                        }
+                    }
+                }
+            };
+        }
+
+        // ==================== FIREBASE CONFIG ====================
+        const firebaseConfig = {
+            databaseURL: "https://phones-market-default-rtdb.europe-west1.firebasedatabase.app"
+        };
+        
+        let db;
+        let allProducts = {};
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
+        let currentFilter = { category: 'all', brand: 'all', search: '' };
+
+        function initFirebase() {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.database();
+        }
+
+        // ==================== LOAD PRODUCTS ====================
+        async function loadProducts() {
+            try {
+                const snapshot = await db.ref('products').once('value');
+                allProducts = snapshot.val() || {};
+                
+                // If no products in Firebase, use sample data
+                if (Object.keys(allProducts).length === 0) {
+                    allProducts = getSampleProducts();
+                }
+                
+                renderProducts(Object.values(allProducts));
+                updateFavCount();
+            } catch (error) {
+                console.error("Firebase error, loading sample data:", error);
+                allProducts = getSampleProducts();
+                renderProducts(Object.values(allProducts));
+            }
+        }
+
+        function getSampleProducts() {
+            return {
+                "1001": {
+                    id: 1001, brand: "آبل", category: "flagship",
+                    name: "iPhone 16 Pro Max 256GB", price: 285000, oldPrice: 320000,
+                    stock: 12, rating: 4.9, reviews: 312,
+                    colors: ["تيتانيوم طبيعي", "تيتانيوم أزرق"], storage: ["256GB", "512GB"],
+                    images: ["https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-16-pro-max-1.jpg"],
+                    isNew: true, isHot: true
+                },
+                "2001": {
+                    id: 2001, brand: "سامسونج", category: "flagship",
+                    name: "Galaxy S25 Ultra 512GB", price: 265000, oldPrice: 295000,
+                    stock: 8, rating: 4.8, reviews: 189,
+                    colors: ["تيتانيوم رمادي"], storage: ["256GB", "512GB"],
+                    images: ["https://fdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-s25-ultra-1.jpg"],
+                    isNew: true, isHot: true
+                },
+                "3001": {
+                    id: 3001, brand: "شاومي", category: "gaming",
+                    name: "Xiaomi 15 Pro 256GB", price: 175000, oldPrice: 199000,
+                    stock: 22, rating: 4.7, reviews: 154,
+                    colors: ["أسود", "أبيض"], storage: ["256GB", "512GB"],
+                    images: ["https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-15-pro-1.jpg"],
+                    isNew: false, isHot: true
+                }
+            };
+        }
+
+        // ==================== RENDER PRODUCTS ====================
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center">
+                        <i class="fa-solid fa-search text-6xl text-slate-600 mb-4"></i>
+                        <p class="text-xl font-semibold">لا توجد منتجات مطابقة</p>
+                    </div>
+                `;
+                return;
+            }
+
+            products.forEach(product => {
+                const isFav = favorites.includes(String(product.id));
+                const discount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
+                
+                const cardHTML = `
+                    <div class="premium-card bg-slate-900 border border-slate-700 rounded-3xl overflow-hidden group">
+                        <!-- Image -->
+                        <div class="relative h-56 bg-slate-800 flex items-center justify-center overflow-hidden">
+                            <img src="${product.images?.[0] || 'https://placehold.co/300x300?text=Phone'}" 
+                                 class="product-img max-h-[82%] max-w-[78%] object-contain transition-all duration-500"
+                                 alt="${product.name}">
+                            
+                            <!-- Badges -->
+                            <div class="absolute top-4 right-4 flex flex-col gap-y-1.5">
+                                ${product.isNew ? `<div class="modern-badge bg-emerald-500 text-white px-3 py-px rounded-2xl text-[10px] font-extrabold tracking-wider">جديد</div>` : ''}
+                                ${product.isHot ? `<div class="modern-badge bg-orange-500 text-white px-3 py-px rounded-2xl text-[10px] font-extrabold tracking-wider">الأكثر طلباً</div>` : ''}
+                                ${discount > 0 ? `<div class="modern-badge bg-red-500 text-white px-2.5 py-px rounded-2xl text-xs font-extrabold">-${discount}%</div>` : ''}
+                            </div>
+                            
+                            <!-- Stock -->
+                            <div class="absolute bottom-4 left-4">
+                                ${product.stock > 0 
+                                    ? `<div class="text-[10px] px-3 py-1 bg-emerald-900/80 text-emerald-300 rounded-2xl font-bold flex items-center gap-x-1"><i class="fa-solid fa-check text-xs"></i> <span>متوفر</span></div>` 
+                                    : `<div class="text-[10px] px-3 py-1 bg-red-900/70 text-red-300 rounded-2xl font-bold">نفذ المخزون</div>`}
+                            </div>
+                            
+                            <!-- Favorite Button -->
+                            <button onclick="event.stopImmediatePropagation(); toggleFavorite(${product.id}, this)" 
+                                    class="absolute top-4 left-4 w-9 h-9 flex items-center justify-center rounded-2xl bg-black/40 backdrop-blur-md transition-all hover:bg-black/60 ${isFav ? 'text-red-500' : 'text-white'}">
+                                <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="p-5">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-extrabold tracking-widest text-orange-400">${product.brand}</span>
+                                <div class="flex items-center gap-x-px text-amber-400 text-sm">
+                                    ${'★'.repeat(Math.floor(product.rating || 4))} 
+                                    <span class="text-[10px] text-slate-400 ml-1">(${product.reviews || 0})</span>
+                                </div>
+                            </div>
+                            
+                            <h3 onclick="showProductModal(${product.id})" class="font-extrabold text-[15.5px] leading-tight tracking-tight line-clamp-2 mb-3 cursor-pointer hover:text-orange-300 transition-colors">${product.name}</h3>
+                            
+                            <div class="flex items-baseline gap-x-2 mb-4">
+                                <span class="price text-2xl font-extrabold">${product.price.toLocaleString('ar')}</span>
+                                <span class="text-xs font-medium text-slate-400">دج</span>
+                                ${product.oldPrice ? `<span class="line-through text-xs text-slate-500">${product.oldPrice.toLocaleString('ar')}</span>` : ''}
+                            </div>
+                            
+                            <div class="flex items-center gap-x-2">
+                                <button onclick="event.stopImmediatePropagation(); quickAddToCart(${product.id})" 
+                                        class="flex-1 py-[13px] bg-white text-slate-900 hover:bg-orange-100 active:bg-orange-200 transition-all font-extrabold text-sm tracking-wider rounded-3xl flex items-center justify-center gap-x-2">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <span>أضف للسلة</span>
+                                </button>
+                                
+                                <button onclick="event.stopImmediatePropagation(); showProductModal(${product.id})" 
+                                        class="px-5 flex items-center justify-center border border-slate-600 hover:bg-slate-800 transition-all rounded-3xl text-sm font-semibold w-11 h-[46px]">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        // ==================== FILTERS ====================
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            currentFilter.search = searchTerm;
+            applyFilters();
+        }
+
+        function filterByCategory(category, element) {
+            // Remove active from all
+            document.querySelectorAll('#categoryFilters button').forEach(btn => btn.classList.remove('active', 'bg-orange-500', 'border-orange-500'));
+            element.classList.add('active', 'bg-orange-500', 'border-orange-500');
+            
+            currentFilter.category = category;
+            applyFilters();
+        }
+
+        function filterByBrand(brand, element) {
+            document.querySelectorAll('#brandFilters button').forEach(btn => btn.classList.remove('active', 'bg-orange-500', 'border-orange-500'));
+            element.classList.add('active', 'bg-orange-500', 'border-orange-500');
+            
+            currentFilter.brand = brand;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filtered = Object.values(allProducts);
+            
+            // Category filter
+            if (currentFilter.category !== 'all') {
+                filtered = filtered.filter(p => p.category === currentFilter.category);
+            }
+            
+            // Brand filter
+            if (currentFilter.brand !== 'all') {
+                filtered = filtered.filter(p => p.brand === currentFilter.brand);
+            }
+            
+            // Search filter
+            if (currentFilter.search) {
+                const term = currentFilter.search;
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(term) || 
+                    p.brand.toLowerCase().includes(term)
+                );
+            }
+            
+            renderProducts(filtered);
+        }
+
+        // ==================== FAVORITES ====================
+        function toggleFavorite(productId, btn) {
+            productId = String(productId);
+            const index = favorites.indexOf(productId);
+            
+            if (index > -1) {
+                favorites.splice(index, 1);
+                btn.classList.remove('text-red-500');
+                btn.innerHTML = `<i class="fa-regular fa-heart text-xl"></i>`;
+            } else {
+                favorites.push(productId);
+                btn.classList.add('text-red-500');
+                btn.innerHTML = `<i class="fa-solid fa-heart text-xl"></i>`;
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavCount();
+        }
+
+        function updateFavCount() {
+            document.getElementById('favCount').innerText = favorites.length;
+        }
+
+        function showFavorites() {
+            const favProducts = Object.values(allProducts).filter(p => favorites.includes(String(p.id)));
+            if (favProducts.length === 0) {
+                alert("لا توجد منتجات في المفضلة بعد.");
+                return;
+            }
+            renderProducts(favProducts);
+            
+            // Scroll to products
+            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ==================== COMPARE ====================
+        function addToCompare(productId) {
+            productId = String(productId);
+            if (!compareList.includes(productId)) {
+                if (compareList.length >= 3) {
+                    alert("يمكنك مقارنة 3 منتجات كحد أقصى");
+                    return;
+                }
+                compareList.push(productId);
+                localStorage.setItem('compareList', JSON.stringify(compareList));
+                document.getElementById('compareCount').innerText = compareList.length;
+            }
+        }
+
+        function showCompareModal() {
+            if (compareList.length < 2) {
+                alert("أضف منتجين على الأقل للمقارنة");
+                return;
+            }
+            
+            const products = compareList.map(id => allProducts[id]).filter(Boolean);
+            
+            let html = `<div class="p-8"><h3 class="font-extrabold text-2xl mb-6">مقارنة المنتجات</h3>`;
+            html += `<div class="grid grid-cols-1 md:grid-cols-${products.length} gap-6">`;
+            
+            products.forEach(prod => {
+                html += `
+                    <div class="border border-slate-600 rounded-3xl p-5">
+                        <img src="${prod.images?.[0]}" class="h-36 mx-auto mb-4 object-contain" alt="">
+                        <div class="font-extrabold text-lg mb-1">${prod.name}</div>
+                        <div class="text-orange-400 text-xl font-extrabold mb-4">${prod.price.toLocaleString('ar')} دج</div>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div><span class="text-slate-400">الماركة:</span> <strong>${prod.brand}</strong></div>
+                            <div><span class="text-slate-400">التقييم:</span> <strong>${prod.rating} ★</strong></div>
+                            <div><span class="text-slate-400">المخزون:</span> <strong>${prod.stock}</strong></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div><button onclick="closeCompareModal()" class="mt-8 w-full py-4 bg-white text-black font-extrabold rounded-3xl">إغلاق</button></div>`;
+            
+            const modal = document.createElement('div');
+            modal.className = `fixed inset-0 bg-black/90 z-[120] flex items-center justify-center p-4`;
+            modal.innerHTML = html;
+            modal.onclick = () => modal.remove();
+            document.body.appendChild(modal);
+        }
+
+        function closeCompareModal() {
+            // Handled by onclick above
+        }
+
+        // ==================== PRODUCT MODAL ====================
+        function showProductModal(productId) {
+            const product = allProducts[productId];
+            if (!product) return;
+            
+            const modal = document.getElementById('productModal');
+            const content = document.getElementById('modalContent');
+            
+            const discount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
+            
+            content.innerHTML = `
+                <div class="grid md:grid-cols-5 gap-0">
+                    <!-- Image Side -->
+                    <div class="md:col-span-3 bg-slate-800 p-8 flex items-center justify-center relative">
+                        <img src="${product.images?.[0] || 'https://placehold.co/400'}" class="max-h-[340px] object-contain" alt="${product.name}">
+                        
+                        ${discount > 0 ? `
+                        <div class="absolute top-8 right-8 bg-red-600 text-white px-5 py-1 rounded-3xl font-extrabold text-sm tracking-wider shadow-xl">خصم ${discount}%</div>` : ''}
+                    </div>
+                    
+                    <!-- Info Side -->
+                    <div class="md:col-span-2 p-8">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="uppercase tracking-[2px] text-xs text-orange-400 font-extrabold">${product.brand}</div>
+                                <h2 class="text-3xl font-extrabold tracking-tight mt-1">${product.name}</h2>
+                            </div>
+                            
+                            <button onclick="closeProductModal()" class="text-3xl leading-none text-slate-400 hover:text-white">&times;</button>
+                        </div>
+                        
+                        <div class="my-6 flex items-baseline gap-x-3">
+                            <span class="text-5xl font-extrabold">${product.price.toLocaleString('ar')}</span>
+                            <span class="font-medium text-xl">دج</span>
+                            ${product.oldPrice ? `<span class="line-through text-xl text-slate-500">${product.oldPrice.toLocaleString('ar')}</span>` : ''}
+                        </div>
+                        
+                        <div class="flex items-center gap-2 mb-6">
+                            <div class="flex text-amber-400">${'★'.repeat(Math.floor(product.rating || 4))}</div>
+                            <span class="font-semibold text-sm">${product.rating || 4.8} • ${product.reviews || 124} تقييم</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="text-xs uppercase tracking-wider text-slate-400 mb-2 font-extrabold">اختر السعة</div>
+                            <div class="flex flex-wrap gap-2">
+                                ${(product.storage || ['128GB', '256GB']).map(s => `
+                                    <div onclick="selectOption(this, 'storage')" class="cursor-pointer px-5 py-2 border border-slate-600 hover:border-orange-400 rounded-2xl text-sm font-semibold">${s}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <div class="text-xs uppercase tracking-wider text-slate-400 mb-2 font-extrabold">اختر اللون</div>
+                            <div class="flex flex-wrap gap-3">
+                                ${(product.colors || ['أسود', 'أزرق']).map(c => `
+                                    <div onclick="selectOption(this, 'color')" class="cursor-pointer w-9 h-9 rounded-2xl border-2 border-slate-600 hover:border-orange-400" style="background: #64748b" title="${c}"></div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-x-3">
+                            <button onclick="addToCartFromModal(${product.id}); closeProductModal()" 
+                                    class="flex-1 py-4 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 font-extrabold text-white rounded-3xl text-base flex items-center justify-center gap-x-3 transition-all">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                <span>أضف إلى السلة</span>
+                            </button>
+                            
+                            <button onclick="buyNow(${product.id}); closeProductModal()" 
+                                    class="flex-1 py-4 border border-white text-white font-extrabold rounded-3xl text-base flex items-center justify-center gap-x-2 hover:bg-white hover:text-black transition-all">
+                                <span>اشترِ الآن</span>
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button onclick="addToCompare(${product.id}); closeProductModal()" class="text-xs text-sky-300 hover:text-sky-200 underline">أضف للمقارنة</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function selectOption(element, type) {
+            // Deselect siblings
+            element.parentNode.querySelectorAll('div').forEach(el => el.classList.remove('!border-orange-400', 'bg-orange-400/10'));
+            element.classList.add('!border-orange-400', 'bg-orange-400/10');
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function addToCartFromModal(productId) {
+            // Simple cart simulation
+            const product = allProducts[productId];
+            alert(`تمت إضافة ${product.name} إلى السلة بنجاح!`);
+            // In real app you would push to cart array + show mini cart
+        }
+
+        function quickAddToCart(productId) {
+            const product = allProducts[productId];
+            if (!product) return;
+            
+            // Simple toast
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3.5 rounded-3xl shadow-xl flex items-center gap-x-3 z-[200]`;
+            toast.innerHTML = `
+                <i class="fa-solid fa-check-double"></i> 
+                <span class="font-semibold">تمت إضافة ${product.name.split(' ').slice(0,3).join(' ')} إلى السلة</span>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transition = 'all .3s';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2400);
+        }
+
+        function buyNow(productId) {
+            const product = allProducts[productId];
+            alert(`سيتم توجيهك إلى صفحة الدفع لـ ${product.name}`);
+            // Here you would open the full order modal from original code
+        }
+
+        // ==================== TRACK ORDER ====================
+        function showTrackModal() {
+            const modalHTML = `
+                <div onclick="this.remove()" class="fixed inset-0 bg-black/80 z-[130] flex items-center justify-center p-4">
+                    <div onclick="event.stopImmediatePropagation()" class="bg-slate-900 rounded-3xl p-8 max-w-md w-full border border-slate-700">
+                        <h3 class="font-extrabold text-2xl mb-6">تتبع طلبك</h3>
+                        
+                        <input id="trackInput" type="text" placeholder="أدخل رقم الطلب (مثال: 784521)" 
+                               class="w-full bg-slate-800 border border-slate-600 focus:border-orange-400 px-5 py-4 rounded-3xl mb-4 outline-none">
+                        
+                        <button onclick="trackOrder()" class="w-full py-4 bg-white text-black font-extrabold rounded-3xl">تتبع الآن</button>
+                        
+                        <div id="trackResult" class="mt-5 hidden"></div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        async function trackOrder() {
+            const input = document.getElementById('trackInput').value.trim();
+            const resultDiv = document.getElementById('trackResult');
+            
+            if (!input) return;
+            
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = `<div class="text-center py-4 text-sm">جاري البحث...</div>`;
+            
+            try {
+                const res = await fetch(`${firebaseConfig.databaseURL}/orders/${input}.json`);
+                const order = await res.json();
+                
+                if (order) {
+                    resultDiv.innerHTML = `
+                        <div class="bg-slate-800 rounded-2xl p-5 text-sm">
+                            <div class="font-bold mb-1">${order.product}</div>
+                            <div class="text-emerald-400 font-mono text-lg mb-3">${order.totalPrice} دج</div>
+                            
+                            <div class="flex justify-between text-xs">
+                                <div>الحالة</div>
+                                <div class="font-extrabold text-emerald-300">${order.status || 'قيد المعالجة'}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="text-red-400 text-sm">لم يتم العثور على هذا الطلب.</div>`;
+                }
+            } catch(e) {
+                resultDiv.innerHTML = `<div class="text-red-400">حدث خطأ أثناء البحث.</div>`;
+            }
+        }
+
+        // ==================== THEME ====================
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeIcon').classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+
+        // ==================== INITIALIZE ====================
+        function initializeApp() {
+            initializeTailwind();
+            initFirebase();
+            initTheme();
+            
+            // Load products
+            loadProducts();
+            
+            // Initial counts
+            document.getElementById('favCount').innerText = favorites.length;
+            document.getElementById('compareCount').innerText = compareList.length;
+            
+            // Keyboard support for search
+            document.getElementById('searchInput').addEventListener('focus', function() {
+                this.placeholder = "اكتب اسم الهاتف أو الماركة...";
+            });
+            
+            // Demo: Show some products immediately
+            console.log('%c[R.Shop v2] Modern redesign loaded successfully', 'color:#64748b');
+        }
+        
+        // Boot the application
+        window.onload = initializeApp;
+    </script>
+</body>
+</html>

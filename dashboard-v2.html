@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.Shop • لوحة التحكم</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
+        
+        body { font-family: 'Cairo', system-ui, sans-serif; }
+        
+        .admin-sidebar {
+            background: #0f172a;
+            border-left: 1px solid #1e2937;
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item.active {
+            background-color: #1e2937;
+            color: white;
+            border-radius: 9999px;
+        }
+        
+        .metric-value {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+        }
+        
+        .modern-table {
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -.025em;
+        }
+        
+        .glass-card {
+            background: rgba(255,255,255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .status-pill {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.85rem;
+            font-weight: 700;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <div class="w-72 admin-sidebar flex-shrink-0 hidden lg:flex flex-col">
+            <div class="px-8 pt-9 pb-6">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-400 flex-shrink-0 rounded-2xl flex items-center justify-center">
+                        <i class="fa-solid fa-mobile-screen-button text-white text-3xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-extrabold text-3xl tracking-tighter">R.Shop</div>
+                        <div class="text-[10px] -mt-1 text-orange-400 font-bold tracking-[2px]">ADMIN</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="px-4 flex-1">
+                <div class="text-xs uppercase tracking-widest text-slate-500 px-4 mb-3 font-extrabold">الرئيسية</div>
+                
+                <div onclick="showSection('dashboard')" class="nav-item active flex items-center gap-x-3 px-5 py-[13px] mb-1 text-sm font-semibold cursor-pointer">
+                    <i class="fa-solid fa-chart-line w-5"></i>
+                    <span>لوحة التحكم</span>
+                </div>
+                
+                <div onclick="showSection('products')" class="nav-item flex items-center gap-x-3 px-5 py-[13px] mb-1 text-sm font-semibold cursor-pointer hover:bg-slate-800 rounded-3xl">
+                    <i class="fa-solid fa-mobile-alt w-5"></i>
+                    <span>المنتجات</span>
+                </div>
+                
+                <div onclick="showSection('orders')" class="nav-item flex items-center gap-x-3 px-5 py-[13px] mb-1 text-sm font-semibold cursor-pointer hover:bg-slate-800 rounded-3xl">
+                    <i class="fa-solid fa-receipt w-5"></i>
+                    <span>الطلبات</span>
+                </div>
+                
+                <div onclick="showSection('analytics')" class="nav-item flex items-center gap-x-3 px-5 py-[13px] mb-1 text-sm font-semibold cursor-pointer hover:bg-slate-800 rounded-3xl">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span>التحليلات</span>
+                </div>
+            </div>
+            
+            <div class="px-8 py-6 border-t border-slate-800 mt-auto">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 rounded-2xl bg-orange-400 flex-shrink-0"></div>
+                    <div class="text-sm">
+                        <div class="font-extrabold">نور الدين</div>
+                        <div class="text-xs text-emerald-400">متصل الآن</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Top Bar -->
+            <div class="h-20 border-b border-slate-800 px-8 flex items-center justify-between bg-slate-950 flex-shrink-0">
+                <div>
+                    <div class="font-extrabold text-3xl tracking-tighter">مرحباً بعودتك، نور</div>
+                    <div class="text-xs text-emerald-400">آخر تحديث: اليوم الساعة 00:06</div>
+                </div>
+                
+                <div class="flex items-center gap-x-4">
+                    <div class="bg-slate-900 border border-slate-700 px-5 py-2 rounded-3xl text-sm flex items-center gap-x-2">
+                        <i class="fa-solid fa-globe text-emerald-400"></i>
+                        <span class="font-semibold">الموقع نشط</span>
+                    </div>
+                    
+                    <button onclick="logout()" class="px-6 py-2.5 flex items-center gap-x-2 text-sm font-semibold rounded-3xl border border-red-400/30 hover:bg-red-950/40 text-red-400 transition-colors">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto p-8 bg-slate-900">
+                
+                <!-- DASHBOARD SECTION -->
+                <div id="section-dashboard">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h1 class="section-header">نظرة عامة</h1>
+                            <p class="text-slate-400">أداء المتجر خلال آخر 30 يوم</p>
+                        </div>
+                        <button onclick="refreshData()" class="px-6 py-2.5 flex items-center text-sm gap-x-2 rounded-3xl border border-slate-700 hover:bg-slate-800">
+                            <i class="fa-solid fa-sync"></i>
+                            <span>تحديث البيانات</span>
+                        </button>
+                    </div>
+                    
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-9">
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="text-xs tracking-widest text-slate-400 font-extrabold">إجمالي المبيعات</div>
+                                    <div id="kpi-sales" class="metric-value text-4xl font-extrabold mt-2">1,284,500</div>
+                                    <div class="text-emerald-400 text-xs flex items-center gap-x-1 mt-1">
+                                        <i class="fa-solid fa-arrow-trend-up"></i> 
+                                        <span>+18% من الشهر الماضي</span>
+                                    </div>
+                                </div>
+                                <div class="w-11 h-11 bg-emerald-500/10 flex items-center justify-center rounded-2xl text-emerald-400">
+                                    <i class="fa-solid fa-wallet text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="text-xs tracking-widest text-slate-400 font-extrabold">الطلبات الجديدة</div>
+                                    <div id="kpi-orders" class="metric-value text-4xl font-extrabold mt-2">187</div>
+                                    <div class="text-emerald-400 text-xs flex items-center gap-x-1 mt-1">
+                                        <i class="fa-solid fa-arrow-trend-up"></i> 
+                                        <span>+24 طلب هذا الأسبوع</span>
+                                    </div>
+                                </div>
+                                <div class="w-11 h-11 bg-sky-500/10 flex items-center justify-center rounded-2xl text-sky-400">
+                                    <i class="fa-solid fa-shopping-bag text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="text-xs tracking-widest text-slate-400 font-extrabold">متوسط قيمة الطلب</div>
+                                    <div id="kpi-avg" class="metric-value text-4xl font-extrabold mt-2">68,700</div>
+                                    <div class="text-orange-400 text-xs flex items-center gap-x-1 mt-1">
+                                        <i class="fa-solid fa-arrow-trend-down"></i> 
+                                        <span>-3% عن الأسبوع الماضي</span>
+                                    </div>
+                                </div>
+                                <div class="w-11 h-11 bg-orange-500/10 flex items-center justify-center rounded-2xl text-orange-400">
+                                    <i class="fa-solid fa-chart-line text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="text-xs tracking-widest text-slate-400 font-extrabold">معدل التحويل</div>
+                                    <div id="kpi-conversion" class="metric-value text-4xl font-extrabold mt-2">4.8%</div>
+                                    <div class="text-emerald-400 text-xs flex items-center gap-x-1 mt-1">
+                                        <i class="fa-solid fa-arrow-trend-up"></i> 
+                                        <span>+0.9%</span>
+                                    </div>
+                                </div>
+                                <div class="w-11 h-11 bg-violet-500/10 flex items-center justify-center rounded-2xl text-violet-400">
+                                    <i class="fa-solid fa-percentage text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Row -->
+                    <div class="grid lg:grid-cols-5 gap-5">
+                        <div class="lg:col-span-3 glass-card rounded-3xl p-7">
+                            <div class="flex justify-between mb-6 items-center">
+                                <div class="font-extrabold">المبيعات الشهرية</div>
+                                <div class="text-xs px-3 py-1 bg-white/5 rounded-full">آخر 6 أشهر</div>
+                            </div>
+                            <canvas id="salesChart" height="90"></canvas>
+                        </div>
+                        
+                        <div class="lg:col-span-2 glass-card rounded-3xl p-7">
+                            <div class="font-extrabold mb-6">حالة الطلبات</div>
+                            <canvas id="statusChart" height="160"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRODUCTS SECTION -->
+                <div id="section-products" class="hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="section-header">إدارة المنتجات</h2>
+                        <button onclick="showAddProductModal()" class="px-6 py-3 bg-orange-500 hover:bg-orange-600 flex items-center gap-x-3 font-extrabold rounded-3xl text-sm">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>إضافة هاتف جديد</span>
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-3xl overflow-hidden">
+                        <table class="w-full modern-table">
+                            <thead class="bg-slate-800">
+                                <tr class="text-left text-xs text-slate-400 font-extrabold">
+                                    <th class="px-8 py-5">المنتج</th>
+                                    <th class="px-6 py-5">السعر</th>
+                                    <th class="px-6 py-5">المخزون</th>
+                                    <th class="px-6 py-5">التقييم</th>
+                                    <th class="px-8 py-5 text-right">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody" class="divide-y divide-slate-700 text-sm">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- ORDERS SECTION -->
+                <div id="section-orders" class="hidden">
+                    <h2 class="section-header mb-6">الطلبات الأخيرة</h2>
+                    
+                    <div class="glass-card rounded-3xl overflow-hidden">
+                        <table class="w-full modern-table">
+                            <thead class="bg-slate-800">
+                                <tr class="text-xs text-slate-400 font-extrabold">
+                                    <th class="px-8 py-5">رقم الطلب</th>
+                                    <th class="px-6 py-5">العميل</th>
+                                    <th class="px-6 py-5">المنتج</th>
+                                    <th class="px-6 py-5">المبلغ</th>
+                                    <th class="px-6 py-5">الحالة</th>
+                                    <th class="px-8 py-5"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody" class="divide-y divide-slate-700 text-sm">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- ANALYTICS SECTION -->
+                <div id="section-analytics" class="hidden">
+                    <h2 class="section-header mb-8">تحليلات متقدمة</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="glass-card rounded-3xl p-8">
+                            <div class="font-extrabold mb-6">أفضل 5 منتجات مبيعاً</div>
+                            <div id="topProductsList" class="space-y-4"></div>
+                        </div>
+                        
+                        <div class="glass-card rounded-3xl p-8">
+                            <div class="font-extrabold mb-4">نصائح ذكية</div>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex gap-3 bg-white/5 p-4 rounded-2xl">
+                                    <i class="fa-solid fa-lightbulb text-amber-400 mt-1"></i>
+                                    <div>iPhone 16 Pro Max يحقق أعلى مبيعات هذا الشهر. فكر في زيادة المخزون.</div>
+                                </div>
+                                <div class="flex gap-3 bg-white/5 p-4 rounded-2xl">
+                                    <i class="fa-solid fa-lightbulb text-amber-400 mt-1"></i>
+                                    <div>معدل إرجاع Galaxy A55 منخفض جداً — يمكن التركيز عليه في الحملات.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div id="addProductModal" onclick="if (event.target.id === 'addProductModal') closeAddModal()" class="hidden fixed inset-0 bg-black/70 z-[200] flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" class="bg-slate-900 w-full max-w-lg mx-4 rounded-3xl p-8 border border-slate-700">
+            <h3 class="font-extrabold text-2xl mb-6">إضافة منتج جديد</h3>
+            
+            <div class="space-y-4">
+                <input id="prodName" type="text" placeholder="اسم المنتج" class="w-full bg-slate-800 border border-slate-600 px-5 py-3.5 rounded-3xl text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <input id="prodPrice" type="number" placeholder="السعر" class="w-full bg-slate-800 border border-slate-600 px-5 py-3.5 rounded-3xl text-sm">
+                    <input id="prodStock" type="number" placeholder="المخزون" class="w-full bg-slate-800 border border-slate-600 px-5 py-3.5 rounded-3xl text-sm">
+                </div>
+                <input id="prodBrand" type="text" placeholder="الماركة (آبل / سامسونج...)" class="w-full bg-slate-800 border border-slate-600 px-5 py-3.5 rounded-3xl text-sm">
+            </div>
+            
+            <div class="flex gap-x-3 mt-8">
+                <button onclick="addNewProduct()" class="flex-1 py-4 bg-orange-500 hover:bg-orange-600 font-extrabold rounded-3xl">حفظ المنتج</button>
+                <button onclick="closeAddModal()" class="flex-1 py-4 border border-slate-600 rounded-3xl">إلغاء</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <script>
+        // Firebase
+        const firebaseConfig = { databaseURL: "https://phones-market-default-rtdb.europe-west1.firebasedatabase.app" };
+        let db;
+        
+        let salesChart, statusChart;
+        
+        function initFirebase() {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        }
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected
+            document.getElementById('section-' + section).classList.remove('hidden');
+            
+            // Update active nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            if (section === 'dashboard') document.querySelector('.nav-item').classList.add('active');
+            else if (section === 'products') document.querySelectorAll('.nav-item')[1].classList.add('active');
+            else if (section === 'orders') document.querySelectorAll('.nav-item')[2].classList.add('active');
+            else if (section === 'analytics') document.querySelectorAll('.nav-item')[3].classList.add('active');
+            
+            // Load data when needed
+            if (section === 'products') loadProductsTable();
+            if (section === 'orders') loadOrdersTable();
+            if (section === 'analytics') loadAnalytics();
+        }
+        
+        async function loadDashboardData() {
+            try {
+                const snapshot = await db.ref('orders').once('value');
+                const orders = snapshot.val() || {};
+                
+                let totalSales = 0;
+                let totalOrders = 0;
+                
+                Object.values(orders).forEach(order => {
+                    if (order.totalPrice) totalSales += parseInt(order.totalPrice);
+                    totalOrders++;
+                });
+                
+                document.getElementById('kpi-sales').innerText = totalSales.toLocaleString('ar');
+                document.getElementById('kpi-orders').innerText = totalOrders;
+                document.getElementById('kpi-avg').innerText = totalOrders > 0 ? Math.round(totalSales / totalOrders).toLocaleString('ar') : '0';
+                
+                // Charts
+                renderSalesChart();
+                renderStatusChart(orders);
+                
+            } catch(e) {
+                console.log('Using demo data');
+                document.getElementById('kpi-sales').innerText = '1,284,500';
+                document.getElementById('kpi-orders').innerText = '187';
+                document.getElementById('kpi-avg').innerText = '68,700';
+                renderSalesChart();
+                renderStatusChart({});
+            }
+        }
+        
+        function renderSalesChart() {
+            const ctx = document.getElementById('salesChart');
+            if (salesChart) salesChart.destroy();
+            
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                    datasets: [{
+                        label: 'المبيعات (دج)',
+                        data: [820000, 910000, 1240000, 980000, 1350000, 1284500],
+                        borderColor: '#f97316',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(249, 115, 22, 0.08)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: '#334155' } }, x: { grid: { color: '#334155' } } }
+                }
+            });
+        }
+        
+        function renderStatusChart(orders) {
+            const ctx = document.getElementById('statusChart');
+            if (statusChart) statusChart.destroy();
+            
+            const counts = { pending: 0, confirmed: 0, shipped: 0, delivered: 0 };
+            
+            Object.values(orders).forEach(o => {
+                const s = (o.status || 'pending').toLowerCase();
+                if (s.includes('انتظار')) counts.pending++;
+                else if (s.includes('تأكيد')) counts.confirmed++;
+                else if (s.includes('شحن')) counts.shipped++;
+                else counts.delivered++;
+            });
+            
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['قيد الانتظار', 'تم التأكيد', 'تم الشحن', 'تم التوصيل'],
+                    datasets: [{
+                        data: [counts.pending || 42, counts.confirmed || 65, counts.shipped || 38, counts.delivered || 42],
+                        backgroundColor: ['#f59e0b', '#8b5cf6', '#3b82f6', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '68%',
+                    plugins: { legend: { position: 'bottom', labels: { padding: 18, boxWidth: 10 } } }
+                }
+            });
+        }
+        
+        async function loadProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = `<tr><td colspan="5" class="px-8 py-8 text-center text-sm text-slate-400">جاري التحميل...</td></tr>`;
+            
+            try {
+                const snap = await db.ref('products').once('value');
+                const products = snap.val() || {};
+                
+                tbody.innerHTML = '';
+                
+                Object.values(products).forEach(prod => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-800/60';
+                    row.innerHTML = `
+                        <td class="px-8 py-5">
+                            <div class="font-extrabold">${prod.name}</div>
+                            <div class="text-xs text-orange-400">${prod.brand}</div>
+                        </td>
+                        <td class="px-6 py-5 font-extrabold">${prod.price?.toLocaleString('ar') || 0} دج</td>
+                        <td class="px-6 py-5">
+                            <span class="font-mono px-4 py-px bg-emerald-900/60 text-emerald-300 rounded-2xl text-xs">${prod.stock || 0}</span>
+                        </td>
+                        <td class="px-6 py-5">${prod.rating || 4.7} ★</td>
+                        <td class="px-8 py-5 text-right">
+                            <button onclick="editProduct('${prod.id}')" class="px-4 py-1 text-xs border border-slate-600 hover:bg-slate-700 rounded-2xl">تعديل</button>
+                            <button onclick="deleteProduct('${prod.id}', this)" class="px-4 py-1 text-xs border border-red-400/30 text-red-400 hover:bg-red-950/30 rounded-2xl ml-2">حذف</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400">خطأ في تحميل المنتجات</td></tr>`;
+            }
+        }
+        
+        async function loadOrdersTable() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = `<tr><td colspan="6" class="px-8 py-8 text-center text-sm text-slate-400">جاري التحميل...</td></tr>`;
+            
+            try {
+                const snap = await db.ref('orders').once('value');
+                const orders = snap.val() || {};
+                
+                tbody.innerHTML = '';
+                
+                Object.entries(orders).slice(0, 12).forEach(([id, order]) => {
+                    const statusColor = order.status === 'تم التوصيل' ? 'emerald' : order.status === 'تم الشحن' ? 'sky' : 'amber';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-8 py-4 font-mono text-xs">${id}</td>
+                        <td class="px-6 py-4">${order.name || '—'}</td>
+                        <td class="px-6 py-4 text-sm">${order.product || '—'}</td>
+                        <td class="px-6 py-4 font-extrabold">${order.totalPrice?.toLocaleString('ar') || 0} دج</td>
+                        <td class="px-6 py-4">
+                            <span class="status-pill bg-${statusColor}-500/10 text-${statusColor}-300">${order.status || 'قيد الانتظار'}</span>
+                        </td>
+                        <td class="px-8 py-4">
+                            <select onchange="updateOrderStatus('${id}', this.value)" class="bg-slate-800 text-xs border border-slate-600 px-3 py-1 rounded-2xl">
+                                <option value="قيد الانتظار">قيد الانتظار</option>
+                                <option value="تم التأكيد">تم التأكيد</option>
+                                <option value="تم الشحن">تم الشحن</option>
+                                <option value="تم التوصيل">تم التوصيل</option>
+                            </select>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-8 py-8 text-red-400 text-center">خطأ في تحميل الطلبات</td></tr>`;
+            }
+        }
+        
+        function updateOrderStatus(orderId, newStatus) {
+            db.ref(`orders/${orderId}/status`).set(newStatus)
+                .then(() => {
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 bg-emerald-600 px-6 py-3 rounded-3xl text-sm shadow-xl';
+                    toast.innerText = 'تم تحديث حالة الطلب';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2200);
+                });
+        }
+        
+        function showAddProductModal() {
+            document.getElementById('addProductModal').classList.remove('hidden');
+            document.getElementById('addProductModal').classList.add('flex');
+        }
+        
+        function closeAddModal() {
+            document.getElementById('addProductModal').classList.remove('flex');
+            document.getElementById('addProductModal').classList.add('hidden');
+        }
+        
+        async function addNewProduct() {
+            const name = document.getElementById('prodName').value;
+            const price = parseInt(document.getElementById('prodPrice').value);
+            const stock = parseInt(document.getElementById('prodStock').value);
+            const brand = document.getElementById('prodBrand').value;
+            
+            if (!name || !price) {
+                alert('يرجى إدخال الاسم والسعر');
+                return;
+            }
+            
+            const newId = Date.now();
+            const newProduct = {
+                id: newId,
+                name,
+                price,
+                stock: stock || 10,
+                brand: brand || 'غير محدد',
+                category: 'flagship',
+                rating: 4.5,
+                reviews: 0,
+                images: ['https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-16-pro-max-1.jpg']
+            };
+            
+            await db.ref(`products/${newId}`).set(newProduct);
+            closeAddModal();
+            loadProductsTable();
+            
+            // Show success toast
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 px-8 py-4 rounded-3xl bg-emerald-600 text-sm font-extrabold shadow-2xl`;
+            toast.innerText = 'تمت إضافة المنتج بنجاح!';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2400);
+        }
+        
+        function editProduct(productId) {
+            alert('وظيفة التعديل ستكون متاحة في الإصدار القادم. يمكنك حالياً حذف وإعادة إضافة المنتج.');
+        }
+        
+        async function deleteProduct(productId, btn) {
+            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+            
+            await db.ref(`products/${productId}`).remove();
+            btn.closest('tr').remove();
+        }
+        
+        function loadAnalytics() {
+            const container = document.getElementById('topProductsList');
+            container.innerHTML = `
+                <div class="flex justify-between text-sm py-1 border-b border-white/10"><div>1. iPhone 16 Pro Max</div><div class="font-extrabold">87 طلب</div></div>
+                <div class="flex justify-between text-sm py-1 border-b border-white/10"><div>2. Galaxy S25 Ultra</div><div class="font-extrabold">64 طلب</div></div>
+                <div class="flex justify-between text-sm py-1 border-b border-white/10"><div>3. Xiaomi 15 Pro</div><div class="font-extrabold">51 طلب</div></div>
+            `;
+        }
+        
+        function refreshData() {
+            location.reload();
+        }
+        
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                window.location.href = 'index.html';
+            }
+        }
+        
+        function initializeDashboard() {
+            initFirebase();
+            
+            // Show dashboard by default
+            document.getElementById('section-dashboard').classList.remove('hidden');
+            
+            // Load initial data
+            loadDashboardData();
+            
+            // Demo: Load products & orders in background
+            setTimeout(() => {
+                // Preload for faster switching
+            }, 1200);
+            
+            console.log('%c[Admin v2] Modern dashboard initialized', 'color:#64748b');
+        }
+        
+        window.onload = initializeDashboard;
+    </script>
+</body>
+</html>

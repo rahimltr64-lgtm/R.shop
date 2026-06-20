@@ -24,6 +24,10 @@
             --accent-gold: #f5b041;
             --accent-purple: #8b5cf6;
             --accent-orange: #f97316;
+            --tag-orange-light: #fb923c;
+            --tag-orange-dark: #c2410c;
+            --grad-tag: linear-gradient(135deg, #fb923c 0%, #f97316 60%, #c2410c 100%);
+            --grad-cart: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #2a3447;
@@ -160,6 +164,33 @@
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 28px; }
         .stat-card { background: var(--card-bg); padding: 20px 22px; border-radius: 20px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; position: relative; }
         .stat-card::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-blue); border-radius: 0 0 0 4px; }
+        .stat-card.highlight::before { background: var(--grad-tag); }
+        .stat-card.highlight .stat-icon-badge { background: var(--grad-tag); }
+        .stat-icon-badge {
+            width: 46px; height: 46px; border-radius: 14px; background: var(--accent-blue);
+            display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+        }
+        .growth-pill {
+            display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800;
+            padding: 2px 9px; border-radius: 20px; margin-top: 4px;
+        }
+        .growth-pill.up { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+        .growth-pill.down { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+        .growth-pill.flat { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+        .smart-alert-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px;
+            background: var(--card-elev); border: 1px solid var(--border-color); margin-bottom: 8px;
+            border-right: 3px solid var(--accent-orange);
+        }
+        .smart-alert-item.severe { border-right-color: var(--accent-red); }
+        .smart-alert-item.good { border-right-color: var(--accent-green); }
+        .smart-alert-icon { font-size: 20px; flex-shrink: 0; }
+        .smart-alert-text { flex: 1; font-size: 12.5px; line-height: 1.5; }
+        .smart-alert-text strong { display: block; font-size: 13px; margin-bottom: 2px; }
+        .margin-bar-wrap { background: var(--card-elev); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; }
+        .margin-bar-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+        .margin-bar-track { height: 7px; background: var(--border-color); border-radius: 4px; overflow: hidden; }
+        .margin-bar-fill { height: 100%; background: var(--grad-tag); border-radius: 4px; }
         .stat-info h3 { margin: 0; font-size: 11px; color: var(--text-muted); }
         .stat-info .stat-num { font-size: 21px; font-weight: 900; color: #fff; display: block; margin-top: 4px; }
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
@@ -213,6 +244,19 @@
             .charts-grid { grid-template-columns: 1fr; }
             header { flex-direction: column; align-items: stretch; }
             .modal-box { padding: 22px 16px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .stat-card { padding: 14px 14px; }
+            .stat-card .stat-info h3 { font-size: 11px; }
+            .stat-card .stat-num { font-size: 18px; }
+            .stat-icon-badge { width: 36px; height: 36px; font-size: 17px; }
+            .home-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .home-card { padding: 18px 10px; }
+            .home-card .icon { font-size: 28px; }
+            .home-card .title { font-size: 12.5px; }
+            .home-card .desc { font-size: 9.5px; }
+            .grid-3, .grid-inputs, .images-grid { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .table-container { overflow-x: auto; }
         }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -309,6 +353,11 @@
             <div class="icon">🧠</div>
             <div class="title">تحليلات متقدمة</div>
             <div class="desc">ذكاء أعمال ومؤشرات</div>
+        </div>
+        <div class="home-card" onclick="showView('view-growth')">
+            <div class="icon" style="background:linear-gradient(135deg,#fb923c,#c2410c); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">🚀</div>
+            <div class="title">النمو والتنبيهات</div>
+            <div class="desc">مقارنة الأشهر وتنبيهات ذكية</div>
         </div>
         <div class="home-card" onclick="loadAllData(); showToast('🔄 تم التحديث','success')">
             <div class="icon">🔄</div>
@@ -420,6 +469,60 @@
                 <h2 style="border:none; padding:0; margin:20px 0 10px;">⚠️ تنبيهات المخزون</h2>
                 <div id="stockAlerts" class="top-products-list">جاري التحميل...</div>
             </div>
+        </div>
+    </div>
+
+    <div id="view-growth" class="view-page">
+        <button class="back-btn" onclick="showHome()">⬅️ رجوع للقائمة</button>
+
+        <div class="stats-grid" style="margin-bottom:20px;">
+            <div class="stat-card highlight">
+                <div class="stat-info">
+                    <h3>نمو المبيعات (شهري)</h3>
+                    <span class="stat-num" id="growthSalesNum">0%</span>
+                    <span class="growth-pill flat" id="growthSalesPill">— مقارنة بالشهر السابق</span>
+                </div>
+                <div class="stat-icon-badge">📈</div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="stat-info">
+                    <h3>نمو الطلبات (شهري)</h3>
+                    <span class="stat-num" id="growthOrdersNum">0%</span>
+                    <span class="growth-pill flat" id="growthOrdersPill">— مقارنة بالشهر السابق</span>
+                </div>
+                <div class="stat-icon-badge">📦</div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="stat-info">
+                    <h3>متوسط هامش الربح</h3>
+                    <span class="stat-num" id="avgMarginNum">0%</span>
+                </div>
+                <div class="stat-icon-badge">💹</div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="stat-info">
+                    <h3>تنبيهات نشطة</h3>
+                    <span class="stat-num" id="activeAlertsNum">0</span>
+                </div>
+                <div class="stat-icon-badge">🔔</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h2 style="border:none; padding:0; margin-bottom:16px;">💹 هامش الربح حسب المنتج (Top 8)</h2>
+                <div id="marginByProductList"></div>
+            </div>
+            <div class="chart-card">
+                <h2 style="border:none; padding:0; margin-bottom:16px;">📊 نمو المبيعات — 6 أشهر</h2>
+                <canvas id="growthTrendChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <h2>🔔 تنبيهات ذكية</h2>
+            <p style="color:var(--text-muted); font-size:12px; margin-top:-8px;">إشارات مبنية على سلوك المبيعات والإلغاء، غير المخزون المنخفض (انظر التحليلات المتقدمة).</p>
+            <div id="smartAlertsList">جاري التحليل...</div>
         </div>
     </div>
 
@@ -548,6 +651,7 @@
     let salesTrendChart = null;
     let profitByProductChart = null;
     let wilayaChart = null;
+    let growthTrendChart = null;
     let selectedOrderKeys = new Set();
 
 
@@ -568,6 +672,9 @@
         }
         if (id === 'view-analytics' && typeof renderAdvancedAnalytics === 'function') {
             setTimeout(renderAdvancedAnalytics, 150);
+        }
+        if (id === 'view-growth' && typeof renderGrowthAndAlerts === 'function') {
+            setTimeout(renderGrowthAndAlerts, 150);
         }
     }
 
@@ -641,6 +748,7 @@
             renderOrdersChart();
             renderTopProducts();
             renderAdvancedAnalytics();
+            renderGrowthAndAlerts();
             
             document.getElementById('lastUpdatedTime').innerText = new Date().toLocaleTimeString('ar-DZ');
         } catch(e) {
@@ -1072,6 +1180,154 @@
         `).join('') : '<p style="color:var(--text-muted); text-align:center">✅ المخزون جيد</p>';
     }
 
+    // ==================== النمو والتنبيهات الذكية ====================
+    function renderGrowthAndAlerts() {
+        const orders = Object.values(allOrdersData);
+        const products = Object.values(allProductsData);
+        if (orders.length === 0) return;
+
+        const validOrders = orders.filter(o => o.status !== 'ملغى');
+
+        // ---- 1. تجميع شهري لآخر 6 أشهر ----
+        const monthKey = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        const now = new Date();
+        const months = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            months.push(monthKey(d));
+        }
+        const monthlySales = {}; const monthlyOrders = {};
+        months.forEach(m => { monthlySales[m] = 0; monthlyOrders[m] = 0; });
+        validOrders.forEach(o => {
+            if (!o.createdAt) return;
+            const mk = monthKey(new Date(o.createdAt));
+            if (monthlySales.hasOwnProperty(mk)) {
+                monthlySales[mk] += parseInt(o.totalPrice) || 0;
+                monthlyOrders[mk] += 1;
+            }
+        });
+
+        const currentMonth = months[months.length - 1];
+        const prevMonth = months[months.length - 2];
+        const salesNow = monthlySales[currentMonth] || 0;
+        const salesPrev = monthlySales[prevMonth] || 0;
+        const ordersNow = monthlyOrders[currentMonth] || 0;
+        const ordersPrev = monthlyOrders[prevMonth] || 0;
+
+        const pctChange = (now_, prev_) => {
+            if (prev_ === 0) return now_ > 0 ? 100 : 0;
+            return Math.round(((now_ - prev_) / prev_) * 100);
+        };
+        const salesGrowth = pctChange(salesNow, salesPrev);
+        const ordersGrowth = pctChange(ordersNow, ordersPrev);
+
+        const setGrowthUI = (numId, pillId, value) => {
+            const numEl = document.getElementById(numId);
+            const pillEl = document.getElementById(pillId);
+            numEl.innerText = (value > 0 ? '+' : '') + value + '%';
+            pillEl.classList.remove('up','down','flat');
+            if (value > 0) { pillEl.classList.add('up'); pillEl.innerText = '↑ نمو مقارنة بالشهر السابق'; }
+            else if (value < 0) { pillEl.classList.add('down'); pillEl.innerText = '↓ تراجع مقارنة بالشهر السابق'; }
+            else { pillEl.classList.add('flat'); pillEl.innerText = '— لا تغيير عن الشهر السابق'; }
+        };
+        setGrowthUI('growthSalesNum', 'growthSalesPill', salesGrowth);
+        setGrowthUI('growthOrdersNum', 'growthOrdersPill', ordersGrowth);
+
+        // ---- 2. رسم بياني للنمو الشهري ----
+        const growthCtx = document.getElementById('growthTrendChart');
+        if (growthCtx) {
+            if (growthTrendChart) growthTrendChart.destroy();
+            growthTrendChart = new Chart(growthCtx, {
+                type: 'bar',
+                data: {
+                    labels: months.map(m => m.slice(5) + '/' + m.slice(2,4)),
+                    datasets: [{
+                        label: 'المبيعات (DA)',
+                        data: months.map(m => monthlySales[m]),
+                        backgroundColor: months.map((m,i) => i === months.length-1 ? '#f97316' : '#2563eb'),
+                        borderRadius: 8
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        // ---- 3. هامش الربح حسب المنتج ----
+        const productMargins = products
+            .filter(p => p.price && p.cost)
+            .map(p => ({ name: p.name, margin: Math.round(((p.price - p.cost) / p.price) * 100), price: p.price, cost: p.cost }))
+            .sort((a,b) => b.margin - a.margin)
+            .slice(0, 8);
+        const avgMargin = productMargins.length
+            ? Math.round(productMargins.reduce((s,p) => s + p.margin, 0) / productMargins.length) : 0;
+        document.getElementById('avgMarginNum').innerText = avgMargin + '%';
+
+        document.getElementById('marginByProductList').innerHTML = productMargins.length ? productMargins.map(p => `
+            <div class="margin-bar-wrap">
+                <div class="margin-bar-row"><strong>${p.name.slice(0,28)}</strong><span style="color:var(--accent-orange); font-weight:800">${p.margin}%</span></div>
+                <div class="margin-bar-track"><div class="margin-bar-fill" style="width:${Math.max(2, Math.min(100, p.margin))}%"></div></div>
+            </div>
+        `).join('') : '<p style="color:var(--text-muted); text-align:center">لا توجد بيانات سعر جملة كافية</p>';
+
+        // ---- 4. تنبيهات ذكية (إشارات سلوكية، مختلفة عن تنبيهات المخزون) ----
+        const alerts = [];
+
+        // إلغاء مرتفع لمنتج معين
+        const cancelByProduct = {};
+        const ordersByProduct = {};
+        orders.forEach(o => {
+            const name = o.product || 'غير معروف';
+            ordersByProduct[name] = (ordersByProduct[name] || 0) + 1;
+            if (o.status === 'ملغى') cancelByProduct[name] = (cancelByProduct[name] || 0) + 1;
+        });
+        Object.entries(cancelByProduct).forEach(([name, count]) => {
+            const total = ordersByProduct[name] || 1;
+            const rate = Math.round((count / total) * 100);
+            if (total >= 3 && rate >= 40) {
+                alerts.push({ type: 'severe', icon: '🚨', title: `معدل إلغاء مرتفع: ${name.slice(0,30)}`,
+                    text: `${rate}% من طلبات هذا المنتج (${count} من ${total}) تم إلغاؤها. قد يستدعي مراجعة السعر أو الوصف أو جودة المنتج.` });
+            }
+        });
+
+        // تراجع مبيعات حاد
+        if (salesPrev > 0 && salesGrowth <= -30) {
+            alerts.push({ type: 'severe', icon: '📉', title: 'تراجع كبير في المبيعات',
+                text: `انخفضت المبيعات بنسبة ${Math.abs(salesGrowth)}% هذا الشهر مقارنة بالشهر الماضي. راجع الحملات الترويجية والمخزون.` });
+        }
+
+        // نمو ملحوظ (إيجابي)
+        if (salesPrev > 0 && salesGrowth >= 30) {
+            alerts.push({ type: 'good', icon: '🎉', title: 'نمو قوي في المبيعات',
+                text: `ارتفعت المبيعات بنسبة ${salesGrowth}% هذا الشهر. حافظ على نفس استراتيجية التسويق الحالية.` });
+        }
+
+        // منتجات بدون أي طلب منذ فترة طويلة (راكدة)
+        const lastOrderDate = {};
+        validOrders.forEach(o => {
+            const name = o.product || '';
+            const d = o.createdAt ? new Date(o.createdAt) : null;
+            if (d && (!lastOrderDate[name] || d > lastOrderDate[name])) lastOrderDate[name] = d;
+        });
+        const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+        products.forEach(p => {
+            if ((p.stock || 0) === 0) return; // تنبيهات المخزون تغطي هذه الحالة
+            const last = lastOrderDate[p.name];
+            const daysSince = last ? Math.floor((now - last) / (24*60*60*1000)) : null;
+            if ((!last || daysSince > 30) && (p.stock || 0) > 0) {
+                alerts.push({ type: 'normal', icon: '🐌', title: `منتج راكد: ${p.name.slice(0,30)}`,
+                    text: last ? `لم يُطلب منذ ${daysSince} يوماً، بينما لا يزال ${p.stock} قطعة في المخزون.` : 'لم يُطلب هذا المنتج منذ بدء تتبع الطلبات.' });
+            }
+        });
+
+        document.getElementById('activeAlertsNum').innerText = alerts.length;
+        document.getElementById('smartAlertsList').innerHTML = alerts.length ? alerts.slice(0, 10).map(a => `
+            <div class="smart-alert-item ${a.type}">
+                <span class="smart-alert-icon">${a.icon}</span>
+                <div class="smart-alert-text"><strong>${a.title}</strong>${a.text}</div>
+            </div>
+        `).join('') : '<p style="color:var(--text-muted); text-align:center">✅ لا توجد تنبيهات حالياً، كل شيء يبدو طبيعياً</p>';
+    }
+
     function calculateFinance() {
         let totalSales = 0, totalProfit = 0;
         Object.values(allOrdersData).forEach(order => {
@@ -1264,5 +1520,5 @@
     // بدء التطبيق
     checkAuthState();
 </script>
-<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;var a=target.closest?target.closest("a[href]"):null;if(!a||!a.href||!/^https?:\/\//.test(a.href))return;if(a.href.replace(/#.*$/,"")===loc)return;var productId=extractProductId(target)||extractProductId(a);if(!productId)return;e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*")},true)})();</script></body>
+</body>
 </html>

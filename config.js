@@ -11,11 +11,12 @@
 const CONFIG = {
   // 🔥 Firebase Configuration
   FIREBASE_BASE_URL: "https://phones-market-default-rtdb.europe-west1.firebasedatabase.app",
-  
-  // 🤖 Telegram Bot (يجب نقله إلى متغيرات البيئة في الإنتاج)
-  // استخدم متغيرات البيئة بدلاً من الضع الكود مباشرة
-  TELEGRAM_TOKEN: process.env.TELEGRAM_TOKEN || "YOUR_TELEGRAM_TOKEN_HERE",
-  TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || "YOUR_CHAT_ID_HERE",
+
+  // 🤖 Telegram Bot
+  // ⚠️ لا تضع توكن البوت هنا أبداً. أي قيمة في ملف يُحمَّل في المتصفح (config.js)
+  // تكون مرئية لأي زائر يفتح "عرض المصدر". التوكن الحقيقي يجب أن يعيش فقط على
+  // الخادم (Cloud Function) ولا يُرفع لهذا المتجر العام.
+  // راجع FIREBASE_SETUP.md لطريقة إعداد إشعار Telegram من جهة الخادم.
   
   // 🔐 Admin Configuration
   ADMIN_PASSWORD: "Admin2026", // يجب تغيير كلمة المرور في الإنتاج!

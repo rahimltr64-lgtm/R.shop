@@ -161,6 +161,7 @@ body.light-mode header { background: rgba(255,255,255,0.92); }
     scrollbar-width: none; border-bottom: 1px solid var(--line);
 }
 .filter-scroll::-webkit-scrollbar { display: none; }
+#quickBrandChips { display: contents; }
 .filter-chip {
     flex-shrink: 0; background: var(--navy-800); border: 1px solid var(--line);
     color: var(--ink); padding: 9px 15px; border-radius: 30px; font-size: 12.5px;
@@ -469,9 +470,7 @@ body.has-compare-bar .back-to-top { bottom: calc(76px + var(--safe-bottom)); }
 
 <div class="filter-scroll" id="filterBar">
     <button class="filter-chip active" data-filter-type="all" onclick="quickFilterAll(this)">🌍 الكل</button>
-    <button class="filter-chip" data-filter-type="brand" data-value="آبل" onclick="quickFilterBrand('آبل', this)">🍎 آبل</button>
-    <button class="filter-chip" data-filter-type="brand" data-value="سامسونج" onclick="quickFilterBrand('سامسونج', this)">⭐ سامسونج</button>
-    <button class="filter-chip" data-filter-type="brand" data-value="شاومي" onclick="quickFilterBrand('شاومي', this)">🔴 شاومي</button>
+    <span id="quickBrandChips"></span>
     <button class="filter-chip" data-filter-type="category" data-value="flagship" onclick="quickFilterCategory('flagship', this)">👑 Flagship</button>
     <button class="filter-chip" data-filter-type="category" data-value="budget" onclick="quickFilterCategory('budget', this)">💰 اقتصادي</button>
     <button class="filter-chip more-btn" id="moreFilterBtn" onclick="openFilterSheet()">⚙️ فلترة <span class="dot"></span></button>
@@ -484,14 +483,6 @@ body.has-compare-bar .back-to-top { bottom: calc(76px + var(--safe-bottom)); }
             <p class="filter-group-title">الماركة</p>
             <div class="filter-group-grid" id="fullBrandsGrid">
                 <button class="filter-chip active" data-brand="الكل" onclick="filterBrand('الكل', this)">🌍 الكل</button>
-                <button class="filter-chip" data-brand="آبل" onclick="filterBrand('آبل', this)">🍎 آبل</button>
-                <button class="filter-chip" data-brand="سامسونج" onclick="filterBrand('سامسونج', this)">⭐ سامسونج</button>
-                <button class="filter-chip" data-brand="شاومي" onclick="filterBrand('شاومي', this)">🔴 شاومي</button>
-                <button class="filter-chip" data-brand="هواوي" onclick="filterBrand('هواوي', this)">🟢 هواوي</button>
-                <button class="filter-chip" data-brand="ون بلس" onclick="filterBrand('ون بلس', this)">🔵 ون بلس</button>
-                <button class="filter-chip" data-brand="أوبو" onclick="filterBrand('أوبو', this)">🟡 أوبو</button>
-                <button class="filter-chip" data-brand="ريلمي" onclick="filterBrand('ريلمي', this)">🟠 ريلمي</button>
-                <button class="filter-chip" data-brand="نوكيا" onclick="filterBrand('نوكيا', this)">🔷 نوكيا</button>
             </div>
         </div>
         <div class="filter-group">
@@ -712,6 +703,48 @@ body.has-compare-bar .back-to-top { bottom: calc(76px + var(--safe-bottom)); }
             console.error('shipping load error',e);
             yalidineShippingRates = DEFAULT_SHIPPING;
         }
+    }
+
+    // ===== الماركات: تُقرأ من Firebase وتُدار من لوحة التحكم =====
+    const DEFAULT_BRANDS = [
+        {id:'apple', emoji:'🍎', name:'آبل'},
+        {id:'samsung', emoji:'⭐', name:'سامسونج'},
+        {id:'xiaomi', emoji:'🔴', name:'شاومي'},
+        {id:'huawei', emoji:'🟢', name:'هواوي'},
+        {id:'oneplus', emoji:'🔵', name:'ون بلس'},
+        {id:'oppo', emoji:'🟡', name:'أوبو'},
+        {id:'realme', emoji:'🟠', name:'ريلمي'},
+        {id:'nokia', emoji:'🔷', name:'نوكيا'}
+    ];
+    let allBrands = [];
+
+    async function loadBrands(){
+        try{
+            const res = await fetch(`${CONFIG.FIREBASE_BASE_URL}/brands.json`);
+            const data = await res.json();
+            if(data && Object.keys(data).length){
+                allBrands = Object.values(data).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ar'));
+            }else{
+                allBrands = DEFAULT_BRANDS.slice().sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+            }
+        }catch(e){
+            console.error('brands load error',e);
+            allBrands = DEFAULT_BRANDS.slice().sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+        }
+        renderBrandFilterUI();
+    }
+
+    function renderBrandFilterUI(){
+        // أول 3 ماركات كاختصار سريع في الشريط العلوي
+        const quickHtml = allBrands.slice(0, 3).map(b => `
+            <button class="filter-chip" data-filter-type="brand" data-value="${b.name}" onclick="quickFilterBrand('${b.name}', this)">${b.emoji || '📱'} ${b.name}</button>
+        `).join('');
+        document.getElementById('quickBrandChips').innerHTML = quickHtml;
+
+        // كل الماركات في قائمة الفلترة الكاملة
+        const fullHtml = `<button class="filter-chip active" data-brand="الكل" onclick="filterBrand('الكل', this)">🌍 الكل</button>` +
+            allBrands.map(b => `<button class="filter-chip" data-brand="${b.name}" onclick="filterBrand('${b.name}', this)">${b.emoji || '📱'} ${b.name}</button>`).join('');
+        document.getElementById('fullBrandsGrid').innerHTML = fullHtml;
     }
 
     const COLOR_HEX_MAP = {
@@ -1355,7 +1388,7 @@ body.has-compare-bar .back-to-top { bottom: calc(76px + var(--safe-bottom)); }
     })();
 
     (async ()=>{
-        await loadShippingRates();
+        await Promise.all([loadShippingRates(), loadBrands()]);
         populateWilayas();
         fetchStoreProducts();
     })();

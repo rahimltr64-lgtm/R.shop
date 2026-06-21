@@ -258,39 +258,25 @@ footer { background: var(--navy-900); border-top: 1px solid var(--line); padding
 
 /* ---------- Floating controls ---------- */
 .whatsapp-float {
-    position: fixed; bottom: calc(70px + var(--safe-bottom)); left: 14px; width: 50px; height: 50px;
+    position: fixed; bottom: calc(18px + var(--safe-bottom)); left: 14px; width: 50px; height: 50px;
     background: #1ebe5d; border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-size: 22px; box-shadow: 0 8px 20px -6px rgba(30,190,93,0.6); z-index: 800; text-decoration: none;
 }
 .back-to-top {
-    position: fixed; bottom: calc(70px + var(--safe-bottom)); right: 14px; width: 42px; height: 42px;
+    position: fixed; bottom: calc(18px + var(--safe-bottom)); right: 14px; width: 42px; height: 42px;
     background: var(--navy-800); border: 1px solid var(--line); color: var(--ink); border-radius: 50%;
     display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 800;
 }
 .back-to-top.visible { opacity: 1; pointer-events: all; }
-
-/* ---------- Bottom tab bar (mobile primary nav) ---------- */
-.bottom-tabs {
-    position: fixed; bottom: 0; right: 0; left: 0; z-index: 900;
-    background: rgba(10,22,40,0.95); backdrop-filter: blur(18px);
-    border-top: 1px solid var(--line); display: flex;
-    padding: 6px 4px max(6px, var(--safe-bottom));
-}
-body.light-mode .bottom-tabs { background: rgba(255,255,255,0.95); }
-.tab-item {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-    padding: 6px 2px; cursor: pointer; color: var(--ink-dim); font-size: 10px; font-weight: 700;
-}
-.tab-item .tab-icon { font-size: 18px; }
-.tab-item.active { color: var(--tag-orange-light); }
-body { padding-bottom: 64px; }
+body.has-compare-bar .whatsapp-float,
+body.has-compare-bar .back-to-top { bottom: calc(76px + var(--safe-bottom)); }
 
 /* ---------- Compare bar ---------- */
 .compare-bar {
-    position: fixed; bottom: 64px; left: 0; right: 0; z-index: 850;
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 850;
     background: var(--navy-800); border-top: 1px solid var(--line);
-    padding: 10px 14px; display: none; align-items: center; gap: 8px;
+    padding: 10px 14px max(10px, var(--safe-bottom)); display: none; align-items: center; gap: 8px;
     box-shadow: 0 -8px 24px -10px rgba(0,0,0,0.5);
 }
 .compare-bar.show { display: flex; }
@@ -431,10 +417,7 @@ body { padding-bottom: 64px; }
 }
 @media (min-width: 900px) {
     .products-grid { grid-template-columns: repeat(4, 1fr); }
-    body { padding-bottom: 0; }
-    .bottom-tabs { display: none; }
     .whatsapp-float, .back-to-top { bottom: 24px; }
-    .compare-bar { bottom: 0; }
     header, .toolbar, .sec-head, .filter-scroll, .products-wrap, footer {
         max-width: 1100px; margin-left: auto; margin-right: auto;
     }
@@ -564,13 +547,6 @@ body { padding-bottom: 64px; }
 
 <a href="https://wa.me/213697914837" target="_blank" class="whatsapp-float">💬</a>
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
-<div class="bottom-tabs">
-    <div class="tab-item active" onclick="scrollToTop(); setActiveTab(this)"><span class="tab-icon">🏠</span>الرئيسية</div>
-    <div class="tab-item" onclick="toggleFavFilter(); setActiveTab(this)"><span class="tab-icon">❤️</span>المفضلة</div>
-    <div class="tab-item" onclick="openDrawer('trackDrawer')"><span class="tab-icon">🔍</span>تتبع</div>
-    <div class="tab-item" onclick="document.querySelector('.whatsapp-float').click()"><span class="tab-icon">💬</span>تواصل</div>
-</div>
 
 <div class="compare-bar" id="compareBar">
     <div class="compare-items" id="compareItems"></div>
@@ -987,8 +963,9 @@ body { padding-bottom: 64px; }
     function updateCompareBar() {
         const bar = document.getElementById('compareBar');
         const itemsEl = document.getElementById('compareItems');
-        if(compareList.length === 0) { bar.classList.remove('show'); return; }
+        if(compareList.length === 0) { bar.classList.remove('show'); document.body.classList.remove('has-compare-bar'); return; }
         bar.classList.add('show');
+        document.body.classList.add('has-compare-bar');
         itemsEl.innerHTML = compareList.map(key => {
             const p = allProducts[key];
             return p ? `<div class="compare-item-chip">📱 ${p.name.substring(0,20)}... <button onclick="toggleCompare('${key}', document.querySelector('[onclick*=\\'${key}\\'].compare-add-btn')); updateCompareBar();">✕</button></div>` : '';
@@ -1356,12 +1333,6 @@ body { padding-bottom: 64px; }
                 <input type="radio" id="s1" name="rating" value="1"><label for="s1">★</label>
             </div>
             <button id="submitRatingBtn" class="btn-action" style="background:var(--grad-tag); width:80%; margin: 0 auto 12px;" onclick="submitRating()">إرسال التقييم</button>`;
-    }
-
-    function scrollToTop() { window.scrollTo({top:0, behavior:'smooth'}); }
-    function setActiveTab(el) {
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
     }
 
     window.addEventListener('scroll', () => {

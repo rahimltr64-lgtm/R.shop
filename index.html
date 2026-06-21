@@ -79,33 +79,33 @@ body {
 header {
     background: rgba(10,22,40,0.92); backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top));
+    padding: 9px 16px; padding-top: max(9px, env(safe-area-inset-top));
     display: flex; justify-content: space-between; align-items: center;
     position: sticky; top: 0; z-index: 1000;
     border-bottom: 1px solid var(--line);
 }
 body.light-mode header { background: rgba(255,255,255,0.92); }
-.brand-mark { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.brand-mark { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .brand-glyph {
-    width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0;
+    width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
     background: var(--grad-cart); display: flex; align-items: center; justify-content: center;
-    font-size: 18px; box-shadow: 0 4px 14px -4px rgba(37,99,235,0.6);
+    font-size: 15px; box-shadow: 0 4px 14px -4px rgba(37,99,235,0.6);
     position: relative; overflow: hidden;
 }
 .brand-glyph::after {
     content: '%'; position: absolute; bottom: -3px; left: -3px;
-    width: 16px; height: 16px; border-radius: 5px; background: var(--grad-tag);
-    color: #fff; font-size: 9px; font-weight: 900; display: flex;
+    width: 14px; height: 14px; border-radius: 4px; background: var(--grad-tag);
+    color: #fff; font-size: 8px; font-weight: 900; display: flex;
     align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(194,65,12,0.5);
 }
-.brand-text h1 { margin: 0; font-size: 16px; font-weight: 900; letter-spacing: -0.3px; line-height: 1.1; }
-.brand-text span { font-size: 10px; color: var(--ink-dim); font-weight: 600; }
+.brand-text h1 { margin: 0; font-size: 15px; font-weight: 900; letter-spacing: -0.3px; line-height: 1.1; }
+.brand-text span { font-size: 9.5px; color: var(--ink-dim); font-weight: 600; }
 .header-actions { display: flex; gap: 6px; align-items: center; }
 .icon-btn {
     background: var(--navy-700); border: 1px solid var(--line);
-    color: var(--ink); width: 36px; height: 36px; border-radius: 11px;
+    color: var(--ink); width: 33px; height: 33px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 15px; cursor: pointer; position: relative; flex-shrink: 0;
+    font-size: 14px; cursor: pointer; position: relative; flex-shrink: 0;
 }
 .icon-btn.active { background: var(--grad-tag); border-color: transparent; color: #fff; }
 .icon-btn .ping {
@@ -115,7 +115,7 @@ body.light-mode header { background: rgba(255,255,255,0.92); }
 }
 
 /* ---------- Search & sort ---------- */
-.toolbar { padding: 12px 16px 4px; display: flex; gap: 8px; }
+.toolbar { padding: 10px 16px 0; display: flex; gap: 8px; }
 .search-shell {
     flex: 1; display: flex; align-items: center; gap: 8px;
     background: var(--navy-800); border: 1px solid var(--line);
@@ -150,55 +150,43 @@ body.light-mode header { background: rgba(255,255,255,0.92); }
 .sort-option.active { background: var(--navy-700); color: var(--tag-orange-light); }
 .sort-option.active::after { content: '✓'; }
 
-/* ---------- Hero ---------- */
-.hero {
-    margin: 14px 16px 6px; border-radius: var(--radius-lg);
-    background: var(--grad-cart); position: relative; overflow: hidden;
-    padding: 22px 18px; min-height: 130px; display: flex; flex-direction: column; justify-content: center;
-}
-.hero::before {
-    content: ''; position: absolute; left: -30px; top: -30px; width: 160px; height: 160px;
-    background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 70%);
-}
-.hero-tag {
-    position: absolute; top: 14px; left: 14px;
-    background: var(--grad-tag); color: #fff; font-size: 10px; font-weight: 800;
-    padding: 5px 11px; border-radius: 20px; box-shadow: 0 4px 10px -3px rgba(194,65,12,0.6);
-}
-.hero h2 { margin: 18px 0 6px; font-size: 19px; font-weight: 900; color: #fff; max-width: 80%; line-height: 1.3; }
-.hero p { margin: 0 0 12px; font-size: 12px; color: rgba(255,255,255,0.82); max-width: 85%; line-height: 1.6; }
-.hero-stats { display: flex; gap: 16px; }
-.hero-stats div { font-size: 11px; color: rgba(255,255,255,0.9); }
-.hero-stats strong { display: block; font-size: 16px; font-weight: 900; color: #fff; }
-
 /* ---------- Section headers ---------- */
-.sec-head { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 16px 8px; }
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 16px 8px; }
 .sec-head h3 { margin: 0; font-size: 15px; font-weight: 800; }
 .sec-head span { font-size: 11px; color: var(--ink-dim); font-weight: 700; }
 
-/* ---------- Brand row (horizontal scroll, mobile-first) ---------- */
-.brand-scroll {
-    display: flex; gap: 9px; overflow-x: auto; padding: 4px 16px 6px;
-    scrollbar-width: none;
+/* ---------- Unified filter row (brands + categories merged) ---------- */
+.filter-scroll {
+    display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px 12px;
+    scrollbar-width: none; border-bottom: 1px solid var(--line);
 }
-.brand-scroll::-webkit-scrollbar { display: none; }
-.brand-chip {
+.filter-scroll::-webkit-scrollbar { display: none; }
+.filter-chip {
     flex-shrink: 0; background: var(--navy-800); border: 1px solid var(--line);
-    color: var(--ink); padding: 9px 16px; border-radius: 30px; font-size: 12.5px;
+    color: var(--ink); padding: 9px 15px; border-radius: 30px; font-size: 12.5px;
     font-weight: 700; cursor: pointer; white-space: nowrap; display: flex; gap: 6px; align-items: center;
 }
-.brand-chip.active { background: var(--grad-cart); border-color: transparent; color: #fff; }
-
-/* ---------- Category tag row — styled like little discount tags ---------- */
-.cat-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 2px 16px 10px; scrollbar-width: none; }
-.cat-scroll::-webkit-scrollbar { display: none; }
-.cat-tag {
-    flex-shrink: 0; position: relative; background: var(--navy-800); border: 1px solid var(--line);
-    color: var(--ink); padding: 8px 14px 8px 18px; font-size: 12px; font-weight: 700;
-    cursor: pointer; white-space: nowrap; border-radius: 0 10px 10px 0;
-    clip-path: polygon(12px 0, 100% 0, 100% 100%, 12px 100%, 0 50%);
+.filter-chip.active { background: var(--grad-cart); border-color: transparent; color: #fff; }
+.filter-chip.more-btn { background: var(--navy-700); color: var(--tag-orange-light); }
+.filter-chip.more-btn .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--tag-orange);
+    display: none;
 }
-.cat-tag.active { background: var(--grad-tag); border-color: transparent; color: #fff; }
+.filter-chip.more-btn.has-active .dot { display: inline-block; }
+
+/* ---------- Full filter sheet (brands + categories grouped) ---------- */
+.filter-sheet-box .filter-group { margin-bottom: 18px; }
+.filter-sheet-box .filter-group:last-child { margin-bottom: 4px; }
+.filter-sheet-box .filter-group-title {
+    font-size: 11.5px; color: var(--ink-dim); font-weight: 800; margin: 0 0 10px;
+    text-transform: uppercase; letter-spacing: .3px;
+}
+.filter-sheet-box .filter-group-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter-sheet-box .filter-chip { flex-shrink: initial; }
+.filter-sheet-apply {
+    width: 100%; margin-top: 6px; background: var(--grad-tag); color: #fff; border: none;
+    padding: 13px; border-radius: 12px; font-family: 'Cairo'; font-weight: 800; font-size: 13.5px; cursor: pointer;
+}
 
 /* ---------- Products grid ---------- */
 .products-wrap { padding: 4px 16px 10px; }
@@ -440,7 +428,6 @@ body { padding-bottom: 64px; }
 /* ---------- Tablet / desktop scale-up (mobile remains the design center) ---------- */
 @media (min-width: 640px) {
     .products-grid { grid-template-columns: repeat(3, 1fr); }
-    .hero h2 { font-size: 23px; }
 }
 @media (min-width: 900px) {
     .products-grid { grid-template-columns: repeat(4, 1fr); }
@@ -448,7 +435,7 @@ body { padding-bottom: 64px; }
     .bottom-tabs { display: none; }
     .whatsapp-float, .back-to-top { bottom: 24px; }
     .compare-bar { bottom: 0; }
-    header, .toolbar, .hero, .sec-head, .brand-scroll, .cat-scroll, .products-wrap, footer {
+    header, .toolbar, .sec-head, .filter-scroll, .products-wrap, footer {
         max-width: 1100px; margin-left: auto; margin-right: auto;
     }
     header { width: 100%; }
@@ -497,39 +484,47 @@ body { padding-bottom: 64px; }
     </div>
 </div>
 
-<div class="hero">
-    <span class="hero-tag">✨ جديد 2026</span>
-    <h2>أحدث الهواتف الذكية بأفضل الأسعار</h2>
-    <p>آبل، سامسونج، شاومي، هواوي وون بلس — توصيل لكل الولايات مع ضمان أصلي 12 شهر</p>
-    <div class="hero-stats">
-        <div><strong id="heroTotal">500+</strong>منتج</div>
-        <div><strong>58</strong>ولاية</div>
-        <div><strong>24/7</strong>دعم</div>
+<div class="filter-scroll" id="filterBar">
+    <button class="filter-chip active" data-filter-type="all" onclick="quickFilterAll(this)">🌍 الكل</button>
+    <button class="filter-chip" data-filter-type="brand" data-value="آبل" onclick="quickFilterBrand('آبل', this)">🍎 آبل</button>
+    <button class="filter-chip" data-filter-type="brand" data-value="سامسونج" onclick="quickFilterBrand('سامسونج', this)">⭐ سامسونج</button>
+    <button class="filter-chip" data-filter-type="brand" data-value="شاومي" onclick="quickFilterBrand('شاومي', this)">🔴 شاومي</button>
+    <button class="filter-chip" data-filter-type="category" data-value="flagship" onclick="quickFilterCategory('flagship', this)">👑 Flagship</button>
+    <button class="filter-chip" data-filter-type="category" data-value="budget" onclick="quickFilterCategory('budget', this)">💰 اقتصادي</button>
+    <button class="filter-chip more-btn" id="moreFilterBtn" onclick="openFilterSheet()">⚙️ فلترة <span class="dot"></span></button>
+</div>
+
+<div class="sort-sheet" id="filterSheet" onclick="closeFilterSheet(event)">
+    <div class="sort-sheet-box filter-sheet-box">
+        <h3>تصفية المنتجات</h3>
+        <div class="filter-group">
+            <p class="filter-group-title">الماركة</p>
+            <div class="filter-group-grid" id="fullBrandsGrid">
+                <button class="filter-chip active" data-brand="الكل" onclick="filterBrand('الكل', this)">🌍 الكل</button>
+                <button class="filter-chip" data-brand="آبل" onclick="filterBrand('آبل', this)">🍎 آبل</button>
+                <button class="filter-chip" data-brand="سامسونج" onclick="filterBrand('سامسونج', this)">⭐ سامسونج</button>
+                <button class="filter-chip" data-brand="شاومي" onclick="filterBrand('شاومي', this)">🔴 شاومي</button>
+                <button class="filter-chip" data-brand="هواوي" onclick="filterBrand('هواوي', this)">🟢 هواوي</button>
+                <button class="filter-chip" data-brand="ون بلس" onclick="filterBrand('ون بلس', this)">🔵 ون بلس</button>
+                <button class="filter-chip" data-brand="أوبو" onclick="filterBrand('أوبو', this)">🟡 أوبو</button>
+                <button class="filter-chip" data-brand="ريلمي" onclick="filterBrand('ريلمي', this)">🟠 ريلمي</button>
+                <button class="filter-chip" data-brand="نوكيا" onclick="filterBrand('نوكيا', this)">🔷 نوكيا</button>
+            </div>
+        </div>
+        <div class="filter-group">
+            <p class="filter-group-title">القسم</p>
+            <div class="filter-group-grid" id="fullCategoriesGrid">
+                <button class="filter-chip active" data-cat="الكل" onclick="filterCategory('الكل', this)">🌍 الكل</button>
+                <button class="filter-chip" data-cat="flagship" onclick="filterCategory('flagship', this)">👑 Flagship</button>
+                <button class="filter-chip" data-cat="gaming" onclick="filterCategory('gaming', this)">🎮 Gaming</button>
+                <button class="filter-chip" data-cat="budget" onclick="filterCategory('budget', this)">💰 اقتصادي</button>
+                <button class="filter-chip" data-cat="photography" onclick="filterCategory('photography', this)">📸 تصوير</button>
+                <button class="filter-chip" data-cat="foldable" onclick="filterCategory('foldable', this)">📲 قابل للطي</button>
+                <button class="filter-chip" data-cat="accessories" onclick="filterCategory('accessories', this)">🎧 إكسسوارات</button>
+            </div>
+        </div>
+        <button class="filter-sheet-apply" onclick="closeFilterSheet()">عرض النتائج (<span id="filterResultCount">0</span>)</button>
     </div>
-</div>
-
-<div class="sec-head"><h3>تسوق حسب الماركة</h3></div>
-<div class="brand-scroll" id="brandsBar">
-    <button class="brand-chip active" data-brand="الكل" onclick="filterBrand('الكل', this)">🌍 الكل</button>
-    <button class="brand-chip" data-brand="آبل" onclick="filterBrand('آبل', this)">🍎 آبل</button>
-    <button class="brand-chip" data-brand="سامسونج" onclick="filterBrand('سامسونج', this)">⭐ سامسونج</button>
-    <button class="brand-chip" data-brand="شاومي" onclick="filterBrand('شاومي', this)">🔴 شاومي</button>
-    <button class="brand-chip" data-brand="هواوي" onclick="filterBrand('هواوي', this)">🟢 هواوي</button>
-    <button class="brand-chip" data-brand="ون بلس" onclick="filterBrand('ون بلس', this)">🔵 ون بلس</button>
-    <button class="brand-chip" data-brand="أوبو" onclick="filterBrand('أوبو', this)">🟡 أوبو</button>
-    <button class="brand-chip" data-brand="ريلمي" onclick="filterBrand('ريلمي', this)">🟠 ريلمي</button>
-    <button class="brand-chip" data-brand="نوكيا" onclick="filterBrand('نوكيا', this)">🔷 نوكيا</button>
-</div>
-
-<div class="sec-head"><h3>الأقسام</h3></div>
-<div class="cat-scroll" id="categoriesBar">
-    <button class="cat-tag active" onclick="filterCategory('الكل', this)">الكل 🌍</button>
-    <button class="cat-tag" onclick="filterCategory('flagship', this)">Flagship 👑</button>
-    <button class="cat-tag" onclick="filterCategory('gaming', this)">Gaming 🎮</button>
-    <button class="cat-tag" onclick="filterCategory('budget', this)">اقتصادي 💰</button>
-    <button class="cat-tag" onclick="filterCategory('photography', this)">تصوير 📸</button>
-    <button class="cat-tag" onclick="filterCategory('foldable', this)">قابل للطي 📲</button>
-    <button class="cat-tag" onclick="filterCategory('accessories', this)">إكسسوارات 🎧</button>
 </div>
 
 <div class="sec-head">
@@ -849,8 +844,6 @@ body { padding-bottom: 64px; }
             allProducts = raw;
             renderStoreProducts();
             updateFavBadge();
-            const total = Object.keys(allProducts).length;
-            document.getElementById('heroTotal').innerText = total + '+';
         } catch(e) {
             console.error("خطأ في تحميل المنتجات:", e);
             renderStoreProducts();
@@ -1286,17 +1279,66 @@ body { padding-bottom: 64px; }
         renderStoreProducts();
     }
 
+    // ===== شريط الفلاتر السريع (موحّد) =====
+    function syncQuickBarUI() {
+        document.querySelectorAll('#filterBar .filter-chip').forEach(b => b.classList.remove('active'));
+        const moreBtn = document.getElementById('moreFilterBtn');
+        if(currentCategory === 'الكل' && currentBrand === 'الكل') {
+            document.querySelector('#filterBar [data-filter-type="all"]').classList.add('active');
+            moreBtn.classList.remove('has-active');
+            return;
+        }
+        const quickMatch = document.querySelector(
+            `#filterBar [data-filter-type="brand"][data-value="${currentBrand}"], #filterBar [data-filter-type="category"][data-value="${currentCategory}"]`
+        );
+        if(quickMatch && ((currentBrand !== 'الكل' && currentCategory === 'الكل') || (currentCategory !== 'الكل' && currentBrand === 'الكل'))) {
+            quickMatch.classList.add('active');
+            moreBtn.classList.remove('has-active');
+        } else {
+            moreBtn.classList.add('has-active');
+        }
+    }
+    function syncFullSheetUI() {
+        document.querySelectorAll('#fullBrandsGrid .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.brand === currentBrand));
+        document.querySelectorAll('#fullCategoriesGrid .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.cat === currentCategory));
+        const count = Object.keys(allProducts).filter(k => {
+            const p = allProducts[k]; if(!p) return false;
+            if(currentCategory !== 'الكل' && p.category !== currentCategory) return false;
+            if(currentBrand !== 'الكل' && p.brand !== currentBrand) return false;
+            return true;
+        }).length;
+        const el = document.getElementById('filterResultCount');
+        if(el) el.innerText = count;
+    }
+    function quickFilterAll(btn) {
+        currentCategory = 'الكل'; currentBrand = 'الكل';
+        syncQuickBarUI(); syncFullSheetUI(); renderStoreProducts();
+    }
+    function quickFilterBrand(brand, btn) {
+        currentBrand = brand; currentCategory = 'الكل';
+        syncQuickBarUI(); syncFullSheetUI(); renderStoreProducts();
+    }
+    function quickFilterCategory(cat, btn) {
+        currentCategory = cat; currentBrand = 'الكل';
+        syncQuickBarUI(); syncFullSheetUI(); renderStoreProducts();
+    }
+    function openFilterSheet() { syncFullSheetUI(); document.getElementById('filterSheet').classList.add('show'); }
+    function closeFilterSheet(e) {
+        if(e && e.target && e.target.id !== 'filterSheet') return;
+        document.getElementById('filterSheet').classList.remove('show');
+    }
+
     function filterCategory(cat, btn) {
         currentCategory = cat;
-        document.querySelectorAll('.cat-tag').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#fullCategoriesGrid .filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderStoreProducts();
+        syncQuickBarUI(); syncFullSheetUI(); renderStoreProducts();
     }
     function filterBrand(brand, btn) {
         currentBrand = brand;
-        document.querySelectorAll('.brand-chip').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#fullBrandsGrid .filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderStoreProducts();
+        syncQuickBarUI(); syncFullSheetUI(); renderStoreProducts();
     }
 
     function openDrawer(id) { document.getElementById(id).classList.add('show'); }

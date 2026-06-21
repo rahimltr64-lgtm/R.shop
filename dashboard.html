@@ -339,11 +339,6 @@
             <div class="title">إضافة هاتف</div>
             <div class="desc">منتج جديد بسرعة</div>
         </div>
-        <div class="home-card" onclick="openBrandsModal()">
-            <div class="icon">🏷️</div>
-            <div class="title">إدارة الماركات</div>
-            <div class="desc">إضافة وحذف الماركات المتوفرة</div>
-        </div>
         <div class="home-card" onclick="openShippingModal()">
             <div class="icon">🚚</div>
             <div class="title">أسعار التوصيل</div>
@@ -399,6 +394,11 @@
                 <input type="text" id="productSearchInput" class="search-input" placeholder="🔍 ابحث في المنتجات..." oninput="renderProducts()">
                 <select id="productFilterBrand" class="filter-select" onchange="renderProducts()">
                     <option value="الكل">كل الماركات</option>
+                    <option value="آبل">🍎 آبل</option>
+                    <option value="سامسونج">⭐ سامسونج</option>
+                    <option value="شاومي">🔴 شاومي</option>
+                    <option value="هواوي">🟢 هواوي</option>
+                    <option value="ون بلس">🔵 ون بلس</option>
                 </select>
                 <select id="productFilterStock" class="filter-select" onchange="renderProducts()">
                     <option value="الكل">كل المخزون</option>
@@ -537,6 +537,14 @@
                     <input type="number" id="p_id" placeholder="رقم ID فريد" required>
                     <select id="p_brand" required>
                         <option value="">-- الماركة --</option>
+                        <option value="آبل">🍎 آبل</option>
+                        <option value="سامسونج">⭐ سامسونج</option>
+                        <option value="شاومي">🔴 شاومي</option>
+                        <option value="هواوي">🟢 هواوي</option>
+                        <option value="ون بلس">🔵 ون بلس</option>
+                        <option value="أوبو">🟡 أوبو</option>
+                        <option value="ريلمي">🟠 ريلمي</option>
+                        <option value="نوكيا">🔷 نوكيا</option>
                     </select>
                     <select id="p_cat" required>
                         <option value="">-- القسم --</option>
@@ -604,23 +612,6 @@
         </div>
     </div>
 
-    <!-- مودال الماركات -->
-    <div class="modal-overlay" id="brandsModal" onclick="closeBrandsModal(event)">
-        <div class="modal-box" style="max-width:520px;">
-            <button class="modal-close" onclick="closeBrandsModalForce()">✕</button>
-            <h2 style="border:none;">🏷️ إدارة الماركات</h2>
-            <p style="color:var(--text-muted); font-size:12px; margin:-10px 0 15px 0;">هذه الماركات تظهر في فلاتر المتجر وفي نموذج إضافة هاتف</p>
-
-            <div style="display:flex; gap:8px; margin-bottom:16px;">
-                <input type="text" id="newBrandEmoji" placeholder="🍎" maxlength="2" style="max-width:60px; text-align:center; margin-bottom:0;">
-                <input type="text" id="newBrandName" placeholder="اسم الماركة الجديدة (مثال: غوغل)" style="margin-bottom:0;">
-                <button class="btn-trigger-modal green" style="white-space:nowrap; flex-shrink:0;" onclick="addBrand()">➕ إضافة</button>
-            </div>
-
-            <div id="brandsListContainer" style="display:flex; flex-direction:column; gap:8px; max-height:50vh; overflow-y:auto;"></div>
-        </div>
-    </div>
-
     <!-- شريط التحديث الجماعي -->
     <div class="bulk-action-bar" id="bulkActionBar">
         <span>☑️ <span id="bulkCount">0</span> طلب محدد</span>
@@ -656,7 +647,6 @@
 
     let allOrdersData = {};
     let allProductsData = {};
-    let allBrandsData = {};
     let ordersChart = null;
     let salesTrendChart = null;
     let profitByProductChart = null;
@@ -742,35 +732,15 @@
     }
 
     // ==================== جلب البيانات ====================
-    const DEFAULT_BRANDS = [
-        {id:'apple', emoji:'🍎', name:'آبل'},
-        {id:'samsung', emoji:'⭐', name:'سامسونج'},
-        {id:'xiaomi', emoji:'🔴', name:'شاومي'},
-        {id:'huawei', emoji:'🟢', name:'هواوي'},
-        {id:'oneplus', emoji:'🔵', name:'ون بلس'},
-        {id:'oppo', emoji:'🟡', name:'أوبو'},
-        {id:'realme', emoji:'🟠', name:'ريلمي'},
-        {id:'nokia', emoji:'🔷', name:'نوكيا'}
-    ];
-
     async function loadAllData() {
         try {
-            const [pSnapshot, oSnapshot, bSnapshot] = await Promise.all([
+            const [pSnapshot, oSnapshot] = await Promise.all([
                 db.ref('products').once('value'),
-                db.ref('orders').once('value'),
-                db.ref('brands').once('value')
+                db.ref('orders').once('value')
             ]);
             
             allProductsData = pSnapshot.val() || {};
             allOrdersData = oSnapshot.val() || {};
-
-            let brandsVal = bSnapshot.val();
-            if (!brandsVal || Object.keys(brandsVal).length === 0) {
-                brandsVal = Object.fromEntries(DEFAULT_BRANDS.map(b => [b.id, b]));
-                await db.ref('brands').set(brandsVal);
-            }
-            allBrandsData = brandsVal;
-            populateBrandSelects();
             
             renderProducts();
             filterOrdersTable();
@@ -784,32 +754,6 @@
         } catch(e) {
             console.error(e);
             showToast('❌ خطأ في تحميل البيانات', 'error');
-        }
-    }
-
-    function getSortedBrandsList() {
-        return Object.entries(allBrandsData)
-            .map(([key, b]) => ({ key, ...b }))
-            .sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ar'));
-    }
-
-    // يبني قوائم الماركات (فلتر المنتجات + فورم الإضافة/التعديل) من بيانات Firebase
-    function populateBrandSelects() {
-        const brands = getSortedBrandsList();
-        const optionsHtml = brands.map(b => `<option value="${b.name}">${b.emoji || ''} ${b.name}</option>`).join('');
-
-        const filterSelect = document.getElementById('productFilterBrand');
-        if (filterSelect) {
-            const current = filterSelect.value || 'الكل';
-            filterSelect.innerHTML = `<option value="الكل">كل الماركات</option>${optionsHtml}`;
-            filterSelect.value = brands.some(b => b.name === current) ? current : 'الكل';
-        }
-
-        const formSelect = document.getElementById('p_brand');
-        if (formSelect) {
-            const current = formSelect.value;
-            formSelect.innerHTML = `<option value="">-- الماركة --</option>${optionsHtml}`;
-            if (brands.some(b => b.name === current)) formSelect.value = current;
         }
     }
 
@@ -1530,82 +1474,6 @@
         }
     }
 
-    // ==================== إدارة الماركات ====================
-    function openBrandsModal() {
-        document.getElementById('brandsModal').classList.add('show');
-        document.getElementById('newBrandEmoji').value = '';
-        document.getElementById('newBrandName').value = '';
-        renderBrandsList();
-    }
-    function closeBrandsModal(e) {
-        if (e.target === document.getElementById('brandsModal')) closeBrandsModalForce();
-    }
-    function closeBrandsModalForce() {
-        document.getElementById('brandsModal').classList.remove('show');
-    }
-
-    function renderBrandsList() {
-        const container = document.getElementById('brandsListContainer');
-        const brands = getSortedBrandsList();
-        if (brands.length === 0) {
-            container.innerHTML = `<p style="color:var(--text-muted); font-size:12.5px; text-align:center; padding:20px 0;">لا توجد ماركات. أضف أول ماركة بالأعلى.</p>`;
-            return;
-        }
-        container.innerHTML = brands.map(b => {
-            const productCount = Object.values(allProductsData).filter(p => p && p.brand === b.name).length;
-            return `
-            <div style="display:flex; align-items:center; gap:10px; background:var(--main-dark); border:1px solid var(--border-color); border-radius:12px; padding:10px 14px;">
-                <span style="font-size:20px;">${b.emoji || '📱'}</span>
-                <div style="flex:1;">
-                    <strong style="font-size:13.5px;">${b.name}</strong>
-                    ${productCount > 0 ? `<div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">${productCount} منتج مرتبط بهذه الماركة</div>` : ''}
-                </div>
-                <button class="btn-action-small" style="color:var(--accent-red)" title="حذف" onclick="deleteBrand('${b.key}', '${b.name}', ${productCount})">🗑️</button>
-            </div>`;
-        }).join('');
-    }
-
-    async function addBrand() {
-        const emojiInput = document.getElementById('newBrandEmoji');
-        const nameInput = document.getElementById('newBrandName');
-        const emoji = emojiInput.value.trim() || '📱';
-        const name = nameInput.value.trim();
-
-        if (!name) { showToast('⚠️ يرجى كتابة اسم الماركة', 'error'); return; }
-        const exists = Object.values(allBrandsData).some(b => b.name === name);
-        if (exists) { showToast('⚠️ هذه الماركة موجودة بالفعل', 'error'); return; }
-
-        const newKey = 'brand_' + Date.now();
-        try {
-            await db.ref('brands/' + newKey).set({ emoji, name });
-            allBrandsData[newKey] = { emoji, name };
-            populateBrandSelects();
-            renderBrandsList();
-            emojiInput.value = '';
-            nameInput.value = '';
-            showToast('✅ تمت إضافة الماركة بنجاح', 'success');
-        } catch(e) {
-            showToast('❌ فشل إضافة الماركة', 'error');
-        }
-    }
-
-    async function deleteBrand(key, name, productCount) {
-        if (productCount > 0) {
-            if (!confirm(`⚠️ توجد ${productCount} منتج مرتبط بـ "${name}". حذف الماركة لن يحذف المنتجات لكنها ستبقى بدون ماركة في القوائم. متابعة الحذف؟`)) return;
-        } else {
-            if (!confirm(`حذف ماركة "${name}"؟`)) return;
-        }
-        try {
-            await db.ref('brands/' + key).remove();
-            delete allBrandsData[key];
-            populateBrandSelects();
-            renderBrandsList();
-            showToast('🗑️ تم حذف الماركة', 'success');
-        } catch(e) {
-            showToast('❌ فشل حذف الماركة', 'error');
-        }
-    }
-
     // ==================== دوال مساعدة ====================
     function openModal() {
         document.getElementById('modalTitle').innerText = '➕ إضافة هاتف جديد';
@@ -1653,4 +1521,4 @@
     checkAuthState();
 </script>
 </body>
-</html>
+    </html>

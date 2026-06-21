@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أداة استبدال الماركات | R.Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<style>
+:root {
+    --main-dark: #0a0e16; --card-bg: #131a2a; --card-elev: #1a2335;
+    --accent-red: #ef4444; --accent-green: #10b981; --accent-blue: #3b82f6;
+    --accent-gold: #f5b041; --text-main: #f8fafc; --text-muted: #94a3b8;
+    --border-color: #2a3447;
+}
+* { box-sizing: border-box; }
+body { font-family:'Cairo',sans-serif; background:var(--main-dark); color:var(--text-main); margin:0; padding:20px; }
+.wrap { max-width:560px; margin:0 auto; }
+.card { background:var(--card-bg); border:1px solid var(--border-color); border-radius:22px; padding:24px; margin-bottom:18px; }
+h1 { font-size:18px; margin:0 0 6px; }
+p.sub { color:var(--text-muted); font-size:12.5px; margin:0 0 18px; line-height:1.7; }
+input { width:100%; padding:12px; background:var(--main-dark); border:1px solid var(--border-color); color:#fff; border-radius:12px; margin-bottom:11px; font-family:'Cairo'; font-size:13px; }
+button { width:100%; padding:13px; border:none; border-radius:14px; font-family:'Cairo'; font-weight:800; font-size:13.5px; cursor:pointer; margin-top:4px; }
+.btn-login { background:linear-gradient(135deg,var(--accent-blue),#1d4ed8); color:#fff; }
+.btn-run { background:linear-gradient(135deg,#fb923c,#c2410c); color:#fff; }
+.btn-run:disabled { opacity:.5; cursor:not-allowed; }
+.err { color:var(--accent-red); font-size:12.5px; margin-bottom:10px; display:none; }
+.hidden { display:none; }
+.brand-old { display:flex; align-items:center; gap:10px; background:var(--card-elev); border-radius:12px; padding:10px 14px; margin-bottom:8px; font-size:13px; }
+.brand-old .count { color:var(--text-muted); font-size:11px; margin-right:auto; }
+.new-list { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.new-chip { background:var(--card-elev); border:1px solid var(--border-color); border-radius:20px; padding:7px 14px; font-size:12.5px; font-weight:700; }
+.log { font-size:12px; line-height:1.8; background:var(--main-dark); border:1px solid var(--border-color); border-radius:12px; padding:12px; max-height:240px; overflow-y:auto; white-space:pre-wrap; }
+.log .ok { color:var(--accent-green); }
+.log .warn { color:var(--accent-gold); }
+.note { background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.3); border-radius:12px; padding:12px 14px; font-size:12px; color:var(--tag-orange-light); margin-bottom:16px; line-height:1.7; }
+.mismatch-card { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); border-radius:12px; padding:14px; margin:14px 0; font-size:12.5px; line-height:1.8; }
+.mismatch-card strong { color:var(--accent-red); }
+.exact-val { background:var(--main-dark); border:1px solid var(--border-color); border-radius:6px; padding:1px 6px; font-family:monospace; direction:ltr; display:inline-block; }
+.fix-btn { width:auto; display:inline-block; padding:9px 16px; font-size:12px; margin-top:10px; background:var(--accent-blue); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <div class="card" id="loginCard">
+        <h1>🔐 تسجيل الدخول</h1>
+        <p class="sub">أداة لمرة واحدة لاستبدال الماركات في قاعدة R.Shop. سجّل دخولك بنفس بيانات لوحة التحكم.</p>
+        <div class="err" id="loginErr"></div>
+        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <button class="btn-login" onclick="doLogin()">تسجيل الدخول</button>
+    </div>
+
+    <div class="card hidden" id="mainCard">
+        <h1>🏷️ استبدال الماركات</h1>
+        <p class="sub">سيتم حذف كل الماركات الحالية ووضع القائمة الجديدة محلّها.</p>
+
+        <div id="oldBrandsBox"></div>
+
+        <div id="mismatchBox" class="hidden"></div>
+
+        <p class="sub" style="margin-top:18px; margin-bottom:8px; font-weight:800; color:var(--text-main);">الماركات الجديدة التي ستُضاف:</p>
+        <div class="new-list" id="newBrandsBox"></div>
+
+        <div class="note">
+            ⚠️ المنتجات المرتبطة بالماركات القديمة (المعروضة أعلاه) <strong>لن تُحذف</strong>، لكنها ستبقى تحمل اسم ماركة قديمة غير موجودة في القائمة الجديدة، وستظهر في لوحة التحكم والمتجر بدون فلتر ماركة صحيح. يمكنك تعديل ماركة كل منتج يدوياً بعد ذلك من "إدارة المنتجات" إذا أردت ربطه بماركة جديدة.
+        </div>
+
+        <button class="btn-run" id="runBtn" onclick="runReplace()">🔁 تنفيذ الاستبدال الآن</button>
+        <div class="log hidden" id="logBox" style="margin-top:14px;"></div>
+    </div>
+
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCyZ5mBrgTyGcGtOxkCd9X9ehMhPZ4vwwM",
+        authDomain: "phones-market.firebaseapp.com",
+        databaseURL: "https://phones-market-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "phones-market",
+        storageBucket: "phones-market.firebasestorage.app",
+        messagingSenderId: "1059312114207",
+        appId: "1:1059312114207:web:df55121ec1e716e038532a",
+        measurementId: "G-SJSS09QPWT"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const NEW_BRANDS = [
+        { id:'realmi',  emoji:'🟠', name:'Realmi' },
+        { id:'infinix', emoji:'🟣', name:'Infinix' },
+        { id:'condor',  emoji:'🔶', name:'Condor' },
+        { id:'itel',    emoji:'🔵', name:'Itel' },
+        { id:'ace',     emoji:'⚪',  name:'Ace' },
+        { id:'tecno',   emoji:'🟢', name:'Tecno' }
+    ];
+
+    let allProductsCache = {};
+
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('mainCard').classList.remove('hidden');
+            loadCurrentState();
+        }
+    });
+
+    async function doLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        const err = document.getElementById('loginErr');
+        err.style.display = 'none';
+        if (!email || !pass) { err.textContent = '❌ أدخل البريد وكلمة المرور'; err.style.display = 'block'; return; }
+        try {
+            await auth.signInWithEmailAndPassword(email, pass);
+        } catch (e) {
+            err.textContent = '❌ ' + (e.message || 'فشل تسجيل الدخول');
+            err.style.display = 'block';
+        }
+    }
+
+    async function loadCurrentState() {
+        const [bSnap, pSnap] = await Promise.all([
+            db.ref('brands').once('value'),
+            db.ref('products').once('value')
+        ]);
+        const brands = bSnap.val() || {};
+        allProductsCache = pSnap.val() || {};
+
+        const oldBox = document.getElementById('oldBrandsBox');
+        const brandEntries = Object.values(brands);
+        if (brandEntries.length === 0) {
+            oldBox.innerHTML = `<p class="sub">لا توجد ماركات محفوظة حالياً في القاعدة.</p>`;
+        } else {
+            oldBox.innerHTML = brandEntries.map(b => {
+                const count = Object.values(allProductsCache).filter(p => p && p.brand === b.name).length;
+                return `<div class="brand-old"><span>${b.emoji||'📱'}</span><strong>${b.name}</strong><span class="count">${count} منتج</span></div>`;
+            }).join('');
+        }
+
+        document.getElementById('newBrandsBox').innerHTML = NEW_BRANDS.map(b =>
+            `<span class="new-chip">${b.emoji} ${b.name}</span>`
+        ).join('');
+
+        checkBrandCaseMismatch();
+    }
+
+    // يفحص كل ماركة جديدة (مثل "Realmi") مقابل القيم الفعلية المخزّنة في prod.brand
+    // لو وُجد نص يطابقها معنوياً لكن بحالة أحرف مختلفة (realmi / REALMI...)، يُنبّه ويعرض الفرق بدقة.
+    function checkBrandCaseMismatch() {
+        const box = document.getElementById('mismatchBox');
+        const mismatches = [];
+
+        NEW_BRANDS.forEach(nb => {
+            const variantsFound = new Set();
+            Object.values(allProductsCache).forEach(p => {
+                if (p && p.brand && p.brand.toLowerCase() === nb.name.toLowerCase() && p.brand !== nb.name) {
+                    variantsFound.add(p.brand);
+                }
+            });
+            variantsFound.forEach(v => {
+                const count = Object.values(allProductsCache).filter(p => p && p.brand === v).length;
+                mismatches.push({ newName: nb.name, foundAs: v, count });
+            });
+        });
+
+        if (mismatches.length === 0) {
+            box.classList.add('hidden');
+            box.innerHTML = '';
+            return;
+        }
+
+        box.classList.remove('hidden');
+        box.innerHTML = mismatches.map(m => `
+            <div class="mismatch-card">
+                ⚠️ وجدت <strong>${m.count}</strong> منتج باسم ماركة مكتوب بالضبط: <span class="exact-val">${m.foundAs}</span><br>
+                وهذا <strong>لا يطابق</strong> حرفياً اسم الماركة الجديدة: <span class="exact-val">${m.newName}</span><br>
+                (الفرق في حالة الأحرف فقط، لكن الفلترة في المتجر حساسة لذلك ولن تتعرف عليه كنفس الماركة)
+                <br>
+                <button class="fix-btn" onclick="fixCaseMismatch('${m.foundAs.replace(/'/g,"\\'")}', '${m.newName}')">✏️ تصحيح الاسم إلى "${m.newName}" الآن</button>
+            </div>
+        `).join('');
+    }
+
+    async function fixCaseMismatch(oldExact, newExact) {
+        const updates = {};
+        Object.entries(allProductsCache).forEach(([key, p]) => {
+            if (p && p.brand === oldExact) updates[`${key}/brand`] = newExact;
+        });
+        if (Object.keys(updates).length === 0) return;
+        try {
+            await db.ref('products').update(updates);
+            Object.entries(allProductsCache).forEach(([key, p]) => {
+                if (p && p.brand === oldExact) p.brand = newExact;
+            });
+            checkBrandCaseMismatch();
+            alert(`✅ تم تصحيح ${Object.keys(updates).length} منتج إلى "${newExact}"`);
+        } catch(e) {
+            alert('❌ فشل التصحيح: ' + (e.message || e));
+        }
+    }
+
+    async function runReplace() {
+        const btn = document.getElementById('runBtn');
+        const logBox = document.getElementById('logBox');
+        logBox.classList.remove('hidden');
+        btn.disabled = true;
+        btn.textContent = '⏳ جاري التنفيذ...';
+        logBox.innerHTML = '';
+
+        function log(msg, cls) {
+            logBox.innerHTML += `<div class="${cls||''}">${msg}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        try {
+            log('🗑️ حذف الماركات الحالية...');
+            await db.ref('brands').remove();
+            log('✅ تم الحذف', 'ok');
+
+            log('➕ إضافة الماركات الجديدة...');
+            const newData = Object.fromEntries(NEW_BRANDS.map(b => [b.id, { emoji: b.emoji, name: b.name }]));
+            await db.ref('brands').set(newData);
+            log('✅ تمت إضافة 6 ماركات: ' + NEW_BRANDS.map(b => b.name).join('، '), 'ok');
+
+            log('🎉 انتهى الاستبدال بنجاح. أعد فتح لوحة التحكم لرؤية الماركات الجديدة.', 'ok');
+            btn.textContent = '✅ تم التنفيذ';
+        } catch (e) {
+            log('❌ فشل التنفيذ: ' + (e.message || e), 'warn');
+            btn.disabled = false;
+            btn.textContent = '🔁 إعادة المحاولة';
+        }
+    }
+</script>
+</body>
+</html>

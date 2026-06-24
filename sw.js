@@ -1,23 +1,19 @@
 // ============================================================
-// هواتف ماركت - Service Worker المتقدم
+// R.Shop - Service Worker المتقدم (الإصدار الآمن V2)
 // ============================================================
 
-const CACHE_NAME = 'phones-market-v1.0.0';
+const CACHE_NAME = 'r-shop-v2.0.0';
 const OFFLINE_URL = '/offline.html';
 
-// الملفات المطلوب تخزينها مؤقتاً
+// ✅ الملفات المطلوب تخزينها مؤقتاً (تمت إضافة config.js)
 const STATIC_CACHE_URLS = [
   '/',
   '/index.html',
   '/dashboard.html',
   '/offline.html',
-  '/css/style.css',
-  '/css/dashboard.css',
-  '/js/firebase-config.js',
-  '/js/app.js',
-  '/js/dashboard.js',
+  '/config.js',             // 🔐 تمت الإضافة لضمان تحديث الإعدادات
   '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap',
+  'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js',
@@ -25,9 +21,10 @@ const STATIC_CACHE_URLS = [
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js'
 ];
 
-// URLs الصورية التي سيتم تخزينها
+// ✅ URLs الصورية التي سيتم تخزينها مسبقاً
 const IMAGE_CACHE_URLS = [
-  './icon-192.png'
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // ========== تثبيت Service Worker ==========
@@ -239,7 +236,7 @@ function createOfflinePage() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غير متصل - هواتف ماركت</title>
+    <title>غير متصل - R.Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -335,7 +332,7 @@ self.addEventListener('push', (event) => {
   console.log('[SW] Push Notification received');
   
   let notificationData = {
-    title: 'هواتف ماركت',
+    title: 'R.Shop',
     body: 'تحديث جديد في المتجر!',
     icon: './icon-192.png',
     badge: './icon-192.png',
@@ -422,4 +419,4 @@ async function syncPendingOrders() {
   } catch (error) {
     console.error('[SW] Sync failed:', error);
   }
-  }
+}

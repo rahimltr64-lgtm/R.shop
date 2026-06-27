@@ -1382,5 +1382,63 @@
         setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 400); }, 3000);
     }
 </script>
+
+<!-- ===================================================================
+     🔑 كود مؤقت للحصول على FCM Token (مرة واحدة فقط - للتاجر)
+     احذف هذا القسم كامل بعد ما تاخذ التوكن وتسجله في Pipedream
+=================================================================== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcMKcfrJoGSE07YVf2vpwZhc08NQURn80",
+    projectId: "phones-market",
+    messagingSenderId: "1059312114207",
+    appId: "1:1059312114207:android:4ce9bbae2cef6b6a38532a",
+  };
+
+  const VAPID_KEY = "BIpVHZp7iFK_UiScFPBePZZhbr5HMrKYUCItigwZGoKaE7x69CyEylkLzmDOoEytLL0i68s7yFEegQ0HC0CF7rs";
+
+  const fcmApp = initializeApp(firebaseConfig);
+  const messaging = getMessaging(fcmApp);
+
+  window.getMyDeviceToken = async function () {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        alert("لم يتم منح إذن الإشعارات");
+        return;
+      }
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+      console.log("FCM Token:", token);
+
+      const textarea = document.createElement("textarea");
+      textarea.value = token;
+      textarea.style.position = "fixed";
+      textarea.style.top = "10%";
+      textarea.style.left = "5%";
+      textarea.style.width = "90%";
+      textarea.style.height = "200px";
+      textarea.style.zIndex = "999999";
+      textarea.style.fontSize = "12px";
+      textarea.style.background = "#fff";
+      textarea.style.color = "#000";
+      textarea.style.padding = "10px";
+      textarea.style.borderRadius = "10px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      alert("التوكن ظاهر في الصندوق فوق الصفحة - اضغط مطولاً وانسخه");
+    } catch (err) {
+      console.error("خطأ في جلب التوكن:", err);
+      alert("خطأ: " + err.message);
+    }
+  };
+</script>
+
+<button onclick="getMyDeviceToken()" style="position:fixed;bottom:80px;left:10px;z-index:99999;background:#f97316;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-weight:800;font-family:'Cairo',sans-serif;">
+  🔑 جلب توكن الإشعارات
+</button>
+
 </body>
    </html>

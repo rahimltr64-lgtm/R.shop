@@ -2,7 +2,7 @@
 // R.Shop - Service Worker المتقدم (الإصدار الآمن V2)
 // ============================================================
 
-const CACHE_NAME = 'r-shop-v2.0.0';
+const CACHE_NAME = 'r-shop-v2.1.0';
 const OFFLINE_URL = '/offline.html';
 
 // ✅ الملفات المطلوب تخزينها مؤقتاً (تمت إضافة config.js)

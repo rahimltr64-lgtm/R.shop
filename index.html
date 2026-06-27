@@ -1206,9 +1206,14 @@
             selectedActiveProduct.stock = newStock;
             allProducts[String(selectedActiveProduct.id)] && (allProducts[String(selectedActiveProduct.id)].stock = newStock);
 
-            // إشعار Telegram عبر الخادم (آمن)
-            if (typeof notifyTelegramServerSide === 'function') {
-                notifyTelegramServerSide(orderData);
+            // 🔔 إشعار فوري للتاجر عبر Pipedream → Firebase Cloud Messaging
+            // لا ننتظر النتيجة (fire and forget) باش ما نأخرّو تجربة الزبون
+            if (CONFIG.ORDER_WEBHOOK_URL) {
+                fetch(CONFIG.ORDER_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                }).catch(err => console.warn('تنبيه: فشل إرسال إشعار الطلب', err));
             }
 
             document.getElementById('drawerOrderForm').querySelector('form')?.reset();

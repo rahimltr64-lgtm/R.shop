@@ -1207,13 +1207,19 @@
             allProducts[String(selectedActiveProduct.id)] && (allProducts[String(selectedActiveProduct.id)].stock = newStock);
 
             // 🔔 إشعار فوري للتاجر عبر Pipedream → Firebase Cloud Messaging
-            // لا ننتظر النتيجة (fire and forget) باش ما نأخرّو تجربة الزبون
+            // 🔍 TEMP DEBUG: نسخة مؤقتة للتشخيص - تعرض alert بنتيجة المحاولة
             if (CONFIG.ORDER_WEBHOOK_URL) {
                 fetch(CONFIG.ORDER_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
-                }).catch(err => console.warn('تنبيه: فشل إرسال إشعار الطلب', err));
+                }).then(res => {
+                    alert('✅ نجح إرسال الإشعار! حالة الرد: ' + res.status);
+                }).catch(err => {
+                    alert('❌ فشل إرسال الإشعار: ' + err.message);
+                });
+            } else {
+                alert('⚠️ ORDER_WEBHOOK_URL غير موجود في CONFIG!');
             }
 
             document.getElementById('drawerOrderForm').querySelector('form')?.reset();

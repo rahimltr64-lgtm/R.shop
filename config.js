@@ -12,6 +12,10 @@ const CONFIG = {
   // 🔥 Firebase Configuration
   FIREBASE_BASE_URL: "https://phones-market-default-rtdb.europe-west1.firebasedatabase.app",
 
+  // 🔔 Webhook لإشعارات الطلبات الجديدة (Pipedream → Firebase Cloud Messaging)
+  // آمن أن يكون هنا - لا يحتوي أي سر، فقط نقطة استقبال
+  ORDER_WEBHOOK_URL: "https://eoql8us6k80w5c2.m.pipedream.net",
+
   // 🤖 Telegram Bot
   // ⚠️ لا تضع توكن البوت هنا أبداً. أي قيمة في ملف يُحمَّل في المتصفح (config.js)
   // تكون مرئية لأي زائر يفتح "عرض المصدر". التوكن الحقيقي يجب أن يعيش فقط على
